@@ -1,0 +1,28 @@
+name: Sincronizar con Tokko
+
+on:
+  schedule:
+    - cron: "17 9 * * *"   # todos los días 6:17 (Uruguay)
+  workflow_dispatch:        # botón "Run workflow" para actualizar al instante
+
+permissions:
+  contents: write
+
+jobs:
+  sincronizar:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-python@v5
+        with:
+          python-version: "3.12"
+      - name: Armar los mapas con los datos de Tokko
+        env:
+          TOKKO_KEY: ${{ secrets.TOKKO_KEY }}
+        run: python3 build.py
+      - name: Publicar si hubo cambios
+        run: |
+          git config user.name "Claude"
+          git config user.email "noreply@anthropic.com"
+          git add -A
+          git diff --cached --quiet || (git commit -m "Sincronizar con Tokko" && git push)

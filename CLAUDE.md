@@ -1,32 +1,42 @@
-# Instrucciones para Claude — mapas de barrios
+# Instrucciones para Claude — mapas de Coldwell Banker Zetaté
 
 Repo: `ColdwellBankerZetate/coldwellbankerzetate.github.io` (GitHub Pages, rama `main`, raíz).
-Cada barrio se publica en `https://coldwellbankerzetate.github.io/<slug>/`.
+Sitio: `https://coldwellbankerzetate.github.io/` — portada con todos los barrios; cada barrio en `/<slug>/`; selección para clientes en `/seleccion/?p=REF1,REF2&para=Nombre`.
 El usuario es Mateo (Coldwell Banker Zetaté, Punta del Este). Habla español rioplatense, quiere respuestas cortas y directas.
 
-## Flujo para un barrio nuevo
+## Cómo se arma
 
-1. Mateo pasa los links de las fichas, con precio y dormitorios de cada una.
-2. Crear `barrios/<slug>.json` copiando `barrios/pueblo-mio.json`: `slug`, `nombre`, `zona`, `bajada` (1 frase sobre el barrio) y la lista `propiedades`.
-   - Ficha de amaira (`ficha.amaira.com.ar/...ficha=BPV1234`): poner `codigo` (ej. `BPV1234`), `url`, `precio`, `dormitorios`. `build.py` baja solo coordenadas, lote, hasta 8 fotos, baños y m² desde la API de xintel.
-   - Ficha de otra web (ej. inmobiliaria.link bloquea la lectura automática): pedirle a Mateo un pin de Google Maps y cargar `lat`/`lng` a mano, más `lote`, `banos`, `m2_cubiertos` si los tiene.
-   - Precio y dormitorios: usar los que diga Mateo. Si no coinciden con la ficha, preguntarle.
-3. `python3 build.py barrios/<slug>.json` → genera `<slug>/` (index.html, satelite.jpg, fotos/, logos).
-4. **Revisar cada pin antes de publicar**: recortar `satelite.jpg` alrededor de cada coordenada y mirar que caiga sobre una casa. Los pines de las fichas de amaira muchas veces caen en la entrada del barrio, en un camino o en un terreno vacío. Si hay dudas, mostrarle a Mateo cuál está mal y pedirle captura.
-5. Para corregir un pin: poner `lat`/`lng` en el JSON y volver a correr el build.
-   - Al pasar de píxeles a coordenadas, usar el tamaño REAL de `satelite.jpg` (`Image.open(...).size`) y los `bounds` del `index.html` generado. El recorte cambia cada vez que se mueve un pin.
-   - Después de mover un pin, siempre se regenera `satelite.jpg`: hay que subirlo junto con el `index.html`, porque si no el satélite queda corrido respecto de todos los pines.
-6. Agregar el barrio a la tabla del `README.md`, commit y push a `main`. Esperar a que el link sirva la versión nueva antes de avisarle a Mateo.
+- `python3 build.py` baja el inventario de Tokko y arma TODO: un mapa por barrio, `index.html` (portada), `seleccion/` y `datos.json`.
+- `python3 build.py --offline` usa la última copia local de Tokko (`tokko_cache.json`, no se sube).
+- Clave de Tokko: variable `TOKKO_KEY` o archivo local `.tokko_key`. **Nunca** commitearla: el repo es público y la clave da acceso a los contactos de clientes. En GitHub está como secreto `TOKKO_KEY`.
+- `.github/workflows/sincronizar.yml` corre el build todos los días y publica si cambió algo en Tokko (también con "Run workflow").
+- Plantillas en `plantillas/` (`barrio.html`, `portada.html`, `comun.js` con idiomas/pines/WhatsApp/selección). Logos en `assets/`.
+- `sitio.json`: WhatsApp general (para propiedades sin agente con celular) y código de GoatCounter para estadísticas.
+
+## Barrios
+
+- Cada barrio es `barrios/<slug>.json`. Los de Tokko tienen `tokko_location` y traen solas sus propiedades; si aparece una localidad nueva en Tokko, el build crea el JSON solo.
+- Barrio con fichas de otras inmobiliarias (ej. Pueblo Mío, de amaira): lista `propiedades` con `codigo`, `url`, `precio`, `dormitorios`; el build baja fotos, lote, baños, m² y coordenadas desde la API de xintel. Fichas de otras webs: `lat`/`lng` a mano.
+- Textos por idioma: `bajada` {es,en,pt}, `datos` (chips con amenities, solo datos que salgan de una fuente), `puntos` (amenities en el mapa con lat/lng verificados en el satélite).
+- Corregir un pin: lo ideal es corregirlo en Tokko (se arregla solo al sincronizar). Si no, `ajustes`: {"<reference_code>": {"lat":..,"lng":..}} en el JSON del barrio.
+- `avisos.txt` lista los pines que comparten coordenadas (ubicación aproximada). En el mapa se muestran separados en un círculo y la ventanita dice "Ubicación aproximada".
+
+## Revisar pines
+
+- `python3 verificar.py <slug>` arma `verificacion/<slug>.jpg` con un recorte del satélite por propiedad.
+- `python3 verificar.py zona <lat> <lng> <metros>` arma un recorte con grilla de coordenadas para ubicar casas o amenities.
+- Muchas ubicaciones de Tokko son aproximadas (esquinas, calles, centro del barrio). Avisarle a Mateo cuáles están mal; no inventar ubicaciones.
 
 ## Diseño (no cambiar sin que Mateo lo pida)
 
-- Todo negro, pines rojos en gota con punto negro, etiqueta con precio y dormitorios.
-- Compu: panel negro a la izquierda con el logo centrado, el nombre del barrio en cursiva (Bodoni Moda), stats, filtros por dormitorios y tarjetas con foto. Al pasar el mouse por un pin aparece una ventanita con carrusel de fotos; el click en el pin abre la ficha.
-- Celular: solo el mapa. Arriba, el nombre en cursiva centrado, una línea fina y los filtros sin fondo (el elegido en blanco con un punto rojo). Tocar un pin abre la ficha; mantenerlo apretado abre la ventanita con fotos.
-- Logos en `assets/` (versiones blancas de Coldwell Banker Global Luxury Zetaté).
-- `build.py` envuelve la página en un documento completo con `<meta name="viewport">`: sin eso el celular la muestra como compu.
+- Todo negro. Pines en gota: rojo = venta, champagne = temporada, blanco = alquiler; terreno = gota con aro. Etiqueta con precio y dormitorios; las etiquetas que se superponen se esconden hasta hacer zoom.
+- Compu: panel a la izquierda (logo centrado, nombre en cursiva Bodoni Moda, datos, filtros, tarjetas). Mouse sobre el pin = ventanita con carrusel, precios, tarifas de temporada, Ver ficha, WhatsApp y corazón; click = abre la ficha.
+- Celular: solo el mapa; arriba nombre en cursiva centrado, línea fina y filtros sin fondo (elegido en blanco con punto). Tocar pin = ficha; mantener apretado = ventanita.
+- Idiomas ES/EN/PT (detecta el del navegador; `?lang=en` fuerza uno).
+- WhatsApp: al agente de la propiedad en Tokko (celular UY 5989… o AR 549…); si no tiene, al general de `sitio.json`.
+- `build.py` envuelve cada página en un documento completo con `<meta name="viewport">`: sin eso el celular la muestra como compu.
 
 ## Git
 
 - Commits con `user.name "Claude"` y `user.email noreply@anthropic.com`.
-- No subir `.cache_tiles/`.
+- No subir `.cache_tiles/`, `tokko_cache.json`, `.tokko_key`, `verificacion/`.

@@ -1,2 +1,5 @@
 .cache_tiles/
 __pycache__/
+tokko_cache.json
+verificacion/
+.tokko_key
