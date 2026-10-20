@@ -1,0 +1,49 @@
+{
+  "slug": "pueblo-mio",
+  "nombre": "Pueblo Mío",
+  "zona": "Manantiales · Punta del Este",
+  "bajada": "Barrio privado sobre ruta 104, a 4 km de Manantiales. 159 hectáreas, 86 de áreas comunes y nueve lagunas.",
+  "zoom_imagen": 17,
+  "margen_metros": 450,
+  "propiedades": [
+    {
+      "codigo": "BPV10981",
+      "url": "https://ficha.amaira.com.ar/fichaC.php?ficha=BPV10981&noweb=true",
+      "precio": 1650000,
+      "dormitorios": 4,
+      "lat": -34.869903,
+      "lng": -54.837136,
+      "_nota": "Pin corregido a mano sobre la casa (el de la ficha caía en un terreno vacío)"
+    },
+    {
+      "codigo": "BPV10933",
+      "url": "https://ficha.amaira.com.ar/fichaC.php?ficha=BPV10933",
+      "precio": 1280000,
+      "dormitorios": 4,
+      "lat": -34.861035,
+      "lng": -54.822801,
+      "_nota": "Pin corregido a mano sobre la casa (el de la ficha caía en la entrada del barrio)"
+    },
+    {
+      "codigo": "BPV10790",
+      "url": "https://ficha.amaira.com.ar/fichaC.php?ficha=BPV10790",
+      "precio": 1500000,
+      "dormitorios": 3,
+      "lat": -34.86755,
+      "lng": -54.841062,
+      "_nota": "Pin corregido a mano sobre la casa (el de la ficha caía en el camino)"
+    },
+    {
+      "codigo": "BPV8877",
+      "url": "https://ficha.amaira.com.ar/fichaC.php?ficha=BPV8877",
+      "precio": 1690000,
+      "dormitorios": 4
+    },
+    {
+      "codigo": "BPV8096",
+      "url": "https://ficha.amaira.com.ar/fichaC.php?ficha=BPV8096",
+      "precio": 1190000,
+      "dormitorios": 3
+    }
+  ]
+}
