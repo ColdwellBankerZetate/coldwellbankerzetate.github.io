@@ -135,6 +135,13 @@ def main(cfg_path):
     html = (tpl.replace("/*__LEAFLET_CSS__*/", css)
                .replace("/*__DATOS__*/null", json.dumps(datos, ensure_ascii=False))
                .replace("__NOMBRE__", cfg["nombre"]))
+    # Documento completo: sin el viewport el celular dibuja la página a ancho de compu
+    cabeza = ('<!doctype html>\n<html lang="es">\n<head>\n<meta charset="utf-8">\n'
+              '<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">\n'
+              '<meta name="theme-color" content="#0a0a0a">\n'
+              '<style>body{margin:0}img{max-width:100%}[hidden]{display:none!important}</style>\n')
+    corte = html.index('<div class="app">')
+    html = cabeza + html[:corte] + "</head>\n<body>\n" + html[corte:] + "\n</body>\n</html>\n"
     open(os.path.join(out, "index.html"), "w", encoding="utf-8").write(html)
     for logo in ("logo-apilado.png", "logo-horizontal.png"):
         shutil.copy(os.path.join(AQUI, "assets", logo), os.path.join(out, logo))
