@@ -3,3 +3,5 @@ __pycache__/
 tokko_cache.json
 verificacion/
 .tokko_key
+reel/trabajo/
+reel/*.mp4

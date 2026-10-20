@@ -1,0 +1,134 @@
+<!doctype html>
+<html lang="es"><head><meta charset="utf-8">
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Bodoni+Moda:ital,opsz,wght@0,6..96,500;1,6..96,500&family=Hanken+Grotesk:wght@500;600;700&display=swap">
+<style>
+html,body{margin:0;width:1080px;height:1920px;overflow:hidden;background:#0a0a0a}
+#esc{position:absolute;inset:0;overflow:hidden;font-family:"Hanken Grotesk",sans-serif;color:#f3f1ec}
+#sat{position:absolute;left:0;top:0;transform-origin:0 0;filter:brightness(.8) contrast(1.08) saturate(.88)}
+#vig{position:absolute;inset:0;background:linear-gradient(180deg,rgba(0,0,0,.55) 0%,transparent 22%,transparent 60%,rgba(0,0,0,.7) 100%),radial-gradient(120% 80% at 50% 45%,transparent 55%,rgba(0,0,0,.5) 100%)}
+.pin{position:absolute;width:44px;height:54px;margin:-54px 0 0 -22px;transform-origin:50% 100%}
+.pin::before{content:"";position:absolute;left:0;top:0;width:44px;height:44px;background:#e3141e;border-radius:50% 50% 50% 0;transform:rotate(-45deg);box-shadow:0 0 0 3px rgba(255,255,255,.95),-4px 8px 20px rgba(0,0,0,.6)}
+.pin::after{content:"";position:absolute;left:14px;top:14px;width:16px;height:16px;border-radius:50%;background:#0a0a0a}
+.ring{position:absolute;width:80px;height:30px;margin:-15px 0 0 -40px;border-radius:50%;border:3px solid #e3141e}
+#top{position:absolute;left:0;right:0;top:120px;display:flex;flex-direction:column;align-items:center;text-shadow:0 2px 4px rgba(0,0,0,.8),0 0 30px rgba(0,0,0,.6)}
+#top img{height:84px;filter:drop-shadow(0 2px 6px rgba(0,0,0,.7))}
+#titulo{font-family:"Bodoni Moda",serif;font-style:italic;font-weight:500;font-size:132px;line-height:1;margin-top:56px}
+#raya{width:180px;height:2px;background:rgba(255,255,255,.9);margin-top:34px}
+#sub{font-size:30px;font-weight:600;letter-spacing:.22em;text-transform:uppercase;margin-top:30px;color:rgba(255,255,255,.9)}
+#marca{position:absolute;left:0;right:0;top:86px;display:flex;justify-content:center}
+#marca img{height:34px;filter:drop-shadow(0 2px 6px rgba(0,0,0,.8))}
+#card{position:absolute;left:70px;right:70px;bottom:150px;background:rgba(10,10,10,.9);border:1.5px solid rgba(255,255,255,.18);border-radius:26px;overflow:hidden;box-shadow:0 30px 80px rgba(0,0,0,.6)}
+#card img{display:block;width:100%;height:560px;object-fit:cover}
+#card .c{padding:34px 40px 40px;display:grid;gap:12px}
+#lote{font-size:24px;font-weight:600;letter-spacing:.22em;text-transform:uppercase;color:#c8b28a}
+#precio{font-family:"Bodoni Moda",serif;font-size:78px;line-height:1}
+#precio small{font-family:"Hanken Grotesk";font-size:26px;font-weight:600;letter-spacing:.14em;color:#9b978f;margin-right:14px;vertical-align:14px}
+#specs{font-size:30px;color:#c9c5bd}
+#fin{position:absolute;inset:0;display:flex;flex-direction:column;align-items:center;justify-content:center;background:rgba(8,8,8,.82);text-align:center}
+#fin img{height:150px}
+#fin .t{font-family:"Bodoni Moda",serif;font-style:italic;font-size:70px;margin-top:70px;line-height:1.1}
+#fin .u{font-size:30px;font-weight:600;letter-spacing:.06em;margin-top:40px;color:#c8b28a}
+#fin .r{width:160px;height:2px;background:#e3141e;margin-top:46px}
+</style></head><body>
+<div id="esc">
+  <img id="sat" src="trabajo/satelite.jpg" alt="">
+  <div id="pins"></div>
+  <div id="vig"></div>
+  <div id="marca"><img src="../assets/logo-horizontal.png" alt=""></div>
+  <div id="top"><img src="../assets/logo-apilado.png" alt=""><div id="titulo"></div><div id="raya"></div><div id="sub"></div></div>
+  <div id="card"><img id="cfoto" alt=""><div class="c"><div id="lote"></div><div id="precio"></div><div id="specs"></div></div></div>
+  <div id="fin"><img src="../assets/logo-apilado.png" alt=""><div class="t">Mirá todas<br>en el mapa</div><div class="r"></div><div class="u" id="url"></div></div>
+</div>
+<script>
+let D;
+const FPS = 30;
+const ease = x => x < .5 ? 4 * x * x * x : 1 - Math.pow(-2 * x + 2, 3) / 2;
+const outBack = x => { const c1 = 1.70158, c3 = c1 + 1; return 1 + c3 * Math.pow(x - 1, 3) + c1 * Math.pow(x - 1, 2); };
+const clamp = (x, a = 0, b = 1) => Math.max(a, Math.min(b, x));
+const lerp = (a, b, k) => a + (b - a) * k;
+const fmt = n => n.toLocaleString("es-UY");
+const mitad = b => b % 1 ? Math.floor(b) + "½" : b;
+let ORDEN, PLAN, TOTAL;
+
+async function cargar() {
+  D = await (await fetch("trabajo/datos.json")).json();
+  // recorrido: de este a oeste para que la cámara no salte
+  ORDEN = D.props;
+  document.getElementById("titulo").textContent = D.nombre;
+  document.getElementById("sub").textContent = D.sub;
+  document.getElementById("url").textContent = D.url;
+  const pins = document.getElementById("pins");
+  ORDEN.forEach((p, i) => { pins.insertAdjacentHTML("beforeend", `<div class="ring" id="r${i}"></div><div class="pin" id="p${i}"></div>`); });
+  await Promise.all([...document.images].map(im => im.decode().catch(() => {})));
+  await document.fonts.ready;
+  const INTRO = 3.2, PASO = 3.3, FIN = 3.2;
+  PLAN = { INTRO, PASO, FIN };
+  TOTAL = INTRO + PASO * ORDEN.length + FIN;
+  return TOTAL;
+}
+// cámara: centro (cx,cy) en px de la imagen y escala s
+function camara(t) {
+  const { INTRO, PASO } = PLAN;
+  const ancho = { cx: D.w / 2, cy: D.h / 2 + 60, s: 0.74 };
+  const en = i => ({ cx: ORDEN[i].x, cy: ORDEN[i].y + 330 / 2.1, s: 2.1 });
+  if (t < INTRO) { const k = t / INTRO; return { ...ancho, s: lerp(0.70, 0.76, k) }; }
+  const n = ORDEN.length;
+  const u = t - INTRO;
+  const i = Math.floor(u / PASO);
+  if (i >= n) { const k = ease(clamp((u - n * PASO) / 1.4)); const a = en(n - 1); return { cx: lerp(a.cx, ancho.cx, k), cy: lerp(a.cy, ancho.cy, k), s: lerp(a.s, 0.74, k) }; }
+  const k = ease(clamp((u - i * PASO) / 1.1));
+  const desde = i === 0 ? { ...ancho, s: 0.76 } : en(i - 1);
+  const a = en(i);
+  // arco: alejar un poco en el medio del vuelo
+  const s = lerp(desde.s, a.s, k) * (1 - 0.28 * Math.sin(Math.PI * k) * (i === 0 ? 0 : 1));
+  return { cx: lerp(desde.cx, a.cx, k), cy: lerp(desde.cy, a.cy, k), s };
+}
+function render(t) {
+  const { INTRO, PASO, FIN } = PLAN;
+  const c = camara(t);
+  const tx = 540 - c.cx * c.s, ty = 960 - c.cy * c.s;
+  document.getElementById("sat").style.transform = `translate(${tx}px,${ty}px) scale(${c.s})`;
+  const u = t - INTRO, i = Math.floor(u / PASO), loc = u - i * PASO;
+  ORDEN.forEach((p, j) => {
+    const x = tx + p.x * c.s, y = ty + p.y * c.s;
+    const pin = document.getElementById("p" + j), ring = document.getElementById("r" + j);
+    pin.style.left = ring.style.left = x + "px"; pin.style.top = ring.style.top = y + "px";
+    // los pines caen uno por uno durante la intro
+    const caida = clamp((t - 0.6 - j * 0.22) / 0.5);
+    const activo = j === i && u >= 0;
+    const sc = (t < INTRO + 0.1 ? outBack(caida) : 1) * (activo ? 1.25 : 0.85);
+    pin.style.transform = `scale(${sc})`;
+    pin.style.opacity = t < INTRO ? caida : (activo ? 1 : 0.75);
+    const pr = activo ? ((loc * 0.8) % 1) : 0;
+    ring.style.opacity = activo && loc > 1 ? (1 - pr) * 0.9 : 0;
+    ring.style.transform = `scale(${0.5 + pr * 1.4})`;
+  });
+  // títulos de la intro
+  const top = document.getElementById("top");
+  const ti = clamp(t / 0.8), to = clamp((t - (INTRO - 0.7)) / 0.6);
+  top.style.opacity = ti * (1 - to);
+  top.style.transform = `translateY(${(1 - ease(ti)) * 40 - ease(to) * 40}px)`;
+  document.getElementById("marca").style.opacity = clamp((t - INTRO) / 0.5) * (1 - clamp((t - (INTRO + PASO * ORDEN.length)) / 0.4));
+  // tarjeta de cada casa
+  const card = document.getElementById("card");
+  if (u >= 0 && i < ORDEN.length) {
+    const p = ORDEN[i];
+    if (card.dataset.i != i) {
+      card.dataset.i = i;
+      document.getElementById("cfoto").src = "trabajo/" + p.foto;
+      document.getElementById("lote").textContent = p.lote ? "Lote " + p.lote : p.tipo;
+      document.getElementById("precio").innerHTML = `<small>U$S</small>${fmt(p.precio)}`;
+      document.getElementById("specs").textContent = [p.dorm && `${p.dorm} dormitorios`, p.banos && `${mitad(p.banos)} baños`, p.m2 && `${Math.round(p.m2)} m²`].filter(Boolean).join("  ·  ");
+    }
+    const a = clamp((loc - 0.95) / 0.45), b = clamp((loc - (PASO - 0.35)) / 0.3);
+    card.style.opacity = a * (1 - b);
+    card.style.transform = `translateY(${(1 - ease(a)) * 120 + ease(b) * 40}px) scale(${0.96 + 0.04 * ease(a)})`;
+  } else { card.style.opacity = 0; }
+  // cierre
+  const f = clamp((t - (TOTAL - FIN + 0.6)) / 0.7);
+  const fin = document.getElementById("fin");
+  fin.style.opacity = f; fin.style.transform = `scale(${1.04 - 0.04 * ease(f)})`;
+}
+window.cargar = cargar; window.render = render;
+</script>
+</body></html>

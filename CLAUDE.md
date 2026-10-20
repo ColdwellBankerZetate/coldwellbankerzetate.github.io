@@ -39,4 +39,8 @@ El usuario es Mateo (Coldwell Banker Zetaté, Punta del Este). Habla español ri
 ## Git
 
 - Commits con `user.name "Claude"` y `user.email noreply@anthropic.com`.
-- No subir `.cache_tiles/`, `tokko_cache.json`, `.tokko_key`, `verificacion/`.
+- No subir `.cache_tiles/`, `tokko_cache.json`, `.tokko_key`, `verificacion/`, `reel/trabajo/`, videos.
+
+## Video para redes
+
+`reel/preparar.py <slug>` + `reel/grabar.js` + ffmpeg arman un reel vertical 1080x1920 (~23 s) que recorre el satélite de pin en pin con foto, precio y datos (ver instrucciones en `reel/preparar.py`). Usa solo propiedades con ubicación verificada.
