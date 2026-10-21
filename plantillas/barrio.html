@@ -413,7 +413,8 @@ function aplicar(reencuadrar) {
   });
   const sc = $("st-cant"); if (sc) sc.textContent = vis.length;
   mapa.closePopup(vista);
-  if (reencuadrar && vis.length) encuadrar(vis.map(it => it.m.getLatLng()));
+  const cerca = vis.filter(it => !it.p.lejos);
+  if (reencuadrar && vis.length) encuadrar((cerca.length ? cerca : vis).map(it => it.m.getLatLng()));
   requestAnimationFrame(acomodar);
 }
 function encuadrar(latlngs) {

@@ -15,7 +15,7 @@ Fuentes de propiedades:
 Para corregir un pin: en el JSON del barrio, "ajustes": {"<referencia>": {"lat":..,"lng":..}}.
 Las referencias son el reference_code de Tokko (ej. CHO8077066) o el código de amaira.
 """
-import json, math, os, re, sys, unicodedata, urllib.parse, urllib.request
+import json, math, os, re, statistics, sys, unicodedata, urllib.parse, urllib.request
 
 AQUI = os.path.dirname(os.path.abspath(__file__))
 UA = {"User-Agent": "Mozilla/5.0 (mapas-barrios)"}
@@ -50,6 +50,10 @@ def num(x):
         return None
 
 
+def km(lat1, lng1, lat2, lng2):
+    return math.hypot((lat1 - lat2) * 111.32, (lng1 - lng2) * 111.32 * math.cos(math.radians(lat1)))
+
+
 def whatsapp(*numeros):
     """Primer número que sirva para WhatsApp (celular UY 5989… o AR 549…)."""
     for n in numeros:
@@ -76,6 +80,18 @@ def tokko_todo(offline):
             break
     json.dump(out, open(cache, "w", encoding="utf-8"), ensure_ascii=False)
     return out
+
+
+def ubicacion_tokko(p):
+    lat, lng = float(p["geo_lat"]), float(p["geo_long"])
+    dev = p.get("development") or {}
+    try:
+        dlat, dlng = float(dev.get("geo_lat")), float(dev.get("geo_long"))
+    except (TypeError, ValueError):
+        return {"lat": lat, "lng": lng}
+    if km(lat, lng, dlat, dlng) > 3:
+        return {"lat": dlat, "lng": dlng, "aprox": True, "corregido": f"ubicación del emprendimiento {dev.get('name')}"}
+    return {"lat": lat, "lng": lng}
 
 
 TIPO_OP = {"Venta": "venta", "Alquiler temporario": "temporada", "Alquiler": "alquiler"}
@@ -117,7 +133,7 @@ def tokko_a_prop(p, wa_general):
         "tipo": {"Casa": "casa", "Departamento": "depto", "PH": "depto", "Terreno": "terreno"}.get(tipo, "casa"),
         "titulo": (p.get("publication_title") or "").strip(),
         "url": p["public_url"],
-        "lat": float(p["geo_lat"]), "lng": float(p["geo_long"]),
+        **ubicacion_tokko(p),
         "lote": (p.get("lot_number") or "").strip() or None,
         "dormitorios": p.get("suite_amount") or None,
         "banos": p.get("bathroom_amount") or None,
@@ -263,6 +279,16 @@ def main():
                 p["verificado"] = True
             p["barrio"] = slug
             p["barrio_nombre"] = c["nombre"]
+        # fuera de zona: a más de 5 km de la mediana del barrio (probable error de carga en Tokko)
+        mlat = statistics.median(p["lat"] for p in props)
+        mlng = statistics.median(p["lng"] for p in props)
+        for p in props:
+            d = km(p["lat"], p["lng"], mlat, mlng)
+            if d > 5 and not p.get("verificado"):
+                p["lejos"] = round(d, 1)
+                avisos.append(f"{c['nombre']}: {p['ref']} está a {d:.0f} km del resto del barrio — {p['titulo'][:60]}")
+            if p.get("corregido"):
+                avisos.append(f"{c['nombre']}: {p['ref']} estaba lejos de su emprendimiento; se usó la {p['corregido']}")
         # pines que comparten coordenadas exactas = ubicación aproximada (centro del barrio)
         cuenta = {}
         for p in props:
@@ -280,8 +306,9 @@ def main():
         desc = f"{len(props)} propiedades de Coldwell Banker Zetaté en {c['nombre']}, sobre mapa satelital."
         escribir(os.path.join(AQUI, slug, "index.html"),
                  pagina("barrio.html", f"{c['nombre']} · Coldwell Banker Zetaté", datos, desc))
-        lat = sum(p["lat"] for p in props) / len(props)
-        lng = sum(p["lng"] for p in props) / len(props)
+        cerca = [p for p in props if not p.get("lejos")] or props
+        lat = statistics.median(p["lat"] for p in cerca)
+        lng = statistics.median(p["lng"] for p in cerca)
         ventas = [p["ops"][0]["precio"] for p in props if p["ops"][0]["tipo"] == "venta"]
         resumen.append({"slug": slug, "nombre": c["nombre"], "zona": c.get("zona", ""), "lat": lat, "lng": lng,
                         "total": len(props), "foto": next((p["fotos"][0] for p in props if p["fotos"]), None),
