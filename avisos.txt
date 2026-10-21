@@ -15,9 +15,10 @@ La Juanita: CAP8569853 comparte ubicación con 7 más
 La Juanita: CHO8573468 comparte ubicación con 7 más
 La Juanita: CAP8583279 comparte ubicación con 7 más
 La Juanita: CAP8592362 comparte ubicación con 7 más
-La Juanita: CHO8634329 comparte ubicación con 2 más
-La Juanita: CHO10340271 comparte ubicación con 2 más
-La Juanita: CHO12033778 comparte ubicación con 2 más
+La Juanita: CHO8634329 comparte ubicación con 3 más
+La Juanita: CHO10340271 comparte ubicación con 3 más
+La Juanita: CHO12033778 comparte ubicación con 3 más
+La Juanita: CHO12424166 comparte ubicación con 3 más
 Laguna Escondida: CHO8285987 comparte ubicación con 5 más
 Laguna Escondida: CHO8583575 comparte ubicación con 5 más
 Laguna Escondida: CHO8651286 comparte ubicación con 5 más
@@ -33,3 +34,5 @@ Pinar del Faro: CHO9877973 comparte ubicación con 8 más
 Pinar del Faro: CHO9878535 comparte ubicación con 8 más
 Pinar del Faro: CHO10331408 comparte ubicación con 8 más
 Pinar del Faro: CHO11831205 comparte ubicación con 8 más
+Pueblo Mío: FRO953 comparte ubicación con 1 más
+Pueblo Mío: FRO1206 comparte ubicación con 1 más

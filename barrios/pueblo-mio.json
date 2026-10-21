@@ -8,16 +8,58 @@
     "pt": "Condomínio fechado na Rota 104, a minutos de Manantiales. 159 hectares, 86 de áreas comuns e nove lagoas."
   },
   "datos": [
-    {"es": "Seguridad 24 h", "en": "24-hour security", "pt": "Segurança 24 h"},
-    {"es": "Club house con restaurante y piscinas", "en": "Clubhouse with restaurant and pools", "pt": "Club house com restaurante e piscinas"},
-    {"es": "Beach club", "en": "Beach club", "pt": "Beach club"},
-    {"es": "Lagunas navegables", "en": "Navigable lagoons", "pt": "Lagoas navegáveis"},
-    {"es": "Tenis y pádel", "en": "Tennis and padel", "pt": "Tênis e padel"},
-    {"es": "Caballerizas", "en": "Stables", "pt": "Cavalariças"}
+    {
+      "es": "Seguridad 24 h",
+      "en": "24-hour security",
+      "pt": "Segurança 24 h"
+    },
+    {
+      "es": "Club house con restaurante y piscinas",
+      "en": "Clubhouse with restaurant and pools",
+      "pt": "Club house com restaurante e piscinas"
+    },
+    {
+      "es": "Beach club",
+      "en": "Beach club",
+      "pt": "Beach club"
+    },
+    {
+      "es": "Lagunas navegables",
+      "en": "Navigable lagoons",
+      "pt": "Lagoas navegáveis"
+    },
+    {
+      "es": "Tenis y pádel",
+      "en": "Tennis and padel",
+      "pt": "Tênis e padel"
+    },
+    {
+      "es": "Caballerizas",
+      "en": "Stables",
+      "pt": "Cavalariças"
+    }
   ],
   "puntos": [
-    {"tipo": "deporte", "nombre": {"es": "Canchas de tenis", "en": "Tennis courts", "pt": "Quadras de tênis"}, "lat": -34.8616, "lng": -54.83262},
-    {"tipo": "laguna", "nombre": {"es": "Laguna", "en": "Lagoon", "pt": "Lagoa"}, "lat": -34.86617, "lng": -54.83523}
+    {
+      "tipo": "deporte",
+      "nombre": {
+        "es": "Canchas de tenis",
+        "en": "Tennis courts",
+        "pt": "Quadras de tênis"
+      },
+      "lat": -34.8616,
+      "lng": -54.83262
+    },
+    {
+      "tipo": "laguna",
+      "nombre": {
+        "es": "Laguna",
+        "en": "Lagoon",
+        "pt": "Lagoa"
+      },
+      "lat": -34.86617,
+      "lng": -54.83523
+    }
   ],
   "ajustes": {},
   "propiedades": [
@@ -56,6 +98,32 @@
       "url": "https://ficha.amaira.com.ar/fichaC.php?ficha=BPV8096",
       "precio": 1190000,
       "dormitorios": 3
+    },
+    {
+      "codigo": "FRO90",
+      "url": "https://ficha.amaira.com.ar/fichaC.php?ficha=FRO90&noweb=true",
+      "precio": 2100000,
+      "dormitorios": 4
+    },
+    {
+      "codigo": "FRO953",
+      "url": "https://ficha.amaira.com.ar/fichaC.php?ficha=FRO953&noweb=true",
+      "precio": 1100000,
+      "dormitorios": 3,
+      "lat": -34.8655,
+      "lng": -54.83,
+      "aprox": true,
+      "_nota": "La ficha trae la ubicación del pueblo de Manantiales; falta el pin del lote 161"
+    },
+    {
+      "codigo": "FRO1206",
+      "url": "https://ficha.amaira.com.ar/fichaC.php?ficha=FRO1206&noweb=true",
+      "precio": 1800000,
+      "dormitorios": 3,
+      "lat": -34.8655,
+      "lng": -54.83,
+      "aprox": true,
+      "_nota": "La ficha trae la ubicación del pueblo de Manantiales; falta el pin del lote 145"
     }
   ]
 }

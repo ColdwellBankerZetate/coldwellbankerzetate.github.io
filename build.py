@@ -201,6 +201,7 @@ def manual_a_prop(p, wa_general):
         "ops": [{"tipo": op, "precio": p["precio"], "moneda": "USD", "unidad": "mes" if op == "alquiler" else None}],
         "fotos": p.get("fotos", []),
         "agente": {"nombre": "Coldwell Banker Zetaté", "wa": wa_general},
+        **({"aprox": True} if p.get("aprox") else {}),
     }
 
 
