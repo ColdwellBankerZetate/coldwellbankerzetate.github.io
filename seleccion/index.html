@@ -8,6 +8,7 @@
 <meta property="og:title" content="Selección · Coldwell Banker Zetaté">
 <meta property="og:description" content="Selección de propiedades de Coldwell Banker Zetaté.">
 <style>body{margin:0}img{max-width:100%}[hidden]{display:none!important}</style>
+<script data-goatcounter="https://cbzetate.goatcounter.com/count" async src="//gc.zgo.at/count.js"></script>
 <title>Selección · Coldwell Banker Zetaté</title>
 <link rel="preconnect" href="https://fonts.googleapis.com">
 <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Bodoni+Moda:ital,opsz,wght@0,6..96,500;1,6..96,500&family=Hanken+Grotesk:wght@400;500;600;700&display=swap">
@@ -403,7 +404,7 @@ function track(evento) {
   try { if (window.goatcounter && window.goatcounter.count) window.goatcounter.count({ path: evento, title: evento, event: true }); } catch (_) {}
 }
 function cargarEstadisticas(sitio) {
-  if (!sitio.goatcounter) return;
+  if (!sitio.goatcounter || document.querySelector("script[data-goatcounter]")) return;
   const s = document.createElement("script");
   s.async = true; s.src = "https://gc.zgo.at/count.js";
   s.dataset.goatcounter = `https://${sitio.goatcounter}.goatcounter.com/count`;
@@ -531,7 +532,7 @@ function htmlPin(p, filtroOp) {
 
 </script>
 <script>
-const DATOS = {"modo":"seleccion","nombre":"","zona":"","bajada":{},"datos":[],"puntos":[],"propiedades":[],"sitio":{"whatsapp_general":"5491169763297","goatcounter":null}};
+const DATOS = {"modo":"seleccion","nombre":"","zona":"","bajada":{},"datos":[],"puntos":[],"propiedades":[],"sitio":{"whatsapp_general":"5491169763297","goatcounter":"cbzetate"}};
 const SEL = DATOS.modo === "seleccion";
 const Q = new URLSearchParams(location.search);
 let P = DATOS.propiedades;

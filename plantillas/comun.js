@@ -142,7 +142,7 @@ function track(evento) {
   try { if (window.goatcounter && window.goatcounter.count) window.goatcounter.count({ path: evento, title: evento, event: true }); } catch (_) {}
 }
 function cargarEstadisticas(sitio) {
-  if (!sitio.goatcounter) return;
+  if (!sitio.goatcounter || document.querySelector("script[data-goatcounter]")) return;
   const s = document.createElement("script");
   s.async = true; s.src = "https://gc.zgo.at/count.js";
   s.dataset.goatcounter = `https://${sitio.goatcounter}.goatcounter.com/count`;

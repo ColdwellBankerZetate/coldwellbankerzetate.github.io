@@ -194,6 +194,9 @@ def leer_plantilla(nombre):
 
 
 def pagina(plantilla, titulo, datos, descripcion):
+    gc = (datos.get("sitio") or {}).get("goatcounter")
+    stats = (f'<script data-goatcounter="https://{gc}.goatcounter.com/count" async src="//gc.zgo.at/count.js"></script>\n'
+             if gc else "")
     css = open(os.path.join(AQUI, "plantillas", "leaflet.css"), encoding="utf-8").read()
     comun = leer_plantilla("comun.js")
     html = (leer_plantilla(plantilla)
@@ -208,7 +211,7 @@ def pagina(plantilla, titulo, datos, descripcion):
               f'<meta name="description" content="{descripcion}">\n'
               f'<meta property="og:title" content="{titulo}">\n'
               f'<meta property="og:description" content="{descripcion}">\n'
-              '<style>body{margin:0}img{max-width:100%}[hidden]{display:none!important}</style>\n')
+              '<style>body{margin:0}img{max-width:100%}[hidden]{display:none!important}</style>\n' + stats)
     corte = html.index("<!--CUERPO-->")
     return cabeza + html[:corte] + "</head>\n<body>\n" + html[corte:] + "\n</body>\n</html>\n"
 
