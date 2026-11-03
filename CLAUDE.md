@@ -9,7 +9,7 @@ El usuario es Mateo (Coldwell Banker Zetaté, Punta del Este). Habla español ri
 - `python3 build.py` baja el inventario de Tokko y arma TODO: un mapa por barrio, `index.html` (portada), `seleccion/` y `datos.json`.
 - `python3 build.py --offline` usa la última copia local de Tokko (`tokko_cache.json`, no se sube).
 - Clave de Tokko: variable `TOKKO_KEY` o archivo local `.tokko_key`. **Nunca** commitearla: el repo es público y la clave da acceso a los contactos de clientes. En GitHub está como secreto `TOKKO_KEY`.
-- `.github/workflows/sincronizar.yml` corre el build todos los días y publica si cambió algo en Tokko (también con "Run workflow").
+- `.github/workflows/sincronizar.yml` corre el build cada hora y publica si cambió algo en Tokko o en la planilla de disponibilidad (también con "Run workflow").
 - Plantillas en `plantillas/` (`barrio.html`, `portada.html`, `comun.js` con idiomas/pines/WhatsApp/selección). Logos en `assets/`.
 - `sitio.json`: WhatsApp general (para propiedades sin agente con celular) y código de GoatCounter para estadísticas.
 
@@ -20,6 +20,14 @@ El usuario es Mateo (Coldwell Banker Zetaté, Punta del Este). Habla español ri
 - Textos por idioma: `bajada` {es,en,pt}, `datos` (chips con amenities, solo datos que salgan de una fuente), `puntos` (amenities en el mapa con lat/lng verificados en el satélite).
 - Corregir un pin: lo ideal es corregirlo en Tokko (se arregla solo al sincronizar). Si no, `ajustes`: {"<reference_code>": {"lat":..,"lng":..}} en el JSON del barrio.
 - `avisos.txt` lista los pines que comparten coordenadas (ubicación aproximada). En el mapa se muestran separados en un círculo y la ventanita dice "Ubicación aproximada".
+
+## Disponibilidad (agenda de temporada)
+
+- Planilla de Google con columnas `codigo`, `desde`, `hasta` (una fila por reserva, fechas inclusive: 26/12/2026 a 10/01/2027; sin año = temporada que viene). Otras columnas (ej. `nota`) no se publican.
+- En `sitio.json`, `"disponibilidad"`: id de la planilla (compartida "cualquiera con el link puede ver") o URL de un CSV.
+- Solo las propiedades que aparecen en la planilla muestran agenda. Código sin fechas = se sigue y está todo libre.
+- En la ventanita: "Ver disponibilidad" abre un calendario por mes (libre / ocupado tachado) y abajo los días libres del mes ("Libre: 11–14, 28–31").
+- Errores de la planilla (fechas raras, códigos que no existen) quedan en `avisos.txt`. La copia local `disponibilidad_cache.csv` no se sube.
 
 ## Revisar pines
 

@@ -1,6 +1,8 @@
 /* ===== Común a todas las páginas: idiomas, formato, pines, ventanita, WhatsApp, selección ===== */
 const TXT = {
   es: {
+    ver_disp: "Ver disponibilidad", ocultar_disp: "Ocultar disponibilidad", libre: "Libre", ocupado: "Ocupado",
+    libres_mes: "Libre", sin_libres: "Sin días libres este mes", todo_libre: "Todo el mes libre", dias_sem: "LMMJVSD",
     todas: "Todas", venta: "Venta", temporada: "Temporada", alquiler: "Alquiler", terrenos: "Terrenos",
     casa: "Casa", depto: "Departamento", terreno: "Terreno",
     dorm: "dorm.", dormitorios: "dormitorios", dormitorio: "dormitorio", bano: "baño", banos: "baños",
@@ -22,6 +24,8 @@ const TXT = {
     msg_sel: (para, url) => `${para ? "Selección para " + para : "Te comparto una selección de propiedades"} — Coldwell Banker Zetaté: ${url}`,
   },
   en: {
+    ver_disp: "See availability", ocultar_disp: "Hide availability", libre: "Available", ocupado: "Booked",
+    libres_mes: "Available", sin_libres: "Fully booked this month", todo_libre: "Available all month", dias_sem: "MTWTFSS",
     todas: "All", venta: "For sale", temporada: "Seasonal rent", alquiler: "Rent", terrenos: "Land",
     casa: "House", depto: "Apartment", terreno: "Land",
     dorm: "bd", dormitorios: "bedrooms", dormitorio: "bedroom", bano: "bath", banos: "baths",
@@ -43,6 +47,8 @@ const TXT = {
     msg_sel: (para, url) => `${para ? "Shortlist for " + para : "Here is a shortlist of properties"} — Coldwell Banker Zetaté: ${url}`,
   },
   pt: {
+    ver_disp: "Ver disponibilidade", ocultar_disp: "Ocultar disponibilidade", libre: "Livre", ocupado: "Ocupado",
+    libres_mes: "Livre", sin_libres: "Sem dias livres este mês", todo_libre: "Mês todo livre", dias_sem: "STQQSSD",
     todas: "Todas", venta: "Venda", temporada: "Temporada", alquiler: "Aluguel", terrenos: "Terrenos",
     casa: "Casa", depto: "Apartamento", terreno: "Terreno",
     dorm: "dorm.", dormitorios: "dormitórios", dormitorio: "dormitório", bano: "banheiro", banos: "banheiros",
@@ -214,6 +220,7 @@ function htmlVista(p, filtroOp) {
   const temp = p.ops.find(o => o.tipo === "temporada" && o.periodos && o.periodos.length > 1);
   const tarifas = temp ? `<details class="tarifas"><summary>${t("ver_tarifas")}</summary><table>${temp.periodos.map(x =>
     `<tr><td>${esc(periodo(x.periodo))}</td><td>${mon(x.moneda)} ${fmt(x.precio)}</td></tr>`).join("")}</table></details>` : "";
+  const agenda = Array.isArray(p.ocupado) ? `<details class="tarifas agenda"><summary>${t("ver_disp")}</summary><div class="cal"></div></details>` : "";
   const fav = FAV.tiene(p.ref);
   return `<div class="prev">
     ${f.length ? `<div class="carr">
@@ -229,6 +236,7 @@ function htmlVista(p, filtroOp) {
       <span class="specs">${specs(p)}</span>
       ${p.aprox ? `<span class="aprox">${t("aprox")}</span>` : ""}
       ${tarifas}
+      ${agenda}
       <div class="acciones">
         <a class="b-ficha" href="${esc(p.url)}" target="_blank" rel="noopener" data-ev="ficha">${t("ver_ficha")} ↗</a>
         <a class="b-wa" href="${esc(linkWA(p))}" target="_blank" rel="noopener" data-ev="whatsapp">${ICONO_WA}${t("consultar")}</a>
@@ -257,8 +265,70 @@ function armarVista(raizEl, p) {
     const on = FAV.alternar(p.ref);
     bf.setAttribute("aria-pressed", String(on)); bf.title = on ? t("guardada") : t("guardar");
   });
-  const det = raizEl.querySelector(".tarifas");
+  const det = raizEl.querySelector(".tarifas:not(.agenda)");
   if (det) { det.addEventListener("toggle", () => det.querySelector("summary").textContent = det.open ? t("ocultar_tarifas") : t("ver_tarifas")); L.DomEvent.disableScrollPropagation(det); }
+  const ag = raizEl.querySelector(".agenda");
+  if (ag) {
+    ag.addEventListener("toggle", () => {
+      ag.querySelector("summary").textContent = ag.open ? t("ocultar_disp") : t("ver_disp");
+      if (ag.open) { armarCalendario(ag.querySelector(".cal"), p); track("disponibilidad/" + p.ref); }
+      raizEl.querySelector(".prev")?.classList.toggle("con-agenda", ag.open);
+      raizEl.dispatchEvent(new CustomEvent("crece", { bubbles: true }));
+    });
+    L.DomEvent.disableScrollPropagation(ag); L.DomEvent.disableClickPropagation(ag);
+  }
+}
+
+/* --- agenda de disponibilidad (días ocupados vienen de la planilla, inclusive) --- */
+const iso = d => `${d.getFullYear()}-${String(d.getMonth() + 1).padStart(2, "0")}-${String(d.getDate()).padStart(2, "0")}`;
+function diasOcupados(p) {
+  const s = new Set();
+  for (const [a, b] of p.ocupado || []) {
+    const d = new Date(a + "T12:00"), fin = new Date(b + "T12:00");
+    for (; d <= fin; d.setDate(d.getDate() + 1)) s.add(iso(d));
+  }
+  return s;
+}
+function mesesAgenda(p) {
+  const hoy = new Date(), y = hoy.getFullYear(), m = hoy.getMonth();
+  const desde = new Date(y, m, 1);
+  let hasta = new Date(m <= 2 ? y : y + 1, 2, 1); /* hasta marzo de la temporada */
+  for (const [, b] of p.ocupado || []) { const f = new Date(b + "T12:00"); if (f > hasta) hasta = new Date(f.getFullYear(), f.getMonth(), 1); }
+  const meses = [];
+  for (const d = new Date(desde); d <= hasta && meses.length < 18; d.setMonth(d.getMonth() + 1)) meses.push(new Date(d));
+  const ini = meses.findIndex(d => d.getMonth() === 11 || d.getMonth() <= 2); /* arranca en la temporada */
+  return { meses, ini: Math.max(0, ini) };
+}
+function rangosTexto(dias) {
+  const r = [];
+  for (const d of dias) { const u = r[r.length - 1]; if (u && d === u[1] + 1) u[1] = d; else r.push([d, d]); }
+  return r.map(([a, b]) => a === b ? `${a}` : `${a}–${b}`).join(", ");
+}
+function armarCalendario(el, p) {
+  if (!el.dataset.listo) { el._occ = diasOcupados(p); Object.assign(el, mesesAgenda(p)); el._k = el.ini; el.dataset.listo = "1"; }
+  const d0 = el.meses[el._k], y = d0.getFullYear(), m = d0.getMonth();
+  const n = new Date(y, m + 1, 0).getDate(), hueco = (new Date(y, m, 1).getDay() + 6) % 7;
+  const hoy = iso(new Date());
+  const libres = [];
+  let celdas = "";
+  for (let i = 0; i < hueco; i++) celdas += "<span></span>";
+  for (let d = 1; d <= n; d++) {
+    const k = iso(new Date(y, m, d)), pasado = k < hoy, oc = el._occ.has(k);
+    if (!oc && !pasado) libres.push(d);
+    celdas += `<span class="d${oc ? " oc" : " li"}${pasado ? " pas" : ""}${k === hoy ? " hoy" : ""}">${d}</span>`;
+  }
+  const futuros = n - [...Array(n)].filter((_, i) => iso(new Date(y, m, i + 1)) < hoy).length;
+  const resumen = !futuros ? "" : !libres.length ? t("sin_libres") : libres.length === futuros && futuros === n ? t("todo_libre") : `${t("libres_mes")}: ${rangosTexto(libres)}`;
+  const nombre = new Intl.DateTimeFormat(LANG === "en" ? "en-US" : LANG, { month: "long", year: "numeric" }).format(d0).replace(/^./, c => c.toUpperCase());
+  el.innerHTML = `<div class="cal-cab">
+      <button type="button" class="cal-ant" aria-label="‹" ${el._k === 0 ? "disabled" : ""}>‹</button>
+      <span>${esc(nombre)}</span>
+      <button type="button" class="cal-sig" aria-label="›" ${el._k === el.meses.length - 1 ? "disabled" : ""}>›</button></div>
+    <div class="cal-grid">${[...t("dias_sem")].map(x => `<b>${x}</b>`).join("")}${celdas}</div>
+    <div class="cal-pie"><span class="cal-res">${esc(resumen)}</span>
+      <span class="cal-ley"><i class="li"></i>${t("libre")} <i class="oc"></i>${t("ocupado")}</span></div>`;
+  el.querySelector(".cal-ant").addEventListener("click", e => { e.preventDefault(); e.stopPropagation(); el._k--; armarCalendario(el, p); });
+  el.querySelector(".cal-sig").addEventListener("click", e => { e.preventDefault(); e.stopPropagation(); el._k++; armarCalendario(el, p); });
 }
 
 /* --- pin --- */

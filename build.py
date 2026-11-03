@@ -12,10 +12,15 @@ Fuentes de propiedades:
     "precio", "dormitorios". El script baja coordenadas, lote, fotos, baños y m².
   - Cualquier otra web: en "propiedades" con "lat" y "lng" a mano.
 
+Disponibilidad (agenda de temporada): planilla de Google con columnas codigo, desde, hasta
+(una fila por reserva; fechas inclusive, ej. 01/01/2027 a 15/01/2027). Se configura en sitio.json,
+"disponibilidad": id de la planilla (compartida "cualquiera con el link") o URL de un CSV.
+Una fila con código y sin fechas = la propiedad se sigue en la agenda y está toda libre.
+
 Para corregir un pin: en el JSON del barrio, "ajustes": {"<referencia>": {"lat":..,"lng":..}}.
 Las referencias son el reference_code de Tokko (ej. CHO8077066) o el código de amaira.
 """
-import json, math, os, re, statistics, sys, unicodedata, urllib.parse, urllib.request
+import csv, datetime, io, json, math, os, re, statistics, sys, unicodedata, urllib.parse, urllib.request
 
 AQUI = os.path.dirname(os.path.abspath(__file__))
 UA = {"User-Agent": "Mozilla/5.0 (mapas-barrios)"}
@@ -205,6 +210,78 @@ def manual_a_prop(p, wa_general):
     }
 
 
+# ---------------------------------------------------------------- disponibilidad
+def fecha(texto, hoy):
+    """dd/mm/aaaa, dd/mm/aa, aaaa-mm-dd o dd/mm (sin año = la temporada que viene)."""
+    t = texto.strip()
+    m = re.fullmatch(r"(\d{4})-(\d{1,2})-(\d{1,2})", t)
+    if m:
+        return datetime.date(int(m[1]), int(m[2]), int(m[3]))
+    m = re.fullmatch(r"(\d{1,2})[/.-](\d{1,2})(?:[/.-](\d{2,4}))?", t)
+    if not m:
+        raise ValueError(f"fecha que no entiendo: {texto!r}")
+    d, mes = int(m[1]), int(m[2])
+    if m[3]:
+        a = int(m[3]) + (2000 if len(m[3]) == 2 else 0)
+    else:  # temporada de julio a junio
+        inicio = hoy.year if hoy.month >= 7 else hoy.year - 1
+        a = inicio if mes >= 7 else inicio + 1
+    return datetime.date(a, mes, d)
+
+
+def leer_disponibilidad(sitio, offline, avisos):
+    """{referencia: [[desde, hasta], ...]} con los días ocupados (inclusive)."""
+    fuente = (sitio.get("disponibilidad") or "").strip()
+    cache = os.path.join(AQUI, "disponibilidad_cache.csv")  # puede tener notas internas: no se sube
+    texto = None
+    if fuente and not offline:
+        url = fuente if fuente.startswith("http") else \
+            f"https://docs.google.com/spreadsheets/d/{fuente}/export?format=csv"
+        try:
+            with urllib.request.urlopen(urllib.request.Request(url, headers=UA), timeout=60) as r:
+                texto = r.read().decode("utf-8-sig")
+            if texto.lstrip().startswith("<"):
+                raise ValueError("la planilla no está compartida con 'cualquiera con el link'")
+            open(cache, "w", encoding="utf-8").write(texto)
+        except Exception as e:
+            print(f"  ! no pude leer la planilla de disponibilidad ({e}); uso la última copia")
+            texto = None
+    if texto is None and os.path.exists(cache):
+        texto = open(cache, encoding="utf-8").read()
+    if not texto:
+        return {}
+    hoy = datetime.date.today()
+    filas = list(csv.reader(io.StringIO(texto)))
+    cab = [slugify(c) for c in filas[0]] if filas else []
+    col = lambda *ns: next((cab.index(n) for n in ns if n in cab), None)
+    ic, id_, ih = col("codigo", "referencia", "ref"), col("desde", "entrada", "check-in"), col("hasta", "salida", "check-out")
+    if ic is None or id_ is None:
+        avisos.append("Disponibilidad: la planilla tiene que tener columnas codigo, desde, hasta")
+        return {}
+    out = {}
+    for n, f in enumerate(filas[1:], start=2):
+        f += [""] * (len(cab) - len(f))
+        ref = f[ic].strip().upper()
+        if not ref:
+            continue
+        rangos = out.setdefault(ref, [])
+        d, h = f[id_].strip(), (f[ih].strip() if ih is not None else "")
+        if not d and not h:
+            continue
+        try:
+            a = fecha(d or h, hoy)
+            b = fecha(h, hoy) if h else a
+            if b < a:
+                a, b = b, a
+            if b >= hoy - datetime.timedelta(days=31):
+                rangos.append([a.isoformat(), b.isoformat()])
+        except ValueError as e:
+            avisos.append(f"Disponibilidad, fila {n} ({ref}): {e}")
+    for r in out.values():
+        r.sort()
+    return out
+
+
 # ---------------------------------------------------------------- armado
 def leer_plantilla(nombre):
     return open(os.path.join(AQUI, "plantillas", nombre), encoding="utf-8").read()
@@ -267,6 +344,8 @@ def main():
             print(f"  + barrio nuevo desde Tokko: {loc}")
 
     todo, resumen, avisos = [], [], []
+    disp = leer_disponibilidad(sitio, offline, avisos)
+    sitio = {k: v for k, v in sitio.items() if k != "disponibilidad"}
     for slug, c in sorted(configs.items()):
         props = [tokko_a_prop(p, wa_general) for p in por_loc.get(c.get("tokko_location"), [])]
         props += [manual_a_prop(p, wa_general) for p in c.get("propiedades", [])]
@@ -278,6 +357,8 @@ def main():
             if aj:
                 p["lat"], p["lng"] = aj["lat"], aj["lng"]
                 p["verificado"] = True
+            if p["ref"].upper() in disp:
+                p["ocupado"] = disp[p["ref"].upper()]
             p["barrio"] = slug
             p["barrio_nombre"] = c["nombre"]
         # fuera de zona: a más de 5 km de la mediana del barrio (probable error de carga en Tokko)
@@ -333,6 +414,8 @@ def main():
                     {"modo": "seleccion", "nombre": "", "zona": "", "bajada": {}, "datos": [], "puntos": [],
                      "propiedades": [], "sitio": sitio},
                     "Selección de propiedades de Coldwell Banker Zetaté."))
+    refs = {p["ref"].upper() for p in todo}
+    avisos += [f"Disponibilidad: el código {r} de la planilla no está en ningún mapa" for r in disp if r not in refs]
     escribir(os.path.join(AQUI, "avisos.txt"), "\n".join(avisos) + "\n")
     print(f"listo: {len(resumen)} barrios, {len(todo)} propiedades, {len(avisos)} pines aproximados (ver avisos.txt)")
 

@@ -1,8 +1,8 @@
-name: Sincronizar con Tokko
+name: Sincronizar con Tokko y disponibilidad
 
 on:
   schedule:
-    - cron: "17 9 * * *"   # todos los días 6:17 (Uruguay)
+    - cron: "17 * * * *"   # cada hora (Tokko + planilla de disponibilidad)
   workflow_dispatch:        # botón "Run workflow" para actualizar al instante
 
 permissions:
@@ -16,7 +16,7 @@ jobs:
       - uses: actions/setup-python@v5
         with:
           python-version: "3.12"
-      - name: Armar los mapas con los datos de Tokko
+      - name: Armar los mapas con los datos de Tokko y la planilla de disponibilidad
         env:
           TOKKO_KEY: ${{ secrets.TOKKO_KEY }}
         run: python3 build.py
