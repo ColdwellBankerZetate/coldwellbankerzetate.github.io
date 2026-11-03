@@ -23,10 +23,10 @@ El usuario es Mateo (Coldwell Banker Zetaté, Punta del Este). Habla español ri
 
 ## Disponibilidad (agenda de temporada)
 
-- Planilla de Google "Disponibilidad temporada" (la carga solo Mateo): una fila por casa, `Propiedad` = "Barrio · título (REF)" y `Ocupado` = fechas tomadas, ej. `26/12-10/1, 15/1 al 27/1` (inclusive; sin año = temporada que viene).
-- `Ocupado` vacío = esa casa no muestra agenda. `libre` = todo libre. Fecha mal escrita = no se muestra su agenda y queda en `avisos.txt`.
+- Planilla de Google "Disponibilidad temporada" (la carga solo Mateo), hoja `Disponibilidad`: `Barrio | Casa | Código | Ocupado`.
+- La lista de casas la mantiene sola el script `planilla/Codigo.gs` (pegado en Extensiones → Apps Script de la planilla, función `instalar` una vez): todos los días lee `datos.json` del sitio, agrega casas nuevas de temporada, ordena por barrio, linkea la ficha y conserva "Ocupado". Casas que salen de Tokko con fechas cargadas quedan abajo en gris.
+- `Ocupado` = fechas tomadas, ej. `26/12-10/1, 15/1 al 27/1` (inclusive; sin año = temporada que viene). Vacío = esa casa no muestra agenda. `libre` = todo libre. Fecha mal escrita = no se muestra su agenda y queda en `avisos.txt`.
 - Si Mateo pasa "casa + fechas" por el chat, no hay herramienta para editar la planilla: decirle qué escribir en qué fila.
-- Casas nuevas de temporada: `python3 planilla.py` arma `planilla_disponibilidad.csv` con todas las filas; agregar a la planilla las que falten.
 - En `sitio.json`, `"disponibilidad"`: id de la planilla (compartida "cualquiera con el link puede ver") o URL de un CSV.
 - En la ventanita: "Ver disponibilidad" abre un calendario por mes (libre / ocupado tachado) y abajo los días libres del mes ("Libre: 11–14, 28–31").
 - La copia local `disponibilidad_cache.csv` no se sube.

@@ -254,7 +254,7 @@ def leer_disponibilidad(sitio, offline, avisos):
     filas = list(csv.reader(io.StringIO(texto)))
     cab = [slugify(c) for c in filas[0]] if filas else []
     col = lambda *ns: next((cab.index(n) for n in ns if n in cab), None)
-    ic = col("propiedad", "codigo", "referencia", "ref")
+    ic = col("codigo", "referencia", "ref", "propiedad")
     io_ = col("ocupado", "ocupada", "reservas")
     id_, ih = col("desde", "entrada"), col("hasta", "salida")
     if ic is None or (io_ is None and id_ is None):
