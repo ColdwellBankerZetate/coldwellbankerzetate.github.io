@@ -12,10 +12,10 @@ Fuentes de propiedades:
     "precio", "dormitorios". El script baja coordenadas, lote, fotos, baños y m².
   - Cualquier otra web: en "propiedades" con "lat" y "lng" a mano.
 
-Disponibilidad (agenda de temporada): planilla de Google con columnas codigo, desde, hasta
-(una fila por reserva; fechas inclusive, ej. 01/01/2027 a 15/01/2027). Se configura en sitio.json,
-"disponibilidad": id de la planilla (compartida "cualquiera con el link") o URL de un CSV.
-Una fila con código y sin fechas = la propiedad se sigue en la agenda y está toda libre.
+Disponibilidad (agenda de temporada): planilla de Google con una fila por casa (la arma planilla.py)
+y columna Ocupado con las fechas tomadas, ej. "26/12-10/1, 15/1 al 27/1" (inclusive; sin año = la
+temporada que viene). Vacío = esa casa no muestra agenda; "libre" = todo libre. Se configura en sitio.json,
+"disponibilidad": id de la planilla (compartida "cualquiera con el link puede ver") o URL de un CSV.
 
 Para corregir un pin: en el JSON del barrio, "ajustes": {"<referencia>": {"lat":..,"lng":..}}.
 Las referencias son el reference_code de Tokko (ej. CHO8077066) o el código de amaira.
@@ -254,31 +254,47 @@ def leer_disponibilidad(sitio, offline, avisos):
     filas = list(csv.reader(io.StringIO(texto)))
     cab = [slugify(c) for c in filas[0]] if filas else []
     col = lambda *ns: next((cab.index(n) for n in ns if n in cab), None)
-    ic, id_, ih = col("codigo", "referencia", "ref"), col("desde", "entrada", "check-in"), col("hasta", "salida", "check-out")
-    if ic is None or id_ is None:
-        avisos.append("Disponibilidad: la planilla tiene que tener columnas codigo, desde, hasta")
+    ic = col("propiedad", "codigo", "referencia", "ref")
+    io_ = col("ocupado", "ocupada", "reservas")
+    id_, ih = col("desde", "entrada"), col("hasta", "salida")
+    if ic is None or (io_ is None and id_ is None):
+        avisos.append("Disponibilidad: la planilla tiene que tener columnas Propiedad y Ocupado")
         return {}
     out = {}
     for n, f in enumerate(filas[1:], start=2):
         f += [""] * (len(cab) - len(f))
-        ref = f[ic].strip().upper()
+        celda = f[ic].strip().upper()
+        m = re.search(r"\(([A-Z]+\d+)\)\s*$", celda)  # "Pinar del Faro · 5 suites (CHO8560119)"
+        ref = m.group(1) if m else celda
         if not ref:
             continue
-        rangos = out.setdefault(ref, [])
-        d, h = f[id_].strip(), (f[ih].strip() if ih is not None else "")
-        if not d and not h:
+        if io_ is not None:  # "26/12-10/1, 15/1 al 27/1" · "libre" · vacío = no se muestra agenda
+            texto_oc = f[io_].strip()
+            if not texto_oc:
+                continue
+            tramos = [] if re.fullmatch(r"(?i)\s*(todo\s+)?libre\s*", texto_oc) else \
+                [re.split(r"\s*(?:-|–|al|a|hasta)\s+|\s*[-–]\s*", x.strip(), maxsplit=1)
+                 for x in re.split(r"[,;\n]+|\s+y\s+", texto_oc) if x.strip()]
+        else:
+            tramos = [[f[id_].strip(), f[ih].strip() if ih is not None else ""]]
+            tramos = [] if not any(tramos[0]) else tramos
+        if ref in out and out[ref] is None:
             continue
-        try:
-            a = fecha(d or h, hoy)
-            b = fecha(h, hoy) if h else a
-            if b < a:
-                a, b = b, a
-            if b >= hoy - datetime.timedelta(days=31):
-                rangos.append([a.isoformat(), b.isoformat()])
-        except ValueError as e:
-            avisos.append(f"Disponibilidad, fila {n} ({ref}): {e}")
-    for r in out.values():
-        r.sort()
+        rangos = out.setdefault(ref, [])
+        for tr in tramos:
+            try:
+                d, h = (tr + [""])[:2]
+                a = fecha(d or h, hoy)
+                b = fecha(h, hoy) if h else a
+                if b < a:
+                    a, b = b, a
+                if b >= hoy - datetime.timedelta(days=31):
+                    rangos.append([a.isoformat(), b.isoformat()])
+            except ValueError as e:  # fecha mal escrita: mejor no mostrar agenda que mostrarla mal
+                avisos.append(f"Disponibilidad, fila {n} ({ref}): {e} — no se muestra su agenda")
+                out[ref] = None
+                break
+    out = {k: sorted(v) for k, v in out.items() if v is not None}
     return out
 
 

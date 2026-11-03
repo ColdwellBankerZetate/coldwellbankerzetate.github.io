@@ -23,11 +23,13 @@ El usuario es Mateo (Coldwell Banker Zetaté, Punta del Este). Habla español ri
 
 ## Disponibilidad (agenda de temporada)
 
-- Planilla de Google con columnas `codigo`, `desde`, `hasta` (una fila por reserva, fechas inclusive: 26/12/2026 a 10/01/2027; sin año = temporada que viene). Otras columnas (ej. `nota`) no se publican.
+- Planilla de Google "Disponibilidad temporada" (la carga solo Mateo): una fila por casa, `Propiedad` = "Barrio · título (REF)" y `Ocupado` = fechas tomadas, ej. `26/12-10/1, 15/1 al 27/1` (inclusive; sin año = temporada que viene).
+- `Ocupado` vacío = esa casa no muestra agenda. `libre` = todo libre. Fecha mal escrita = no se muestra su agenda y queda en `avisos.txt`.
+- Si Mateo pasa "casa + fechas" por el chat, no hay herramienta para editar la planilla: decirle qué escribir en qué fila.
+- Casas nuevas de temporada: `python3 planilla.py` arma `planilla_disponibilidad.csv` con todas las filas; agregar a la planilla las que falten.
 - En `sitio.json`, `"disponibilidad"`: id de la planilla (compartida "cualquiera con el link puede ver") o URL de un CSV.
-- Solo las propiedades que aparecen en la planilla muestran agenda. Código sin fechas = se sigue y está todo libre.
 - En la ventanita: "Ver disponibilidad" abre un calendario por mes (libre / ocupado tachado) y abajo los días libres del mes ("Libre: 11–14, 28–31").
-- Errores de la planilla (fechas raras, códigos que no existen) quedan en `avisos.txt`. La copia local `disponibilidad_cache.csv` no se sube.
+- La copia local `disponibilidad_cache.csv` no se sube.
 
 ## Revisar pines
 
