@@ -4,9 +4,9 @@
 <meta charset="utf-8">
 <meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
 <meta name="theme-color" content="#0a0a0a">
-<meta name="description" content="4 propiedades de Coldwell Banker Zetaté en Club de Mar, sobre mapa satelital.">
+<meta name="description" content="5 propiedades de Coldwell Banker Zetaté en Club de Mar, sobre mapa satelital.">
 <meta property="og:title" content="Club de Mar · Coldwell Banker Zetaté">
-<meta property="og:description" content="4 propiedades de Coldwell Banker Zetaté en Club de Mar, sobre mapa satelital.">
+<meta property="og:description" content="5 propiedades de Coldwell Banker Zetaté en Club de Mar, sobre mapa satelital.">
 <style>body{margin:0}img{max-width:100%}[hidden]{display:none!important}</style>
 <script data-goatcounter="https://cbzetate.goatcounter.com/count" async src="//gc.zgo.at/count.js"></script>
 <title>Club de Mar · Coldwell Banker Zetaté</title>
@@ -152,7 +152,7 @@ h1{font-family:var(--f-display);font-style:italic;font-weight:500;font-size:44px
 .carr .cont{position:absolute;right:8px;bottom:8px;background:rgba(10,10,10,.65);color:#fff;font-size:11px;font-weight:600;padding:3px 8px;border-radius:999px;font-variant-numeric:tabular-nums}
 .carr .chip-tipo{position:absolute;left:8px;top:8px;background:rgba(10,10,10,.65);color:#fff;font-size:10px;font-weight:600;letter-spacing:.16em;text-transform:uppercase;padding:4px 8px;border-radius:999px}
 @media (hover:hover){.carr .flecha{opacity:0}.carr:hover .flecha:not(:disabled){opacity:.9}}
-.prev .cuerpo{display:grid;gap:7px;padding:12px 14px 14px}
+.prev .cuerpo{display:grid;grid-template-columns:minmax(0,1fr);gap:7px;padding:12px 14px 14px}
 .prev .op{display:grid;gap:1px}
 .prev .op-n{font-size:10px;font-weight:600;letter-spacing:.18em;text-transform:uppercase;color:var(--muted);display:flex;align-items:center;gap:6px}
 .prev .op-n::before{content:"";width:6px;height:6px;border-radius:50%;background:var(--venta)}
@@ -166,6 +166,22 @@ h1{font-family:var(--f-display);font-style:italic;font-weight:500;font-size:44px
 .tarifas td{padding:4px 0;border-bottom:1px solid var(--line)}
 .tarifas td+td{text-align:right;color:var(--fg)}
 .tarifas td:first-child{color:var(--muted)}
+.agenda .cal{margin-top:8px;font-variant-numeric:tabular-nums}
+.cal-cab{display:flex;align-items:center;justify-content:space-between;font-size:12px;font-weight:600;letter-spacing:.06em;margin-bottom:6px}
+.cal-cab button{background:none;border:1px solid var(--line-2);border-radius:6px;width:26px;height:24px;cursor:pointer;color:var(--fg);line-height:1}
+.cal-cab button:disabled{opacity:.25;cursor:default}
+.cal-grid{display:grid;grid-template-columns:repeat(7,minmax(0,1fr));gap:2px;text-align:center;font-size:11.5px}
+.cal-grid b{font-size:9.5px;font-weight:600;letter-spacing:.1em;color:var(--dim);padding-bottom:2px}
+.cal-grid .d{padding:4px 0;border-radius:4px}
+.cal-grid .li{background:rgba(255,255,255,.07);color:var(--fg)}
+.cal-grid .oc{background:rgba(227,20,30,.16);color:rgba(243,241,236,.38);text-decoration:line-through}
+.cal-grid .pas{opacity:.3}
+.cal-grid .hoy{box-shadow:inset 0 0 0 1px var(--champ)}
+.cal-pie{display:grid;gap:4px;margin-top:7px;font-size:11.5px}
+.cal-res{color:var(--champ)}
+.cal-ley{display:flex;align-items:center;gap:5px;color:var(--muted);font-size:10.5px}
+.cal-ley i{width:9px;height:9px;border-radius:2px;display:inline-block}
+.cal-ley i.li{background:rgba(255,255,255,.18)}.cal-ley i.oc{background:rgba(227,20,30,.45);margin-left:6px}
 .prev .acciones{display:grid;grid-template-columns:1fr 1fr auto;gap:6px;margin-top:4px}
 .prev .acciones a{display:inline-flex;align-items:center;justify-content:center;gap:6px;text-decoration:none;font-size:11px;font-weight:700;letter-spacing:.12em;text-transform:uppercase;padding:9px 8px;border-radius:8px;white-space:nowrap}
 .prev .b-ficha{background:var(--fg);color:var(--ink)}
@@ -219,6 +235,8 @@ h1{font-family:var(--f-display);font-style:italic;font-weight:500;font-size:44px
   .abajo .b-sec{background:var(--glass);backdrop-filter:blur(10px);-webkit-backdrop-filter:blur(10px)}
   .leaflet-control-zoom{display:none}
   .preview .leaflet-popup-content{width:262px!important}
+  .prev .acciones a{letter-spacing:.06em;padding-inline:6px}
+  .prev.con-agenda .carr{display:none} /* agenda abierta: sin fotos para que entre en pantalla */
   .hoja-comp{position:fixed;left:0;right:0;bottom:0;z-index:1500;background:#0d0d0d;border-top:1px solid var(--line-2);border-radius:18px 18px 0 0;padding-block:18px calc(18px + env(safe-area-inset-bottom,0px));padding-left:max(18px,env(safe-area-inset-left,0px));padding-right:max(18px,env(safe-area-inset-right,0px));box-shadow:0 -20px 50px rgba(0,0,0,.6)}
 }
 @media (min-width:900px){.ayuda,.hoja-comp{display:none!important}}
@@ -263,6 +281,8 @@ h1{font-family:var(--f-display);font-style:italic;font-weight:500;font-size:44px
 /* ===== Común a todas las páginas: idiomas, formato, pines, ventanita, WhatsApp, selección ===== */
 const TXT = {
   es: {
+    ver_disp: "Ver disponibilidad", ocultar_disp: "Ocultar disponibilidad", libre: "Libre", ocupado: "Ocupado",
+    libres_mes: "Libre", sin_libres: "Sin días libres este mes", todo_libre: "Todo el mes libre", dias_sem: "LMMJVSD",
     todas: "Todas", venta: "Venta", temporada: "Temporada", alquiler: "Alquiler", terrenos: "Terrenos",
     casa: "Casa", depto: "Departamento", terreno: "Terreno",
     dorm: "dorm.", dormitorios: "dormitorios", dormitorio: "dormitorio", bano: "baño", banos: "baños",
@@ -284,6 +304,8 @@ const TXT = {
     msg_sel: (para, url) => `${para ? "Selección para " + para : "Te comparto una selección de propiedades"} — Coldwell Banker Zetaté: ${url}`,
   },
   en: {
+    ver_disp: "See availability", ocultar_disp: "Hide availability", libre: "Available", ocupado: "Booked",
+    libres_mes: "Available", sin_libres: "Fully booked this month", todo_libre: "Available all month", dias_sem: "MTWTFSS",
     todas: "All", venta: "For sale", temporada: "Seasonal rent", alquiler: "Rent", terrenos: "Land",
     casa: "House", depto: "Apartment", terreno: "Land",
     dorm: "bd", dormitorios: "bedrooms", dormitorio: "bedroom", bano: "bath", banos: "baths",
@@ -305,6 +327,8 @@ const TXT = {
     msg_sel: (para, url) => `${para ? "Shortlist for " + para : "Here is a shortlist of properties"} — Coldwell Banker Zetaté: ${url}`,
   },
   pt: {
+    ver_disp: "Ver disponibilidade", ocultar_disp: "Ocultar disponibilidade", libre: "Livre", ocupado: "Ocupado",
+    libres_mes: "Livre", sin_libres: "Sem dias livres este mês", todo_libre: "Mês todo livre", dias_sem: "STQQSSD",
     todas: "Todas", venta: "Venda", temporada: "Temporada", alquiler: "Aluguel", terrenos: "Terrenos",
     casa: "Casa", depto: "Apartamento", terreno: "Terreno",
     dorm: "dorm.", dormitorios: "dormitórios", dormitorio: "dormitório", bano: "banheiro", banos: "banheiros",
@@ -476,6 +500,7 @@ function htmlVista(p, filtroOp) {
   const temp = p.ops.find(o => o.tipo === "temporada" && o.periodos && o.periodos.length > 1);
   const tarifas = temp ? `<details class="tarifas"><summary>${t("ver_tarifas")}</summary><table>${temp.periodos.map(x =>
     `<tr><td>${esc(periodo(x.periodo))}</td><td>${mon(x.moneda)} ${fmt(x.precio)}</td></tr>`).join("")}</table></details>` : "";
+  const agenda = Array.isArray(p.ocupado) ? `<details class="tarifas agenda"><summary>${t("ver_disp")}</summary><div class="cal"></div></details>` : "";
   const fav = FAV.tiene(p.ref);
   return `<div class="prev">
     ${f.length ? `<div class="carr">
@@ -491,6 +516,7 @@ function htmlVista(p, filtroOp) {
       <span class="specs">${specs(p)}</span>
       ${p.aprox ? `<span class="aprox">${t("aprox")}</span>` : ""}
       ${tarifas}
+      ${agenda}
       <div class="acciones">
         <a class="b-ficha" href="${esc(p.url)}" target="_blank" rel="noopener" data-ev="ficha">${t("ver_ficha")} ↗</a>
         <a class="b-wa" href="${esc(linkWA(p))}" target="_blank" rel="noopener" data-ev="whatsapp">${ICONO_WA}${t("consultar")}</a>
@@ -519,8 +545,70 @@ function armarVista(raizEl, p) {
     const on = FAV.alternar(p.ref);
     bf.setAttribute("aria-pressed", String(on)); bf.title = on ? t("guardada") : t("guardar");
   });
-  const det = raizEl.querySelector(".tarifas");
+  const det = raizEl.querySelector(".tarifas:not(.agenda)");
   if (det) { det.addEventListener("toggle", () => det.querySelector("summary").textContent = det.open ? t("ocultar_tarifas") : t("ver_tarifas")); L.DomEvent.disableScrollPropagation(det); }
+  const ag = raizEl.querySelector(".agenda");
+  if (ag) {
+    ag.addEventListener("toggle", () => {
+      ag.querySelector("summary").textContent = ag.open ? t("ocultar_disp") : t("ver_disp");
+      if (ag.open) { armarCalendario(ag.querySelector(".cal"), p); track("disponibilidad/" + p.ref); }
+      raizEl.querySelector(".prev")?.classList.toggle("con-agenda", ag.open);
+      raizEl.dispatchEvent(new CustomEvent("crece", { bubbles: true }));
+    });
+    L.DomEvent.disableScrollPropagation(ag); L.DomEvent.disableClickPropagation(ag);
+  }
+}
+
+/* --- agenda de disponibilidad (días ocupados vienen de la planilla, inclusive) --- */
+const iso = d => `${d.getFullYear()}-${String(d.getMonth() + 1).padStart(2, "0")}-${String(d.getDate()).padStart(2, "0")}`;
+function diasOcupados(p) {
+  const s = new Set();
+  for (const [a, b] of p.ocupado || []) {
+    const d = new Date(a + "T12:00"), fin = new Date(b + "T12:00");
+    for (; d <= fin; d.setDate(d.getDate() + 1)) s.add(iso(d));
+  }
+  return s;
+}
+function mesesAgenda(p) {
+  const hoy = new Date(), y = hoy.getFullYear(), m = hoy.getMonth();
+  const desde = new Date(y, m, 1);
+  let hasta = new Date(m <= 2 ? y : y + 1, 2, 1); /* hasta marzo de la temporada */
+  for (const [, b] of p.ocupado || []) { const f = new Date(b + "T12:00"); if (f > hasta) hasta = new Date(f.getFullYear(), f.getMonth(), 1); }
+  const meses = [];
+  for (const d = new Date(desde); d <= hasta && meses.length < 18; d.setMonth(d.getMonth() + 1)) meses.push(new Date(d));
+  const ini = meses.findIndex(d => d.getMonth() === 11 || d.getMonth() <= 2); /* arranca en la temporada */
+  return { meses, ini: Math.max(0, ini) };
+}
+function rangosTexto(dias) {
+  const r = [];
+  for (const d of dias) { const u = r[r.length - 1]; if (u && d === u[1] + 1) u[1] = d; else r.push([d, d]); }
+  return r.map(([a, b]) => a === b ? `${a}` : `${a}–${b}`).join(", ");
+}
+function armarCalendario(el, p) {
+  if (!el.dataset.listo) { el._occ = diasOcupados(p); Object.assign(el, mesesAgenda(p)); el._k = el.ini; el.dataset.listo = "1"; }
+  const d0 = el.meses[el._k], y = d0.getFullYear(), m = d0.getMonth();
+  const n = new Date(y, m + 1, 0).getDate(), hueco = (new Date(y, m, 1).getDay() + 6) % 7;
+  const hoy = iso(new Date());
+  const libres = [];
+  let celdas = "";
+  for (let i = 0; i < hueco; i++) celdas += "<span></span>";
+  for (let d = 1; d <= n; d++) {
+    const k = iso(new Date(y, m, d)), pasado = k < hoy, oc = el._occ.has(k);
+    if (!oc && !pasado) libres.push(d);
+    celdas += `<span class="d${oc ? " oc" : " li"}${pasado ? " pas" : ""}${k === hoy ? " hoy" : ""}">${d}</span>`;
+  }
+  const futuros = n - [...Array(n)].filter((_, i) => iso(new Date(y, m, i + 1)) < hoy).length;
+  const resumen = !futuros ? "" : !libres.length ? t("sin_libres") : libres.length === futuros && futuros === n ? t("todo_libre") : `${t("libres_mes")}: ${rangosTexto(libres)}`;
+  const nombre = new Intl.DateTimeFormat(LANG === "en" ? "en-US" : LANG, { month: "long", year: "numeric" }).format(d0).replace(/^./, c => c.toUpperCase());
+  el.innerHTML = `<div class="cal-cab">
+      <button type="button" class="cal-ant" aria-label="‹" ${el._k === 0 ? "disabled" : ""}>‹</button>
+      <span>${esc(nombre)}</span>
+      <button type="button" class="cal-sig" aria-label="›" ${el._k === el.meses.length - 1 ? "disabled" : ""}>›</button></div>
+    <div class="cal-grid">${[...t("dias_sem")].map(x => `<b>${x}</b>`).join("")}${celdas}</div>
+    <div class="cal-pie"><span class="cal-res">${esc(resumen)}</span>
+      <span class="cal-ley"><i class="li"></i>${t("libre")} <i class="oc"></i>${t("ocupado")}</span></div>`;
+  el.querySelector(".cal-ant").addEventListener("click", e => { e.preventDefault(); e.stopPropagation(); el._k--; armarCalendario(el, p); });
+  el.querySelector(".cal-sig").addEventListener("click", e => { e.preventDefault(); e.stopPropagation(); el._k++; armarCalendario(el, p); });
 }
 
 /* --- pin --- */
@@ -532,7 +620,7 @@ function htmlPin(p, filtroOp) {
 
 </script>
 <script>
-const DATOS = {"modo":"barrio","slug":"club-de-mar","nombre":"Club de Mar","zona":"José Ignacio · Maldonado","bajada":{},"datos":[],"puntos":[],"propiedades":[{"ref":"CHO10824921","fuente":"tokko","tipo":"casa","titulo":"Casa en Club de Mar, José Ignacio – 5 suites y 437 m² construidos","url":"https://ficha.info/p/eTAdFdUJiwuUla","lat":-34.838762794583246,"lng":-54.6390223439026,"lote":null,"dormitorios":5,"banos":6,"m2_cubiertos":437.33,"m2_terreno":1200.0,"huespedes":null,"ops":[{"tipo":"venta","precio":3000000,"moneda":"USD","unidad":null}],"fotos":["https://static.tokkobroker.com/pictures/10824921_90623259218228878097916284192761121096657292677251090354702396755764570114966.jpg","https://static.tokkobroker.com/pictures/10824921_82328689291682854070793927134508578748974382363068404212458714078156967180492.jpg","https://static.tokkobroker.com/pictures/10824921_16918856240212370904234504160835418316048717857943824213719530640999124741006.jpg","https://static.tokkobroker.com/pictures/10824921_103425047227726660036353748693113878488004132369423738675895044738744329335023.jpg","https://static.tokkobroker.com/pictures/10824921_11344632712810219223183966835359135407551644975566725979020652511125244460477.jpg","https://static.tokkobroker.com/pictures/10824921_109972125253506975543820877365124722151901450283851729829351756615937369478469.jpg","https://static.tokkobroker.com/pictures/10824921_85245309616697096666295981354075150890573318720718212707633967528154999204541.jpg","https://static.tokkobroker.com/pictures/10824921_8362797892105567439075536352045292760727702706163272747637900079809141159048.jpg","https://static.tokkobroker.com/pictures/10824921_77497002788428154007502147737373323494322784798795452562515532110128759283385.jpg","https://static.tokkobroker.com/pictures/10824921_44414593854238316080997169616776765469969570418046385602740318001971582883415.jpg"],"agente":{"nombre":"Graciana Fernandez","wa":"5491169763297"},"barrio":"club-de-mar","barrio_nombre":"Club de Mar"},{"ref":"CHO8441423","fuente":"tokko","tipo":"casa","titulo":"Casa en Club de Mar, José Ignacio – 4 suites con acceso directo a la playa","url":"https://ficha.info/p/eJz99dUJiruSAa","lat":-34.8377237,"lng":-54.6407175,"lote":null,"dormitorios":4,"banos":5,"m2_cubiertos":10.0,"m2_terreno":10.0,"huespedes":null,"ops":[{"tipo":"temporada","precio":45000,"moneda":"USD","unidad":"quincena","periodos":[{"periodo":"1ra quincena de enero","precio":45000,"moneda":"USD","n":6}]}],"fotos":["https://static.tokkobroker.com/pictures/8441423_67100339195345044327688557079289778852131654711947906614345004121821945487527.jpg","https://static.tokkobroker.com/pictures/8441423_65319735798828661419165631991863276978744807814800001731483269423574610260347.jpg","https://static.tokkobroker.com/pictures/8441423_31960286011246266322254637803929292895294008350395511081333718774059614640253.jpg","https://static.tokkobroker.com/pictures/8441423_21544802602901912265114114209276714670224902815718236125196067851945637581190.jpg","https://static.tokkobroker.com/pictures/8441423_57445367096933376156532241783896963067788368219006811968456941990834130659076.jpg","https://static.tokkobroker.com/pictures/8441423_9322425118125011658127688182068475797547015221305470678980798248505498191879.jpg","https://static.tokkobroker.com/pictures/8441423_102292309131729744707839217960127906883549985211916210432258980055533125140455.jpg","https://static.tokkobroker.com/pictures/8441423_28856053906158159764208267270644620713611664287011654594506943930738860484412.jpg","https://static.tokkobroker.com/pictures/8441423_98083226016572985764023734919949900252372915109621588856578617846332202171352.jpg","https://static.tokkobroker.com/pictures/8441423_62310490056511659855738761826609132524990691925379170237811600100674651687536.jpg"],"agente":{"nombre":"Graciana Fernandez","wa":"5491169763297"},"barrio":"club-de-mar","barrio_nombre":"Club de Mar","aprox":true},{"ref":"CHO8571448","fuente":"tokko","tipo":"casa","titulo":"Casa en Club de Mar, José Ignacio – 4 dormitorios, piscina y diseño contemporáneo","url":"https://ficha.info/p/eJ7ZkdUJirLNba","lat":-34.8377237,"lng":-54.6407175,"lote":null,"dormitorios":4,"banos":4,"m2_cubiertos":10.0,"m2_terreno":1200.0,"huespedes":null,"ops":[{"tipo":"alquiler","precio":55000,"moneda":"USD","unidad":"mes"}],"fotos":["https://static.tokkobroker.com/pictures/8571448_99862908038390081627555783729718937071898420087324405643251260510094313289295.jpg","https://static.tokkobroker.com/pictures/8571448_66167271493858865316980605411207701918476875868808280844855091457509848020579.jpg","https://static.tokkobroker.com/pictures/8571448_114031186239496023652937091363412807213966247961844043776473225611389703829780.jpg","https://static.tokkobroker.com/pictures/8571448_31075131093957717435258589279248951060069894462379738323295704434106166443588.jpg","https://static.tokkobroker.com/pictures/8571448_96152222048765915565713473306053310346536229008296378426604975170696545774596.jpg","https://static.tokkobroker.com/pictures/8571448_59842834215354947592168468983520102155820734791426447562495093101352005795068.jpg","https://static.tokkobroker.com/pictures/8571448_97632759112852906847079583751892714518200088511442923037203440044052511682949.jpg","https://static.tokkobroker.com/pictures/8571448_68459723369243360085446822310538814747705435345006671266837753341116245493401.jpg","https://static.tokkobroker.com/pictures/8571448_115244656736481254376914116203679320573370970007272779680641567997278144463371.jpg","https://static.tokkobroker.com/pictures/8571448_94826151622243253289302765976514962907209677311450961677845663322013616610491.jpg"],"agente":{"nombre":"Graciana Fernandez","wa":"5491169763297"},"barrio":"club-de-mar","barrio_nombre":"Club de Mar","aprox":true},{"ref":"CHO8437856","fuente":"tokko","tipo":"casa","titulo":"Casa en Club de Mar, José Ignacio – 3 suites y terraza con vista al mar","url":"https://ficha.info/p/eJzeCdUJirupPa","lat":-34.8375651929,"lng":-54.6397304471,"lote":null,"dormitorios":3,"banos":5,"m2_cubiertos":10.0,"m2_terreno":10.0,"huespedes":null,"ops":[{"tipo":"temporada","precio":65000,"moneda":"USD","unidad":"quincena","periodos":[{"periodo":"1ra quincena de enero","precio":65000,"moneda":"USD","n":6}]}],"fotos":["https://static.tokkobroker.com/pictures/8437856_27278552607488134520561779784416371472728260961027709828854983954589590670254.jpg","https://static.tokkobroker.com/pictures/8437856_105766124161262975217803928237643497383050378346894971035725286324683186620607.jpg","https://static.tokkobroker.com/pictures/8437856_15407886291639911449499537793660842677651338507190652991611872405174362499667.jpg","https://static.tokkobroker.com/pictures/8437856_62021991308325389510808843289351753867261348645800182834516932685384262112094.jpg","https://static.tokkobroker.com/pictures/8437856_105857994495474105776691486700262827239185751546234732276909930019420634302328.jpg","https://static.tokkobroker.com/pictures/8437856_104986859894248954217418630239225806075872883044863247357836454785828319518498.jpg","https://static.tokkobroker.com/pictures/8437856_37798737070595373815226314198646604706166774646236246565182734216722435068255.jpg","https://static.tokkobroker.com/pictures/8437856_22241399337607648859677209369132740814308219495282893427526445962801995192662.jpg","https://static.tokkobroker.com/pictures/8437856_104103710419166978087129732234722802808463724315772320345216364552358001405112.jpg","https://static.tokkobroker.com/pictures/8437856_32094230083116529982890192912947998552925029731891433024317223826886730035459.jpg"],"agente":{"nombre":"Graciana Fernandez","wa":"5491169763297"},"barrio":"club-de-mar","barrio_nombre":"Club de Mar"}],"sitio":{"whatsapp_general":"5491169763297","goatcounter":"cbzetate"}};
+const DATOS = {"modo":"barrio","slug":"club-de-mar","nombre":"Club de Mar","zona":"José Ignacio · Maldonado","bajada":{},"datos":[],"puntos":[],"propiedades":[{"ref":"CHO10824921","fuente":"tokko","tipo":"casa","titulo":"Casa en Club de Mar, José Ignacio – 5 suites y 437 m² construidos","url":"https://ficha.info/p/eTAdFdUJiwuUla","lat":-34.838762794583246,"lng":-54.6390223439026,"lote":null,"dormitorios":5,"banos":6,"m2_cubiertos":437.33,"m2_terreno":1200.0,"huespedes":null,"ops":[{"tipo":"venta","precio":3000000,"moneda":"USD","unidad":null}],"fotos":["https://static.tokkobroker.com/pictures/10824921_32609857853372695539520598219881698776259054798248629080668010737083584409887.jpg","https://static.tokkobroker.com/pictures/10824921_82328689291682854070793927134508578748974382363068404212458714078156967180492.jpg","https://static.tokkobroker.com/pictures/10824921_16918856240212370904234504160835418316048717857943824213719530640999124741006.jpg","https://static.tokkobroker.com/pictures/10824921_103425047227726660036353748693113878488004132369423738675895044738744329335023.jpg","https://static.tokkobroker.com/pictures/10824921_11344632712810219223183966835359135407551644975566725979020652511125244460477.jpg","https://static.tokkobroker.com/pictures/10824921_109972125253506975543820877365124722151901450283851729829351756615937369478469.jpg","https://static.tokkobroker.com/pictures/10824921_85245309616697096666295981354075150890573318720718212707633967528154999204541.jpg","https://static.tokkobroker.com/pictures/10824921_8362797892105567439075536352045292760727702706163272747637900079809141159048.jpg","https://static.tokkobroker.com/pictures/10824921_77497002788428154007502147737373323494322784798795452562515532110128759283385.jpg","https://static.tokkobroker.com/pictures/10824921_44414593854238316080997169616776765469969570418046385602740318001971582883415.jpg"],"agente":{"nombre":"Graciana Fernandez","wa":"5491169763297"},"barrio":"club-de-mar","barrio_nombre":"Club de Mar"},{"ref":"CHO11177481","fuente":"tokko","tipo":"casa","titulo":"Casa en Club de Mar, José Ignacio – deck con vista al mar y piscina","url":"https://ficha.info/p/eU3V7dUJixeLza","lat":-34.8364292164,"lng":-54.6364742453,"lote":null,"dormitorios":3,"banos":4,"m2_cubiertos":null,"m2_terreno":null,"huespedes":null,"ops":[{"tipo":"alquiler","precio":10,"moneda":"USD","unidad":"mes"}],"fotos":["https://static.tokkobroker.com/pictures/11177481_37426809485559769469564980309538037012787151315079078127353484971541335094399.jpg","https://static.tokkobroker.com/pictures/11177481_64768978492170747405822014343964583024309743235817863454252709737855774544829.jpg","https://static.tokkobroker.com/pictures/11177481_105419931116140531696464153993913669480713699814114722338663848002131929420802.jpg","https://static.tokkobroker.com/pictures/11177481_85697556123742587503586272252948360800870740706631474717413325488514195410015.jpg","https://static.tokkobroker.com/pictures/11177481_87786464239307369982406458140324994984482402426099464409555747974977842779053.jpg","https://static.tokkobroker.com/pictures/11177481_102103535583737302503913388487580776990073096961567461336876216318136058140455.jpg","https://static.tokkobroker.com/pictures/11177481_28963049851948665241685770533610486625563773156865619640753142398499392290956.jpg","https://static.tokkobroker.com/pictures/11177481_37035295412497502467295979227126161927678918929024957847775219676956999006248.jpg","https://static.tokkobroker.com/pictures/11177481_113441249022374100727952729885078751041793358193213435990223324441463177125156.jpg","https://static.tokkobroker.com/pictures/11177481_19481847950760702862331551122454321581097748303520273452301077912898577022383.jpg"],"agente":{"nombre":"Graciana Fernandez","wa":"5491169763297"},"barrio":"club-de-mar","barrio_nombre":"Club de Mar"},{"ref":"CHO8441423","fuente":"tokko","tipo":"casa","titulo":"Casa en Club de Mar, José Ignacio – 4 suites con acceso directo a la playa","url":"https://ficha.info/p/eJz99dUJiruSAa","lat":-34.8377237,"lng":-54.6407175,"lote":null,"dormitorios":4,"banos":5,"m2_cubiertos":10.0,"m2_terreno":10.0,"huespedes":null,"ops":[{"tipo":"temporada","precio":45000,"moneda":"USD","unidad":"quincena","periodos":[{"periodo":"1ra quincena de enero","precio":45000,"moneda":"USD","n":6}]}],"fotos":["https://static.tokkobroker.com/pictures/8441423_67100339195345044327688557079289778852131654711947906614345004121821945487527.jpg","https://static.tokkobroker.com/pictures/8441423_65319735798828661419165631991863276978744807814800001731483269423574610260347.jpg","https://static.tokkobroker.com/pictures/8441423_31960286011246266322254637803929292895294008350395511081333718774059614640253.jpg","https://static.tokkobroker.com/pictures/8441423_21544802602901912265114114209276714670224902815718236125196067851945637581190.jpg","https://static.tokkobroker.com/pictures/8441423_57445367096933376156532241783896963067788368219006811968456941990834130659076.jpg","https://static.tokkobroker.com/pictures/8441423_9322425118125011658127688182068475797547015221305470678980798248505498191879.jpg","https://static.tokkobroker.com/pictures/8441423_102292309131729744707839217960127906883549985211916210432258980055533125140455.jpg","https://static.tokkobroker.com/pictures/8441423_28856053906158159764208267270644620713611664287011654594506943930738860484412.jpg","https://static.tokkobroker.com/pictures/8441423_98083226016572985764023734919949900252372915109621588856578617846332202171352.jpg","https://static.tokkobroker.com/pictures/8441423_62310490056511659855738761826609132524990691925379170237811600100674651687536.jpg"],"agente":{"nombre":"Graciana Fernandez","wa":"5491169763297"},"barrio":"club-de-mar","barrio_nombre":"Club de Mar","aprox":true},{"ref":"CHO8571448","fuente":"tokko","tipo":"casa","titulo":"Casa en Club de Mar, José Ignacio – 4 dormitorios, piscina y diseño contemporáneo","url":"https://ficha.info/p/eJ7ZkdUJirLNba","lat":-34.8377237,"lng":-54.6407175,"lote":null,"dormitorios":4,"banos":4,"m2_cubiertos":10.0,"m2_terreno":1200.0,"huespedes":null,"ops":[{"tipo":"alquiler","precio":55000,"moneda":"USD","unidad":"mes"}],"fotos":["https://static.tokkobroker.com/pictures/8571448_99862908038390081627555783729718937071898420087324405643251260510094313289295.jpg","https://static.tokkobroker.com/pictures/8571448_66167271493858865316980605411207701918476875868808280844855091457509848020579.jpg","https://static.tokkobroker.com/pictures/8571448_114031186239496023652937091363412807213966247961844043776473225611389703829780.jpg","https://static.tokkobroker.com/pictures/8571448_31075131093957717435258589279248951060069894462379738323295704434106166443588.jpg","https://static.tokkobroker.com/pictures/8571448_96152222048765915565713473306053310346536229008296378426604975170696545774596.jpg","https://static.tokkobroker.com/pictures/8571448_59842834215354947592168468983520102155820734791426447562495093101352005795068.jpg","https://static.tokkobroker.com/pictures/8571448_97632759112852906847079583751892714518200088511442923037203440044052511682949.jpg","https://static.tokkobroker.com/pictures/8571448_68459723369243360085446822310538814747705435345006671266837753341116245493401.jpg","https://static.tokkobroker.com/pictures/8571448_115244656736481254376914116203679320573370970007272779680641567997278144463371.jpg","https://static.tokkobroker.com/pictures/8571448_94826151622243253289302765976514962907209677311450961677845663322013616610491.jpg"],"agente":{"nombre":"Graciana Fernandez","wa":"5491169763297"},"barrio":"club-de-mar","barrio_nombre":"Club de Mar","aprox":true},{"ref":"CHO8437856","fuente":"tokko","tipo":"casa","titulo":"Casa en Club de Mar, José Ignacio – 3 suites y terraza con vista al mar","url":"https://ficha.info/p/eJzeCdUJirupPa","lat":-34.8375651929,"lng":-54.6397304471,"lote":null,"dormitorios":3,"banos":5,"m2_cubiertos":10.0,"m2_terreno":10.0,"huespedes":null,"ops":[{"tipo":"temporada","precio":65000,"moneda":"USD","unidad":"quincena","periodos":[{"periodo":"1ra quincena de enero","precio":65000,"moneda":"USD","n":6}]}],"fotos":["https://static.tokkobroker.com/pictures/8437856_27278552607488134520561779784416371472728260961027709828854983954589590670254.jpg","https://static.tokkobroker.com/pictures/8437856_105766124161262975217803928237643497383050378346894971035725286324683186620607.jpg","https://static.tokkobroker.com/pictures/8437856_15407886291639911449499537793660842677651338507190652991611872405174362499667.jpg","https://static.tokkobroker.com/pictures/8437856_62021991308325389510808843289351753867261348645800182834516932685384262112094.jpg","https://static.tokkobroker.com/pictures/8437856_105857994495474105776691486700262827239185751546234732276909930019420634302328.jpg","https://static.tokkobroker.com/pictures/8437856_104986859894248954217418630239225806075872883044863247357836454785828319518498.jpg","https://static.tokkobroker.com/pictures/8437856_37798737070595373815226314198646604706166774646236246565182734216722435068255.jpg","https://static.tokkobroker.com/pictures/8437856_22241399337607648859677209369132740814308219495282893427526445962801995192662.jpg","https://static.tokkobroker.com/pictures/8437856_104103710419166978087129732234722802808463724315772320345216364552358001405112.jpg","https://static.tokkobroker.com/pictures/8437856_32094230083116529982890192912947998552925029731891433024317223826886730035459.jpg"],"agente":{"nombre":"Graciana Fernandez","wa":"5491169763297"},"barrio":"club-de-mar","barrio_nombre":"Club de Mar"}],"sitio":{"whatsapp_general":"5491169763297","goatcounter":"cbzetate"}};
 const SEL = DATOS.modo === "seleccion";
 const Q = new URLSearchParams(location.search);
 let P = DATOS.propiedades;
@@ -618,6 +706,7 @@ function abrirVista(i) {
   vista.setLatLng(it.m.getLatLng()).setContent(htmlVista(it.p, filtroOp())).openOn(mapa);
   abiertaDe = i;
   const c = vista.getElement(); armarVista(c, it.p);
+  c.addEventListener("crece", () => vista._adjustPan()); /* la agenda la agranda: reacomodar el mapa */
   c.onmouseenter = () => clearTimeout(timerCierre);
   c.onmouseleave = () => { if (!tactil) cerrarLuego(); };
   $("abajo").querySelector(".ayuda")?.classList.add("fuera");
