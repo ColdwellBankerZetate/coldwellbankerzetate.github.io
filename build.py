@@ -235,8 +235,9 @@ def leer_disponibilidad(sitio, offline, avisos):
     cache = os.path.join(AQUI, "disponibilidad_cache.csv")  # puede tener notas internas: no se sube
     texto = None
     if fuente and not offline:
+        # por nombre de hoja: "export?format=csv" sin gid baja la PRIMERA hoja, que puede no ser "Disponibilidad"
         url = fuente if fuente.startswith("http") else \
-            f"https://docs.google.com/spreadsheets/d/{fuente}/export?format=csv"
+            f"https://docs.google.com/spreadsheets/d/{fuente}/gviz/tq?tqx=out:csv&sheet=Disponibilidad"
         try:
             with urllib.request.urlopen(urllib.request.Request(url, headers=UA), timeout=60) as r:
                 texto = r.read().decode("utf-8-sig")
@@ -295,6 +296,7 @@ def leer_disponibilidad(sitio, offline, avisos):
                 out[ref] = None
                 break
     out = {k: sorted(v) for k, v in out.items() if v is not None}
+    print(f"  disponibilidad: {len(filas) - 1} filas en la planilla, {len(out)} casas con fechas")
     return out
 
 
