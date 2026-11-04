@@ -25,10 +25,11 @@ El usuario es Mateo (Coldwell Banker Zetaté, Punta del Este). Habla español ri
 
 - Planilla de Google "Disponibilidad temporada" (la carga solo Mateo), hoja `Disponibilidad`: `Barrio | Casa | Código | Ocupado`.
 - La lista de casas la mantiene sola el script `planilla/Codigo.gs` (pegado en Extensiones → Apps Script de la planilla, función `instalar` una vez): todos los días lee `datos.json` del sitio, agrega casas nuevas de temporada, ordena por barrio, linkea la ficha y conserva "Ocupado". Casas que salen de Tokko con fechas cargadas quedan abajo en gris.
-- `Ocupado` = fechas tomadas, ej. `26/12-10/1, 15/1 al 27/1` (inclusive; sin año = temporada que viene). Vacío = esa casa no muestra agenda. `libre` = todo libre. Fecha mal escrita = no se muestra su agenda y queda en `avisos.txt`.
+- Por defecto la casa está **disponible** en los períodos con precio en Tokko (1ra/2da quincena, mes, Fin de año = 26/12–2/1, Semana santa = lunes a domingo de Pascua). Días sin tarifa = gris.
+- `Ocupado` = fechas tomadas, ej. `26/12-10/1, 15/1 al 27/1` (inclusive; sin año = temporada que viene): se tachan. Vacío o `libre` = todo disponible. Fecha mal escrita = no se tacha nada de esa casa y queda en `avisos.txt`.
 - Si Mateo pasa "casa + fechas" por el chat, no hay herramienta para editar la planilla: decirle qué escribir en qué fila.
 - En `sitio.json`, `"disponibilidad"`: id de la planilla (compartida "cualquiera con el link puede ver") o URL de un CSV.
-- En la ventanita: "Ver disponibilidad" abre un calendario por mes (libre / ocupado tachado) y abajo los días libres del mes ("Libre: 11–14, 28–31").
+- Botón dorado "Ver disponibilidad" (ventanita y tarjeta) en toda casa de temporada: tabla período · precio · Disponible / Ocupado / "Libre 16/12–19/12", y calendario por mes (disponible / ocupado tachado / sin tarifa). Reemplaza "Ver tarifas".
 - La copia local `disponibilidad_cache.csv` no se sube.
 
 ## Revisar pines

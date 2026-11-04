@@ -1,7 +1,7 @@
 /* ===== Común a todas las páginas: idiomas, formato, pines, ventanita, WhatsApp, selección ===== */
 const TXT = {
   es: {
-    ver_disp: "Ver disponibilidad", ocultar_disp: "Ocultar disponibilidad", agenda: "Agenda", sin_agenda: "Disponibilidad a confirmar.", consultar_disp: "Consultar por WhatsApp", libre: "Libre", ocupado: "Ocupado",
+    ver_disp: "Ver disponibilidad", ocultar_disp: "Ocultar disponibilidad", agenda: "Agenda", disponible: "Disponible", sin_tarifa: "Sin tarifa", libre_dias: "Libre", libre: "Libre", ocupado: "Ocupado",
     libres_mes: "Libre", sin_libres: "Sin días libres este mes", todo_libre: "Todo el mes libre", dias_sem: "LMMJVSD",
     todas: "Todas", venta: "Venta", temporada: "Temporada", alquiler: "Alquiler", terrenos: "Terrenos",
     casa: "Casa", depto: "Departamento", terreno: "Terreno",
@@ -24,7 +24,7 @@ const TXT = {
     msg_sel: (para, url) => `${para ? "Selección para " + para : "Te comparto una selección de propiedades"} — Coldwell Banker Zetaté: ${url}`,
   },
   en: {
-    ver_disp: "See availability", ocultar_disp: "Hide availability", agenda: "Availability", sin_agenda: "Availability to be confirmed.", consultar_disp: "Ask on WhatsApp", libre: "Available", ocupado: "Booked",
+    ver_disp: "See availability", ocultar_disp: "Hide availability", agenda: "Availability", disponible: "Available", sin_tarifa: "No rate", libre_dias: "Free", libre: "Available", ocupado: "Booked",
     libres_mes: "Available", sin_libres: "Fully booked this month", todo_libre: "Available all month", dias_sem: "MTWTFSS",
     todas: "All", venta: "For sale", temporada: "Seasonal rent", alquiler: "Rent", terrenos: "Land",
     casa: "House", depto: "Apartment", terreno: "Land",
@@ -47,7 +47,7 @@ const TXT = {
     msg_sel: (para, url) => `${para ? "Shortlist for " + para : "Here is a shortlist of properties"} — Coldwell Banker Zetaté: ${url}`,
   },
   pt: {
-    ver_disp: "Ver disponibilidade", ocultar_disp: "Ocultar disponibilidade", agenda: "Agenda", sin_agenda: "Disponibilidade a confirmar.", consultar_disp: "Consultar pelo WhatsApp", libre: "Livre", ocupado: "Ocupado",
+    ver_disp: "Ver disponibilidade", ocultar_disp: "Ocultar disponibilidade", agenda: "Agenda", disponible: "Disponível", sin_tarifa: "Sem tarifa", libre_dias: "Livre", libre: "Livre", ocupado: "Ocupado",
     libres_mes: "Livre", sin_libres: "Sem dias livres este mês", todo_libre: "Mês todo livre", dias_sem: "STQQSSD",
     todas: "Todas", venta: "Venda", temporada: "Temporada", alquiler: "Aluguel", terrenos: "Terrenos",
     casa: "Casa", depto: "Apartamento", terreno: "Terreno",
@@ -174,9 +174,7 @@ function engancharAgenda(btn, caja, p, alCambiar) {
     caja.hidden = !abrir; btn.setAttribute("aria-expanded", String(abrir));
     btn.querySelector("span").textContent = abrir ? t("ocultar_disp") : t("ver_disp");
     if (abrir) {
-      if (Array.isArray(p.ocupado)) armarCalendario(caja.querySelector(".cal"), p);
-      else caja.querySelector(".cal").innerHTML = `<div class="cal-pie"><span class="cal-res">${t("sin_agenda")}</span>
-        <a class="cal-wa" href="${esc(linkWA(p))}" target="_blank" rel="noopener">${ICONO_WA}${t("consultar_disp")}</a></div>`;
+      armarAgenda(caja, p);
       track("disponibilidad/" + p.ref);
     }
     alCambiar && alCambiar(abrir);
@@ -239,7 +237,7 @@ function htmlVista(p, filtroOp) {
   const f = p.fotos || [];
   const ops = p.ops.map(o => `<div class="op op-${o.tipo}"><span class="op-n">${t(o.tipo)}</span><span class="precio">${esc(precioOp(o))}</span></div>`).join("");
   const temp = p.ops.find(o => o.tipo === "temporada" && o.periodos && o.periodos.length > 1);
-  const tarifas = temp ? `<details class="tarifas"><summary>${t("ver_tarifas")}</summary><table>${temp.periodos.map(x =>
+  const tarifas = temp && !tieneAgenda(p) ? `<details class="tarifas"><summary>${t("ver_tarifas")}</summary><table>${temp.periodos.map(x =>
     `<tr><td>${esc(periodo(x.periodo))}</td><td>${mon(x.moneda)} ${fmt(x.precio)}</td></tr>`).join("")}</table></details>` : "";
   const fav = FAV.tiene(p.ref);
   return `<div class="prev">
@@ -255,7 +253,7 @@ function htmlVista(p, filtroOp) {
       ${ops}
       <span class="specs">${specs(p)}</span>
       ${p.aprox ? `<span class="aprox">${t("aprox")}</span>` : ""}
-      ${tieneAgenda(p) ? htmlBotonAgenda() + `<div class="agenda" hidden><div class="cal"></div></div>` : ""}
+      ${tieneAgenda(p) ? htmlBotonAgenda() + `<div class="agenda" hidden><div class="per"></div><div class="cal"></div></div>` : ""}
       ${tarifas}
       <div class="acciones">
         <a class="b-ficha" href="${esc(p.url)}" target="_blank" rel="noopener" data-ev="ficha">${t("ver_ficha")} ↗</a>
@@ -295,8 +293,29 @@ function armarVista(raizEl, p) {
   if (ag) { L.DomEvent.disableScrollPropagation(ag); L.DomEvent.disableClickPropagation(ag); }
 }
 
-/* --- agenda de disponibilidad (días ocupados vienen de la planilla, inclusive) --- */
+/* --- agenda de disponibilidad ---
+   Por defecto la casa está libre en los períodos con precio en Tokko (1ra quincena de enero, Fin de año…).
+   Lo que se carga en "Ocupado" de la planilla se tacha. Días sin tarifa = sin precio (gris). */
 const iso = d => `${d.getFullYear()}-${String(d.getMonth() + 1).padStart(2, "0")}-${String(d.getDate()).padStart(2, "0")}`;
+const MESES_N = { diciembre: 11, enero: 0, febrero: 1, marzo: 2, abril: 3, noviembre: 10 };
+function anioTemporada() { const h = new Date(); return h.getMonth() <= 3 ? h.getFullYear() - 1 : h.getFullYear(); } /* dic de este año → mar del que viene */
+function pascua(y) { /* domingo de Pascua (algoritmo de Gauss/Meeus) */
+  const a = y % 19, b = Math.floor(y / 100), c = y % 100, d = Math.floor(b / 4), e = b % 4, f = Math.floor((b + 8) / 25),
+    g = Math.floor((b - f + 1) / 3), h = (19 * a + b - d - g + 15) % 30, i = Math.floor(c / 4), k = c % 4,
+    l = (32 + 2 * e + 2 * i - h - k) % 7, m = Math.floor((a + 11 * h + 22 * l) / 451), mes = Math.floor((h + l - 7 * m + 114) / 31);
+  return new Date(y, mes - 1, ((h + l - 7 * m + 114) % 31) + 1, 12);
+}
+function rangoPeriodo(nombre) { /* [desde, hasta, prioridad] o null si no es un período de fechas (ej. "Por dia") */
+  const t = nombre.toLowerCase(), Y = anioTemporada(), D = (m, d) => new Date(m === 11 || m === 10 ? Y : Y + 1, m, d, 12);
+  if (t.includes("fin de a")) return [D(11, 26), D(0, 2), 3];
+  if (t.includes("santa") || t.includes("turismo")) { const p = pascua(Y + 1); const lu = new Date(p); lu.setDate(p.getDate() - 6); return [lu, p, 3]; }
+  const k = Object.keys(MESES_N).find(m => t.includes(m));
+  if (k == null) return null;
+  const m = MESES_N[k], fin = new Date(m === 11 || m === 10 ? Y : Y + 1, m + 1, 0).getDate();
+  if (t.includes("1ra") || t.includes("primera")) return [D(m, 1), D(m, 15), 2];
+  if (t.includes("2da") || t.includes("segunda")) return [D(m, 16), D(m, fin), 2];
+  return [D(m, 1), D(m, fin), 1];
+}
 function diasOcupados(p) {
   const s = new Set();
   for (const [a, b] of p.ocupado || []) {
@@ -305,44 +324,77 @@ function diasOcupados(p) {
   }
   return s;
 }
-function mesesAgenda(p) {
-  const hoy = new Date(), y = hoy.getFullYear(), m = hoy.getMonth();
-  const desde = new Date(y, m, 1);
-  let hasta = new Date(m <= 2 ? y : y + 1, 2, 1); /* hasta marzo de la temporada */
+function datosAgenda(p) {
+  if (p._ag) return p._ag;
+  const temp = p.ops.find(o => o.tipo === "temporada");
+  const per = ((temp && temp.periodos) || [{ periodo: "", precio: temp.precio, moneda: temp.moneda }]).map(x => ({ ...x, r: rangoPeriodo(x.periodo || "") }));
+  const precioDia = new Map(); /* iso → período (gana el más específico: Fin de año > quincena > mes) */
+  for (const x of per) {
+    if (!x.r) continue;
+    for (const d = new Date(x.r[0]); d <= x.r[1]; d.setDate(d.getDate() + 1)) {
+      const k = iso(d), y = precioDia.get(k);
+      if (!y || y.r[2] < x.r[2]) precioDia.set(k, x);
+    }
+  }
+  const occ = diasOcupados(p), hoy = new Date(); hoy.setHours(0, 0, 0, 0);
+  const conFechas = per.filter(x => x.r);
+  /* meses a mostrar: de dic a mar de la temporada (o lo que cubran las tarifas / ocupados) */
+  const Y = anioTemporada();
+  let desde = new Date(Y, 11, 1), hasta = new Date(Y + 1, 2, 1);
+  for (const x of conFechas) { if (x.r[0] < desde) desde = new Date(x.r[0].getFullYear(), x.r[0].getMonth(), 1); if (x.r[1] > hasta) hasta = new Date(x.r[1].getFullYear(), x.r[1].getMonth(), 1); }
   for (const [, b] of p.ocupado || []) { const f = new Date(b + "T12:00"); if (f > hasta) hasta = new Date(f.getFullYear(), f.getMonth(), 1); }
+  const primero = new Date(hoy.getFullYear(), hoy.getMonth(), 1);
+  if (desde < primero) desde = primero;
   const meses = [];
   for (const d = new Date(desde); d <= hasta && meses.length < 18; d.setMonth(d.getMonth() + 1)) meses.push(new Date(d));
-  const ini = meses.findIndex(d => d.getMonth() === 11 || d.getMonth() <= 2); /* arranca en la temporada */
-  return { meses, ini: Math.max(0, ini) };
+  if (!meses.length) meses.push(primero);
+  return (p._ag = { per, precioDia, occ, sinTarifas: !conFechas.length, meses, hoy: iso(hoy) });
 }
-function rangosTexto(dias) {
+const dm = k => `${+k.slice(8)}/${+k.slice(5, 7)}`;
+function rangosFechas(keys) { /* ["2027-01-01",…] → "1/1–8/1, 20/1–31/1" */
   const r = [];
-  for (const d of dias) { const u = r[r.length - 1]; if (u && d === u[1] + 1) u[1] = d; else r.push([d, d]); }
-  return r.map(([a, b]) => a === b ? `${a}` : `${a}–${b}`).join(", ");
+  for (const k of keys) { const u = r[r.length - 1], prev = u && new Date(u[1] + "T12:00"); if (prev) prev.setDate(prev.getDate() + 1);
+    if (u && iso(prev) === k) u[1] = k; else r.push([k, k]); }
+  return r.map(([a, b]) => a === b ? dm(a) : `${dm(a)}–${dm(b)}`).join(", ");
+}
+function armarAgenda(caja, p) {
+  const A = datosAgenda(p);
+  const filas = A.per.filter(x => !x.r || iso(x.r[1]) >= A.hoy).map(x => {
+    let estado = "", cls = "";
+    if (x.r) {
+      const dias = []; for (const d = new Date(x.r[0]); d <= x.r[1]; d.setDate(d.getDate() + 1)) { const k = iso(d); if (k >= A.hoy) dias.push(k); }
+      const libres = dias.filter(k => !A.occ.has(k));
+      if (libres.length === dias.length) { estado = t("disponible"); cls = "li"; }
+      else if (!libres.length) { estado = t("ocupado"); cls = "oc"; }
+      else { estado = `${t("libre_dias")} ${rangosFechas(libres)}`; cls = "pa"; }
+    }
+    return x.periodo ? `<tr class="${cls}"><td>${esc(periodo(x.periodo))}</td><td>${mon(x.moneda)} ${fmt(x.precio)}</td><td>${esc(estado)}</td></tr>` : "";
+  }).join("");
+  caja.querySelector(".per").innerHTML = filas ? `<table class="tabla-disp">${filas}</table>` : "";
+  const cal = caja.querySelector(".cal");
+  if (cal._k == null) { const i = A.meses.findIndex(d => [...A.precioDia.keys()].some(k => k.startsWith(iso(d).slice(0, 7)))); cal._k = Math.max(0, i); }
+  armarCalendario(cal, p);
 }
 function armarCalendario(el, p) {
-  if (!el.dataset.listo) { el._occ = diasOcupados(p); Object.assign(el, mesesAgenda(p)); el._k = el.ini; el.dataset.listo = "1"; }
-  const d0 = el.meses[el._k], y = d0.getFullYear(), m = d0.getMonth();
+  const A = datosAgenda(p);
+  const d0 = A.meses[el._k], y = d0.getFullYear(), m = d0.getMonth();
   const n = new Date(y, m + 1, 0).getDate(), hueco = (new Date(y, m, 1).getDay() + 6) % 7;
-  const hoy = iso(new Date());
-  const libres = [];
-  let celdas = "";
+  let celdas = "", hayTarifa = false;
   for (let i = 0; i < hueco; i++) celdas += "<span></span>";
   for (let d = 1; d <= n; d++) {
-    const k = iso(new Date(y, m, d)), pasado = k < hoy, oc = el._occ.has(k);
-    if (!oc && !pasado) libres.push(d);
-    celdas += `<span class="d${oc ? " oc" : " li"}${pasado ? " pas" : ""}${k === hoy ? " hoy" : ""}">${d}</span>`;
+    const k = iso(new Date(y, m, d)), pasado = k < A.hoy, oc = A.occ.has(k), x = A.precioDia.get(k);
+    const conTarifa = A.sinTarifas || !!x; if (x) hayTarifa = true;
+    const cls = oc ? "oc" : conTarifa ? "li" : "st";
+    const tit = x ? `${periodo(x.periodo)} · ${mon(x.moneda)} ${fmt(x.precio)}` : "";
+    celdas += `<span class="d ${cls}${pasado ? " pas" : ""}${k === A.hoy ? " hoy" : ""}"${tit ? ` title="${esc(tit)}"` : ""}>${d}</span>`;
   }
-  const futuros = n - [...Array(n)].filter((_, i) => iso(new Date(y, m, i + 1)) < hoy).length;
-  const resumen = !futuros ? "" : !libres.length ? t("sin_libres") : libres.length === futuros && futuros === n ? t("todo_libre") : `${t("libres_mes")}: ${rangosTexto(libres)}`;
   const nombre = new Intl.DateTimeFormat(LANG === "en" ? "en-US" : LANG, { month: "long", year: "numeric" }).format(d0).replace(/^./, c => c.toUpperCase());
   el.innerHTML = `<div class="cal-cab">
       <button type="button" class="cal-ant" aria-label="‹" ${el._k === 0 ? "disabled" : ""}>‹</button>
       <span>${esc(nombre)}</span>
-      <button type="button" class="cal-sig" aria-label="›" ${el._k === el.meses.length - 1 ? "disabled" : ""}>›</button></div>
+      <button type="button" class="cal-sig" aria-label="›" ${el._k === A.meses.length - 1 ? "disabled" : ""}>›</button></div>
     <div class="cal-grid">${[...t("dias_sem")].map(x => `<b>${x}</b>`).join("")}${celdas}</div>
-    <div class="cal-pie"><span class="cal-res">${esc(resumen)}</span>
-      <span class="cal-ley"><i class="li"></i>${t("libre")} <i class="oc"></i>${t("ocupado")}</span></div>`;
+    <div class="cal-pie"><span class="cal-ley"><i class="li"></i>${t("disponible")} <i class="oc"></i>${t("ocupado")}${!A.sinTarifas ? ` <i class="st"></i>${t("sin_tarifa")}` : ""}</span></div>`;
   el.querySelector(".cal-ant").addEventListener("click", e => { e.preventDefault(); e.stopPropagation(); el._k--; armarCalendario(el, p); });
   el.querySelector(".cal-sig").addEventListener("click", e => { e.preventDefault(); e.stopPropagation(); el._k++; armarCalendario(el, p); });
 }
