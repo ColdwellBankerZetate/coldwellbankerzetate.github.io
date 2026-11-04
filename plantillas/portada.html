@@ -61,8 +61,12 @@ i.venta{background:var(--venta)}i.temporada{background:var(--temporada)}i.alquil
 .bm .c{width:34px;height:34px;border-radius:50%;background:var(--venta);color:#fff;display:grid;place-items:center;font-size:13px;font-weight:700;box-shadow:0 0 0 2px rgba(255,255,255,.9),0 4px 12px rgba(0,0,0,.55);flex:none;font-variant-numeric:tabular-nums;transition:transform .2s}
 .bm .l{font-family:var(--f-display);font-style:italic;font-size:17px;color:#fff;text-shadow:0 1px 2px rgba(0,0,0,.9),0 0 12px rgba(0,0,0,.8);transition:opacity .2s}
 .bm.sin-tag .l{opacity:0}
+.bm.grupo .c{width:40px;height:40px;font-size:14px;box-shadow:0 0 0 2px rgba(255,255,255,.9),0 0 0 7px rgba(227,20,30,.35),0 4px 12px rgba(0,0,0,.55)}
+.bm.grupo{transform:translate(-20px,-20px)}
+.bm.izq{flex-direction:row-reverse;transform:translate(calc(17px - 100%),-17px)}
+.bm.grupo.izq{transform:translate(calc(20px - 100%),-20px)}
 .bm:hover .c,.bm.on .c{transform:scale(1.15)}
-.bm:hover .l,.bm.on .l{opacity:1}
+@media (hover:hover){.bm:hover .l{opacity:1}}
 .top,.tira{display:none}
 @media (max-width:899px){
   .app{display:block;height:100%}
@@ -76,6 +80,9 @@ i.venta{background:var(--venta)}i.temporada{background:var(--temporada)}i.alquil
   .top img{height:15px;width:auto;margin-top:14px;filter:drop-shadow(0 1px 3px rgba(0,0,0,.8))}
   .top h2{font-family:var(--f-display);font-style:italic;font-weight:500;font-size:28px;line-height:1.05;margin:12px 0 0;color:#fff;text-align:center;text-wrap:balance}
   .top .raya{display:block;width:72px;height:1px;margin:12px 0 0;background:rgba(255,255,255,.85)}
+  .bm{flex-direction:column;gap:5px;transform:translate(-50%,-17px)}
+  .bm.grupo{transform:translate(-50%,-20px)}
+  .bm .l{font-size:15px}
   .tira{display:flex;gap:10px;position:absolute;z-index:620;left:0;right:0;bottom:calc(18px + env(safe-area-inset-bottom,0px));overflow-x:auto;scroll-snap-type:x mandatory;padding-inline:max(16px,env(safe-area-inset-left,0px)) max(16px,env(safe-area-inset-right,0px));scrollbar-width:none;margin:0;list-style:none}
   .tira::-webkit-scrollbar{display:none}
   .tira li{flex:0 0 78%;max-width:320px;scroll-snap-align:center}
@@ -130,30 +137,70 @@ function pintar() {
   $("pie").textContent = t("pie");
   $("lista").innerHTML = B.map(b => `<li>${card(b)}</li>`).join("");
   $("tira").innerHTML = B.map(b => `<li>${card(b)}</li>`).join("");
-  capa.clearLayers(); items = [];
-  B.forEach(b => {
-    const m = L.marker([b.lat, b.lng], { keyboard: false, icon: L.divIcon({ className: "bm-icon", iconSize: [0, 0],
-      html: `<a class="bm" href="${b.slug}/" aria-label="${esc(b.nombre)}"><span class="c">${b.total}</span><span class="l tag">${esc(b.nombre)}</span></a>` }) }).addTo(capa);
-    items.push({ b, m, visible: true, pinEl: () => m.getElement()?.querySelector(".bm") });
-  });
   document.querySelectorAll(".bc").forEach(a => {
-    const it = items.find(x => x.b.slug === a.dataset.slug);
-    a.addEventListener("mouseenter", () => it.pinEl()?.classList.add("on"));
-    a.addEventListener("mouseleave", () => it.pinEl()?.classList.remove("on"));
+    const g = () => grupoDe[a.dataset.slug]?.pinEl();
+    a.addEventListener("mouseenter", () => g()?.classList.add("on"));
+    a.addEventListener("mouseleave", () => g()?.classList.remove("on"));
   });
+  agrupar();
+}
+/* Barrios que en pantalla quedan pegados se juntan en un solo círculo (suma de propiedades);
+   tocarlo acerca el mapa hasta que se separan. */
+let grupoDe = {};
+function agrupar() {
+  capa.clearLayers(); items = []; grupoDe = {};
+  const pts = B.map(b => ({ b, p: mapa.latLngToLayerPoint([b.lat, b.lng]) })).sort((x, y) => y.b.total - x.b.total);
+  const usados = new Set();
+  for (const a of pts) {
+    if (usados.has(a)) continue;
+    const miembros = pts.filter(o => !usados.has(o) && a.p.distanceTo(o.p) < (movil() ? 64 : 46));
+    miembros.forEach(o => usados.add(o));
+    const bs = miembros.map(o => o.b), total = bs.reduce((s, b) => s + b.total, 0);
+    const solo = bs.length === 1;
+    const nombre = solo || movil() ? a.b.nombre : `${a.b.nombre} +${bs.length - 1}`;
+    const m = L.marker([a.b.lat, a.b.lng], { keyboard: false, icon: L.divIcon({ className: "bm-icon", iconSize: [0, 0],
+      html: `<a class="bm${solo ? "" : " grupo"}" href="${solo ? a.b.slug + "/" : "#"}" aria-label="${esc(nombre)}"><span class="c">${total}</span><span class="l tag">${esc(nombre)}</span></a>` }) }).addTo(capa);
+    if (!solo) m.on("click", e => {
+      e.originalEvent?.preventDefault();
+      mapa.flyToBounds(L.latLngBounds(bs.map(b => [b.lat, b.lng])), { ...pad, maxZoom: 17, duration: .8 });
+    });
+    const it = { b: a.b, total, m, visible: true, pinEl: () => m.getElement()?.querySelector(".bm") };
+    items.push(it); bs.forEach(b => grupoDe[b.slug] = it);
+  }
+  marcarTira();
   requestAnimationFrame(acomodar);
 }
-const acomodar = () => acomodarEtiquetas(items, it => it.b.total);
-mapa.on("zoomend moveend", () => requestAnimationFrame(acomodar));
+/* Etiquetas: si se salen por la derecha van a la izquierda del círculo; se esconden si tapan otra etiqueta u otro círculo. */
+function acomodar() {
+  const vis = items.filter(it => it.pinEl()), W = mapa.getContainer().clientWidth, pad = 3;
+  const choca = (r, q) => !(r.right + pad < q.left || r.left - pad > q.right || r.bottom + pad < q.top || r.top - pad > q.bottom);
+  vis.forEach(it => it.pinEl().classList.remove("sin-tag", "izq"));
+  const circulos = vis.map(it => it.pinEl().querySelector(".c").getBoundingClientRect());
+  const orden = vis.map((it, k) => ({ it, k })).sort((a, b) =>
+    ((b.it.pinEl().classList.contains("on") ? 1e6 : 0) + b.it.total) - ((a.it.pinEl().classList.contains("on") ? 1e6 : 0) + a.it.total));
+  const puestas = movil() ? [$("titulo-m").getBoundingClientRect(), $("tira").getBoundingClientRect()] : [];
+  for (const { it, k } of orden) {
+    const el = it.pinEl();
+    let r = el.querySelector(".tag").getBoundingClientRect();
+    if (!movil() && r.right > W - 8) { el.classList.add("izq"); r = el.querySelector(".tag").getBoundingClientRect(); }
+    if (r.left < 8 || puestas.some(q => choca(r, q)) || circulos.some((c, j) => j !== k && choca(r, c))) el.classList.add("sin-tag");
+    else puestas.push(r);
+  }
+}
+mapa.on("zoomend", agrupar);
+mapa.on("moveend", () => requestAnimationFrame(acomodar));
 for (const id of ["idiomas-p", "idiomas-m"]) armarIdiomas($(id), pintar);
+const pad = movil() ? { paddingTopLeft: [60, 190], paddingBottomRight: [70, 200] } : { paddingTopLeft: [80, 80], paddingBottomRight: [230, 80] };
 pintar();
-const pad = movil() ? { paddingTopLeft: [24, 160], paddingBottomRight: [110, 170] } : { paddingTopLeft: [80, 80], paddingBottomRight: [230, 80] };
 mapa.fitBounds(L.latLngBounds(B.map(b => [b.lat, b.lng])), pad);
 /* celular: al deslizar la tira, el mapa resalta ese barrio */
 const tira = $("tira");
-tira.addEventListener("scroll", () => {
-  const k = Math.round(tira.scrollLeft / (tira.firstElementChild?.offsetWidth + 10 || 1));
-  items.forEach((it, j) => it.pinEl()?.classList.toggle("on", j === k));
-}, { passive: true });
+function marcarTira() {
+  if (!movil()) return;
+  const t0 = $("tira"), k = Math.round(t0.scrollLeft / (t0.firstElementChild?.offsetWidth + 10 || 1));
+  const on = grupoDe[B[k]?.slug];
+  items.forEach(it => it.pinEl()?.classList.toggle("on", it === on));
+}
+tira.addEventListener("scroll", () => { marcarTira(); requestAnimationFrame(acomodar); }, { passive: true });
 window.addEventListener("resize", () => mapa.invalidateSize());
 </script>
