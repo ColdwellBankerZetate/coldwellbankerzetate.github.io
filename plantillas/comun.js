@@ -1,6 +1,13 @@
 /* ===== Común a todas las páginas: idiomas, formato, pines, ventanita, WhatsApp, selección ===== */
 const TXT = {
   es: {
+    desarrollos: "Desarrollos", desarrollo: "Desarrollo", edificio: "Edificio", edificios: "Edificios", barrio_dev: "Barrio en desarrollo", barrios_dev: "Barrios · lotes",
+    unidades: "Unidades", unidad: "unidad", unidades_m: "unidades", lotes: "Lotes", lote_m: "lote", lotes_m: "lotes", entrega: "Entrega", todos: "Todos",
+    desarrollos_b: "Edificios y barrios en desarrollo: unidades y lotes para invertir desde el inicio.", proximamente: "Próximamente",
+    proximamente_b: "Estamos cargando los nuevos desarrollos. Escribinos y te avisamos primero.", consultar_dev: "Consultar por este desarrollo",
+    ver_desarrollos: "Desarrollos", todos_desarrollos: "Todos los desarrollos", unidades_pronto: "Unidades disponibles a consultar.",
+    ver_mas: "Ver más", ver_menos: "Ver menos", brochure: "Más información", deslizar: "Deslizá para ver desarrollos", msg_devs: "Hola, quiero recibir información de los nuevos desarrollos de Coldwell Banker Zetaté.",
+    msg_dev: d => `Hola, me interesa el desarrollo ${d.nombre} (${d.zona}). ¿Me pasan información? ${location.origin}${raiz()}desarrollos/${d.slug}/`,
     consultar_precio: "Consultar precio", ver_disp: "Ver disponibilidad", ocultar_disp: "Ocultar disponibilidad", agenda: "Agenda", disponible: "Disponible", sin_tarifa: "Sin tarifa", libre_dias: "Libre", libre: "Libre", ocupado: "Ocupado",
     libres_mes: "Libre", sin_libres: "Sin días libres este mes", todo_libre: "Todo el mes libre", dias_sem: "LMMJVSD",
     todas: "Todas", venta: "Venta", temporada: "Temporada", alquiler: "Alquiler", terrenos: "Terrenos",
@@ -24,6 +31,13 @@ const TXT = {
     msg_sel: (para, url) => `${para ? "Selección para " + para : "Te comparto una selección de propiedades"} — Coldwell Banker Zetaté: ${url}`,
   },
   en: {
+    desarrollos: "Developments", desarrollo: "Development", edificio: "Building", edificios: "Buildings", barrio_dev: "Community in development", barrios_dev: "Communities · lots",
+    unidades: "Units", unidad: "unit", unidades_m: "units", lotes: "Lots", lote_m: "lot", lotes_m: "lots", entrega: "Delivery", todos: "All",
+    desarrollos_b: "Buildings and communities under development: units and lots to invest from day one.", proximamente: "Coming soon",
+    proximamente_b: "We are loading the new developments. Message us and you'll hear first.", consultar_dev: "Ask about this development",
+    ver_desarrollos: "Developments", todos_desarrollos: "All developments", unidades_pronto: "Units available on request.",
+    ver_mas: "Read more", ver_menos: "Show less", brochure: "More information", deslizar: "Swipe to see developments", msg_devs: "Hi, I would like information about Coldwell Banker Zetaté's new developments.",
+    msg_dev: d => `Hi, I'm interested in the ${d.nombre} development (${d.zona}). Could you send me information? ${location.origin}${raiz()}desarrollos/${d.slug}/`,
     consultar_precio: "Price on request", ver_disp: "See availability", ocultar_disp: "Hide availability", agenda: "Availability", disponible: "Available", sin_tarifa: "No rate", libre_dias: "Free", libre: "Available", ocupado: "Booked",
     libres_mes: "Available", sin_libres: "Fully booked this month", todo_libre: "Available all month", dias_sem: "MTWTFSS",
     todas: "All", venta: "For sale", temporada: "Seasonal rent", alquiler: "Rent", terrenos: "Land",
@@ -47,6 +61,13 @@ const TXT = {
     msg_sel: (para, url) => `${para ? "Shortlist for " + para : "Here is a shortlist of properties"} — Coldwell Banker Zetaté: ${url}`,
   },
   pt: {
+    desarrollos: "Empreendimentos", desarrollo: "Empreendimento", edificio: "Edifício", edificios: "Edifícios", barrio_dev: "Condomínio em desenvolvimento", barrios_dev: "Condomínios · lotes",
+    unidades: "Unidades", unidad: "unidade", unidades_m: "unidades", lotes: "Lotes", lote_m: "lote", lotes_m: "lotes", entrega: "Entrega", todos: "Todos",
+    desarrollos_b: "Edifícios e condomínios em desenvolvimento: unidades e lotes para investir desde o início.", proximamente: "Em breve",
+    proximamente_b: "Estamos carregando os novos empreendimentos. Escreva para nós e avisamos primeiro.", consultar_dev: "Consultar este empreendimento",
+    ver_desarrollos: "Empreendimentos", todos_desarrollos: "Todos os empreendimentos", unidades_pronto: "Unidades disponíveis sob consulta.",
+    ver_mas: "Ver mais", ver_menos: "Ver menos", brochure: "Mais informações", deslizar: "Deslize para ver empreendimentos", msg_devs: "Olá, quero receber informações sobre os novos empreendimentos da Coldwell Banker Zetaté.",
+    msg_dev: d => `Olá, tenho interesse no empreendimento ${d.nombre} (${d.zona}). Podem me enviar informações? ${location.origin}${raiz()}desarrollos/${d.slug}/`,
     consultar_precio: "Consultar preço", ver_disp: "Ver disponibilidade", ocultar_disp: "Ocultar disponibilidade", agenda: "Agenda", disponible: "Disponível", sin_tarifa: "Sem tarifa", libre_dias: "Livre", libre: "Livre", ocupado: "Ocupado",
     libres_mes: "Livre", sin_libres: "Sem dias livres este mês", todo_libre: "Mês todo livre", dias_sem: "STQQSSD",
     todas: "Todas", venta: "Venda", temporada: "Temporada", alquiler: "Aluguel", terrenos: "Terrenos",
@@ -197,7 +218,8 @@ const FAV = {
   },
   quitar(ref) { const l = this.lista().filter(x => x !== ref); guardarLS("cbz_fav", JSON.stringify(l)); document.dispatchEvent(new CustomEvent("fav")); },
 };
-const raiz = () => location.pathname.replace(/[^/]*\/[^/]*$/, "").replace(/\/?$/, "/");
+const raiz = () => (typeof DATOS !== "undefined" && DATOS && DATOS.raiz) ? new URL(DATOS.raiz, location.href).pathname
+  : location.pathname.replace(/[^/]*\/[^/]*$/, "").replace(/\/?$/, "/");
 function urlSeleccion(refs, para) {
   const u = new URL(location.origin + raiz() + "seleccion/");
   u.searchParams.set("p", refs.join(","));
@@ -205,6 +227,20 @@ function urlSeleccion(refs, para) {
   if (LANG !== "es") u.searchParams.set("lang", LANG);
   return u.toString();
 }
+
+/* --- desarrollos --- */
+const ICONO_EDIF = '<svg viewBox="0 0 24 24" width="16" height="16" aria-hidden="true"><path fill="none" stroke="currentColor" stroke-width="1.7" stroke-linejoin="round" d="M5 21V4.5L14 3v18M14 9l5 1.5V21M3 21h18M8 7.5h3M8 11h3M8 14.5h3M8 18h3M16.5 13h.5M16.5 16.5h.5"/></svg>';
+const ICONO_LOTES = '<svg viewBox="0 0 24 24" width="16" height="16" aria-hidden="true"><path fill="none" stroke="currentColor" stroke-width="1.7" stroke-linejoin="round" d="M3.5 6.5 12 3l8.5 3.5v11L12 21l-8.5-3.5zM12 3v18M3.5 12l8.5 3.5 8.5-3.5"/></svg>';
+const iconoDev = d => d.clase === "edificio" ? ICONO_EDIF : ICONO_LOTES;
+const claseDev = d => d.clase === "edificio" ? t("edificio") : t("barrio_dev");
+function resumenDev(d) {
+  const s = [];
+  if (d.clase === "barrio" && d.lotes) s.push(`${d.lotes} ${d.lotes === 1 ? t("lote_m") : t("lotes_m")}`);
+  else if (d.unidades) s.push(`${d.unidades} ${d.unidades === 1 ? t("unidad") : t("unidades_m")}`);
+  if (d.desde_venta) s.push(`${t("desde")} U$S ${corto(d.desde_venta)}`);
+  return s.join(" · ");
+}
+const waDev = d => `https://wa.me/${d.wa || (DATOS.sitio || {}).whatsapp_general}?text=${encodeURIComponent(TXT[LANG].msg_dev(d))}`;
 
 /* --- mapa base --- */
 function mapaBase(id) {

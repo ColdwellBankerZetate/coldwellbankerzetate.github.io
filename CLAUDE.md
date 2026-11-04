@@ -6,7 +6,7 @@ El usuario es Mateo (Coldwell Banker Zetaté, Punta del Este). Habla español ri
 
 ## Cómo se arma
 
-- `python3 build.py` baja el inventario de Tokko y arma TODO: un mapa por barrio, `index.html` (portada), `seleccion/` y `datos.json`.
+- `python3 build.py` baja el inventario de Tokko y arma TODO: un mapa por barrio, `desarrollos/`, `index.html` (portada), `seleccion/` y `datos.json`.
 - `python3 build.py --offline` usa la última copia local de Tokko (`tokko_cache.json`, no se sube).
 - Clave de Tokko: variable `TOKKO_KEY` o archivo local `.tokko_key`. **Nunca** commitearla: el repo es público y la clave da acceso a los contactos de clientes. En GitHub está como secreto `TOKKO_KEY`.
 - `.github/workflows/sincronizar.yml` corre el build cada hora y publica si cambió algo en Tokko o en la planilla de disponibilidad (también con "Run workflow").
@@ -20,6 +20,15 @@ El usuario es Mateo (Coldwell Banker Zetaté, Punta del Este). Habla español ri
 - Textos por idioma: `bajada` {es,en,pt}, `datos` (chips con amenities, solo datos que salgan de una fuente), `puntos` (amenities en el mapa con lat/lng verificados en el satélite).
 - Corregir un pin: lo ideal es corregirlo en Tokko (se arregla solo al sincronizar). Si no, `ajustes`: {"<reference_code>": {"lat":..,"lng":..}} en el JSON del barrio.
 - `avisos.txt` lista los pines que comparten coordenadas (ubicación aproximada). En el mapa se muestran separados en un círculo y la ventanita dice "Ubicación aproximada".
+
+## Desarrollos (edificios y barrios que se venden por lotes)
+
+- En la portada el título grande se desliza (dedo, mouse o pestañas) de "Propiedades en el mapa" a "Desarrollos"; link directo: `/#desarrollos`. Filtros Todos / Edificios / Barrios · lotes. Pin = rombo champagne con ícono (edificio o lotes).
+- Salen solos de los **emprendimientos de Tokko** (`development/` de la API; copia local `tokko_desarrollos_cache.json`, no se sube). Unidades = propiedades de Tokko asignadas a ese emprendimiento (lotes en barrios, unidades en edificios).
+- Cada desarrollo tiene `desarrollos/<slug>.json` (el build lo crea solo): `tokko_id`, `nombre`, `clase` ("edificio" o "barrio"; vacío = se deduce del tipo de Tokko o de las unidades), `estado` {es,en,pt} (ej. Preventa / En construcción), `entrega` (ej. "2028"), `bajada`, `datos`, `puntos`, y opcionales `lat`/`lng`, `fotos` [urls], `url` (brochure/web), `whatsapp`, `destacado` (va primero), `orden`, `ocultar`.
+- Desarrollo que no está en Tokko: crear el JSON a mano con `nombre`, `clase`, `lat`, `lng`, `fotos`.
+- Página propia en `/desarrollos/<slug>/`: galería, estado/entrega, descripción, botón "Consultar por este desarrollo" (WhatsApp) y mapa con sus unidades. Sin unidades = muestra el rombo y "Unidades disponibles a consultar".
+- Sin ningún desarrollo cargado, la sección muestra "Próximamente" con WhatsApp.
 
 ## Disponibilidad (agenda de temporada)
 
@@ -51,7 +60,7 @@ El usuario es Mateo (Coldwell Banker Zetaté, Punta del Este). Habla español ri
 ## Git
 
 - Commits con `user.name "Claude"` y `user.email noreply@anthropic.com`.
-- No subir `.cache_tiles/`, `tokko_cache.json`, `.tokko_key`, `verificacion/`, `reel/trabajo/`, videos.
+- No subir `.cache_tiles/`, `tokko_cache.json`, `tokko_desarrollos_cache.json`, `.tokko_key`, `verificacion/`, `reel/trabajo/`, videos.
 
 ## Video para redes
 
