@@ -1,7 +1,7 @@
 /* ===== Común a todas las páginas: idiomas, formato, pines, ventanita, WhatsApp, selección ===== */
 const TXT = {
   es: {
-    ver_disp: "Ver disponibilidad", ocultar_disp: "Ocultar disponibilidad", agenda: "Agenda", disponible: "Disponible", sin_tarifa: "Sin tarifa", libre_dias: "Libre", libre: "Libre", ocupado: "Ocupado",
+    consultar_precio: "Consultar precio", ver_disp: "Ver disponibilidad", ocultar_disp: "Ocultar disponibilidad", agenda: "Agenda", disponible: "Disponible", sin_tarifa: "Sin tarifa", libre_dias: "Libre", libre: "Libre", ocupado: "Ocupado",
     libres_mes: "Libre", sin_libres: "Sin días libres este mes", todo_libre: "Todo el mes libre", dias_sem: "LMMJVSD",
     todas: "Todas", venta: "Venta", temporada: "Temporada", alquiler: "Alquiler", terrenos: "Terrenos",
     casa: "Casa", depto: "Departamento", terreno: "Terreno",
@@ -24,7 +24,7 @@ const TXT = {
     msg_sel: (para, url) => `${para ? "Selección para " + para : "Te comparto una selección de propiedades"} — Coldwell Banker Zetaté: ${url}`,
   },
   en: {
-    ver_disp: "See availability", ocultar_disp: "Hide availability", agenda: "Availability", disponible: "Available", sin_tarifa: "No rate", libre_dias: "Free", libre: "Available", ocupado: "Booked",
+    consultar_precio: "Price on request", ver_disp: "See availability", ocultar_disp: "Hide availability", agenda: "Availability", disponible: "Available", sin_tarifa: "No rate", libre_dias: "Free", libre: "Available", ocupado: "Booked",
     libres_mes: "Available", sin_libres: "Fully booked this month", todo_libre: "Available all month", dias_sem: "MTWTFSS",
     todas: "All", venta: "For sale", temporada: "Seasonal rent", alquiler: "Rent", terrenos: "Land",
     casa: "House", depto: "Apartment", terreno: "Land",
@@ -47,7 +47,7 @@ const TXT = {
     msg_sel: (para, url) => `${para ? "Shortlist for " + para : "Here is a shortlist of properties"} — Coldwell Banker Zetaté: ${url}`,
   },
   pt: {
-    ver_disp: "Ver disponibilidade", ocultar_disp: "Ocultar disponibilidade", agenda: "Agenda", disponible: "Disponível", sin_tarifa: "Sem tarifa", libre_dias: "Livre", libre: "Livre", ocupado: "Ocupado",
+    consultar_precio: "Consultar preço", ver_disp: "Ver disponibilidade", ocultar_disp: "Ocultar disponibilidade", agenda: "Agenda", disponible: "Disponível", sin_tarifa: "Sem tarifa", libre_dias: "Livre", libre: "Livre", ocupado: "Ocupado",
     libres_mes: "Livre", sin_libres: "Sem dias livres este mês", todo_libre: "Mês todo livre", dias_sem: "STQQSSD",
     todas: "Todas", venta: "Venda", temporada: "Temporada", alquiler: "Aluguel", terrenos: "Terrenos",
     casa: "Casa", depto: "Apartamento", terreno: "Terreno",
@@ -111,6 +111,7 @@ const mon = m => m === "UYU" ? "$U" : "U$S";
 const corto = n => n >= 1e6 ? (n / 1e6).toFixed(2).replace(/\.?0+$/, "").replace(".", LANG === "en" ? "." : ",") + "M" : Math.round(n / 1e3) + "K";
 const mitad = b => b == null ? null : (b % 1 ? Math.floor(b) + "½" : b);
 function precioOp(o, conDesde = true) {
+  if (o.precio == null) return t("consultar_precio"); /* temporada marcada en la planilla, sin tarifa en Tokko */
   const base = `${mon(o.moneda)} ${fmt(o.precio)}`;
   if (o.tipo === "venta") return base;
   const u = o.unidad ? ` / ${t(o.unidad)}` : "";
@@ -122,6 +123,7 @@ const UNI_CORTA = {
   pt: { quincena: "quinz.", mes: "mês", dia: "dia", periodo: "per." },
 };
 function precioCorto(o) {
+  if (o.precio == null) return t("consultar_precio");
   const b = `${mon(o.moneda)} ${fmt(o.precio)}`;
   return o.tipo === "venta" ? b : `${b} / ${UNI_CORTA[LANG][o.unidad || "mes"]}`;
 }
