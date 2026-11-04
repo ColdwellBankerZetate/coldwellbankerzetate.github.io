@@ -252,6 +252,43 @@ h1{font-family:var(--f-display);font-style:italic;font-weight:500;font-size:44px
   .prev.con-agenda .carr{display:none} /* agenda abierta: sin fotos para que entre en pantalla */
   .hoja-comp{position:fixed;left:0;right:0;bottom:0;z-index:1500;background:#0d0d0d;border-top:1px solid var(--line-2);border-radius:18px 18px 0 0;padding-block:18px calc(18px + env(safe-area-inset-bottom,0px));padding-left:max(18px,env(safe-area-inset-left,0px));padding-right:max(18px,env(safe-area-inset-right,0px));box-shadow:0 -20px 50px rgba(0,0,0,.6)}
 }
+
+/* ---------- Desarrollo (edificio o barrio en desarrollo) ---------- */
+.dev{display:grid;gap:12px}
+.dev-clase{display:inline-flex;align-items:center;gap:8px;font-size:11px;font-weight:600;letter-spacing:.22em;text-transform:uppercase;color:var(--champ)}
+.dev-clase svg{flex:none}
+.estado{display:inline-flex;align-items:center;gap:6px;border:1px solid rgba(200,178,138,.45);color:var(--champ);border-radius:999px;padding:3px 10px;font-size:10.5px;font-weight:600;letter-spacing:.16em;text-transform:uppercase;width:max-content}
+.galeria{position:relative;border-radius:6px;overflow:hidden;background:var(--raise)}
+.galeria .pista-g{display:flex;overflow-x:auto;scroll-snap-type:x mandatory;scrollbar-width:none}
+.galeria .pista-g::-webkit-scrollbar{display:none}
+.galeria img{flex:0 0 100%;width:100%;aspect-ratio:16/10;object-fit:cover;scroll-snap-align:start;display:block}
+.galeria .flecha{position:absolute;top:50%;transform:translateY(-50%);width:32px;height:32px;border-radius:50%;border:1px solid rgba(255,255,255,.25);background:rgba(10,10,10,.6);color:#fff;display:grid;place-items:center;cursor:pointer;font-size:15px;line-height:1;padding:0}
+.galeria .ant{left:10px}.galeria .sig{right:10px}
+.galeria .cont{position:absolute;right:10px;bottom:10px;background:rgba(10,10,10,.65);color:#fff;font-size:11px;font-weight:600;padding:3px 8px;border-radius:999px;font-variant-numeric:tabular-nums}
+.bajada.larga{display:-webkit-box;-webkit-line-clamp:4;-webkit-box-orient:vertical;overflow:hidden;white-space:pre-line}
+.bajada.larga.abierta{display:block;-webkit-line-clamp:unset}
+.mas{background:none;border:0;padding:0;font-size:11px;font-weight:600;letter-spacing:.14em;text-transform:uppercase;color:var(--champ);cursor:pointer;justify-self:start;margin-top:-6px}
+.dev-acc{display:grid;grid-template-columns:1fr auto;gap:8px}
+.dev-acc .b-sel svg{color:inherit}
+.dev-pron{color:var(--muted);font-size:13px;margin:0}
+.dev-pin{position:absolute;left:0;top:0;transform:translate(-21px,-21px);display:flex;align-items:center;gap:10px;white-space:nowrap;pointer-events:none}
+.dev-pin .ic{width:42px;height:42px;display:grid;place-items:center;background:var(--champ);color:#0a0a0a;border-radius:10px;transform:rotate(45deg);box-shadow:0 0 0 2px rgba(255,255,255,.9),0 0 0 8px rgba(200,178,138,.28),0 6px 16px rgba(0,0,0,.55)}
+.dev-pin .ic svg{transform:rotate(-45deg);width:20px;height:20px}
+.dev-pin .n{font-family:var(--f-display);font-style:italic;font-size:19px;color:#fff;text-shadow:0 1px 2px rgba(0,0,0,.9),0 0 12px rgba(0,0,0,.8)}
+.con-unidades .dev-pin{opacity:.85}
+.dev-m{display:none}
+@media (max-width:899px){
+  .dev-m{display:grid;grid-template-columns:96px 1fr;gap:12px;align-items:center;position:absolute;z-index:620;left:max(16px,env(safe-area-inset-left,0px));right:max(16px,env(safe-area-inset-right,0px));bottom:calc(18px + env(safe-area-inset-bottom,0px));background:rgba(10,10,10,.9);backdrop-filter:blur(12px);-webkit-backdrop-filter:blur(12px);border:1px solid var(--line-2);border-radius:14px;padding:8px;box-shadow:0 14px 40px rgba(0,0,0,.5)}
+  .dev-m[hidden]{display:none}
+  .dev-m img{width:96px;height:80px;object-fit:cover;border-radius:9px;display:block;background:var(--raise)}
+  .dev-m .tx{display:grid;gap:4px;min-width:0}
+  .dev-m .dev-clase{font-size:9.5px;letter-spacing:.18em;gap:6px}
+  .dev-m .dev-clase svg{width:13px;height:13px}
+  .dev-m .r{font-size:12.5px;color:var(--muted)}
+  .dev-m .b-sel{padding:8px 12px;font-size:10.5px;justify-content:center}
+  .es-dev .abajo{bottom:calc(126px + env(safe-area-inset-bottom,0px))}
+  .dev-pin .n{display:none}
+}
 @media (min-width:900px){.ayuda,.hoja-comp{display:none!important}}
 @media (prefers-reduced-motion:reduce){*{transition:none!important;animation:none!important}}
 </style>
@@ -264,8 +301,11 @@ h1{font-family:var(--f-display);font-style:italic;font-weight:500;font-size:44px
       <div class="barra-sup"><a class="volver" id="volver" href="../">← <span id="t-todos"></span></a><div class="idiomas" id="idiomas-p"></div></div>
       <div class="logo-wrap"><img class="logo" src="../assets/logo-apilado.png" alt="Coldwell Banker Zetaté" width="210" height="44"></div>
       <div class="titulo"><span class="zona" id="zona"></span><h1 id="nombre"></h1></div>
+      <div class="dev" id="dev-p" hidden></div>
       <p class="bajada" id="bajada"></p>
+      <button class="mas" type="button" id="b-mas" hidden></button>
       <ul class="datos-b" id="datos-b"></ul>
+      <div class="dev-acc" id="dev-acc" hidden></div>
       <div class="stats" id="stats"></div>
       <div class="filtros" id="f-op-p" role="group"></div>
       <div class="filtros" id="f-dorm-p" role="group"></div>
@@ -276,7 +316,7 @@ h1{font-family:var(--f-display);font-style:italic;font-weight:500;font-size:44px
   <main class="mapa-wrap">
     <div id="mapa" aria-label="Mapa satelital"></div>
     <div class="top">
-      <div class="esquinas"><a class="volver" href="../" aria-label="Todos los barrios">←</a><div class="idiomas" id="idiomas-m"></div></div>
+      <div class="esquinas"><a class="volver" id="volver-m" href="../" aria-label="Todos los barrios">←</a><div class="idiomas" id="idiomas-m"></div></div>
       <h2 id="nombre-m"></h2>
       <span class="sub" id="sub-m" hidden></span>
       <span class="raya" aria-hidden="true"></span>
@@ -284,6 +324,7 @@ h1{font-family:var(--f-display);font-style:italic;font-weight:500;font-size:44px
       <div class="filtros dorm" id="f-dorm-m" role="group"></div>
     </div>
     <div class="abajo" id="abajo"></div>
+    <div class="dev-m" id="dev-m" hidden></div>
   </main>
 </div>
 <div class="comp" id="comp" hidden></div>
@@ -294,7 +335,14 @@ h1{font-family:var(--f-display);font-style:italic;font-weight:500;font-size:44px
 /* ===== Común a todas las páginas: idiomas, formato, pines, ventanita, WhatsApp, selección ===== */
 const TXT = {
   es: {
-    ver_disp: "Ver disponibilidad", ocultar_disp: "Ocultar disponibilidad", agenda: "Agenda", disponible: "Disponible", sin_tarifa: "Sin tarifa", libre_dias: "Libre", libre: "Libre", ocupado: "Ocupado",
+    desarrollos: "Desarrollos", desarrollo: "Desarrollo", edificio: "Edificio", edificios: "Edificios", barrio_dev: "Barrio en desarrollo", barrios_dev: "Barrios · lotes",
+    unidades: "Unidades", unidad: "unidad", unidades_m: "unidades", lotes: "Lotes", lote_m: "lote", lotes_m: "lotes", entrega: "Entrega", todos: "Todos",
+    desarrollos_b: "Edificios y barrios en desarrollo: unidades y lotes para invertir desde el inicio.", proximamente: "Próximamente",
+    proximamente_b: "Estamos cargando los nuevos desarrollos. Escribinos y te avisamos primero.", consultar_dev: "Consultar por este desarrollo",
+    ver_desarrollos: "Desarrollos", todos_desarrollos: "Todos los desarrollos", unidades_pronto: "Unidades disponibles a consultar.",
+    ver_mas: "Ver más", ver_menos: "Ver menos", brochure: "Más información", deslizar: "Deslizá para ver desarrollos", msg_devs: "Hola, quiero recibir información de los nuevos desarrollos de Coldwell Banker Zetaté.",
+    msg_dev: d => `Hola, me interesa el desarrollo ${d.nombre} (${d.zona}). ¿Me pasan información? ${location.origin}${raiz()}desarrollos/${d.slug}/`,
+    consultar_precio: "Consultar precio", ver_disp: "Ver disponibilidad", ocultar_disp: "Ocultar disponibilidad", agenda: "Agenda", disponible: "Disponible", sin_tarifa: "Sin tarifa", libre_dias: "Libre", libre: "Libre", ocupado: "Ocupado",
     libres_mes: "Libre", sin_libres: "Sin días libres este mes", todo_libre: "Todo el mes libre", dias_sem: "LMMJVSD",
     todas: "Todas", venta: "Venta", temporada: "Temporada", alquiler: "Alquiler", terrenos: "Terrenos",
     casa: "Casa", depto: "Departamento", terreno: "Terreno",
@@ -317,7 +365,14 @@ const TXT = {
     msg_sel: (para, url) => `${para ? "Selección para " + para : "Te comparto una selección de propiedades"} — Coldwell Banker Zetaté: ${url}`,
   },
   en: {
-    ver_disp: "See availability", ocultar_disp: "Hide availability", agenda: "Availability", disponible: "Available", sin_tarifa: "No rate", libre_dias: "Free", libre: "Available", ocupado: "Booked",
+    desarrollos: "Developments", desarrollo: "Development", edificio: "Building", edificios: "Buildings", barrio_dev: "Community in development", barrios_dev: "Communities · lots",
+    unidades: "Units", unidad: "unit", unidades_m: "units", lotes: "Lots", lote_m: "lot", lotes_m: "lots", entrega: "Delivery", todos: "All",
+    desarrollos_b: "Buildings and communities under development: units and lots to invest from day one.", proximamente: "Coming soon",
+    proximamente_b: "We are loading the new developments. Message us and you'll hear first.", consultar_dev: "Ask about this development",
+    ver_desarrollos: "Developments", todos_desarrollos: "All developments", unidades_pronto: "Units available on request.",
+    ver_mas: "Read more", ver_menos: "Show less", brochure: "More information", deslizar: "Swipe to see developments", msg_devs: "Hi, I would like information about Coldwell Banker Zetaté's new developments.",
+    msg_dev: d => `Hi, I'm interested in the ${d.nombre} development (${d.zona}). Could you send me information? ${location.origin}${raiz()}desarrollos/${d.slug}/`,
+    consultar_precio: "Price on request", ver_disp: "See availability", ocultar_disp: "Hide availability", agenda: "Availability", disponible: "Available", sin_tarifa: "No rate", libre_dias: "Free", libre: "Available", ocupado: "Booked",
     libres_mes: "Available", sin_libres: "Fully booked this month", todo_libre: "Available all month", dias_sem: "MTWTFSS",
     todas: "All", venta: "For sale", temporada: "Seasonal rent", alquiler: "Rent", terrenos: "Land",
     casa: "House", depto: "Apartment", terreno: "Land",
@@ -340,7 +395,14 @@ const TXT = {
     msg_sel: (para, url) => `${para ? "Shortlist for " + para : "Here is a shortlist of properties"} — Coldwell Banker Zetaté: ${url}`,
   },
   pt: {
-    ver_disp: "Ver disponibilidade", ocultar_disp: "Ocultar disponibilidade", agenda: "Agenda", disponible: "Disponível", sin_tarifa: "Sem tarifa", libre_dias: "Livre", libre: "Livre", ocupado: "Ocupado",
+    desarrollos: "Empreendimentos", desarrollo: "Empreendimento", edificio: "Edifício", edificios: "Edifícios", barrio_dev: "Condomínio em desenvolvimento", barrios_dev: "Condomínios · lotes",
+    unidades: "Unidades", unidad: "unidade", unidades_m: "unidades", lotes: "Lotes", lote_m: "lote", lotes_m: "lotes", entrega: "Entrega", todos: "Todos",
+    desarrollos_b: "Edifícios e condomínios em desenvolvimento: unidades e lotes para investir desde o início.", proximamente: "Em breve",
+    proximamente_b: "Estamos carregando os novos empreendimentos. Escreva para nós e avisamos primeiro.", consultar_dev: "Consultar este empreendimento",
+    ver_desarrollos: "Empreendimentos", todos_desarrollos: "Todos os empreendimentos", unidades_pronto: "Unidades disponíveis sob consulta.",
+    ver_mas: "Ver mais", ver_menos: "Ver menos", brochure: "Mais informações", deslizar: "Deslize para ver empreendimentos", msg_devs: "Olá, quero receber informações sobre os novos empreendimentos da Coldwell Banker Zetaté.",
+    msg_dev: d => `Olá, tenho interesse no empreendimento ${d.nombre} (${d.zona}). Podem me enviar informações? ${location.origin}${raiz()}desarrollos/${d.slug}/`,
+    consultar_precio: "Consultar preço", ver_disp: "Ver disponibilidade", ocultar_disp: "Ocultar disponibilidade", agenda: "Agenda", disponible: "Disponível", sin_tarifa: "Sem tarifa", libre_dias: "Livre", libre: "Livre", ocupado: "Ocupado",
     libres_mes: "Livre", sin_libres: "Sem dias livres este mês", todo_libre: "Mês todo livre", dias_sem: "STQQSSD",
     todas: "Todas", venta: "Venda", temporada: "Temporada", alquiler: "Aluguel", terrenos: "Terrenos",
     casa: "Casa", depto: "Apartamento", terreno: "Terreno",
@@ -404,6 +466,7 @@ const mon = m => m === "UYU" ? "$U" : "U$S";
 const corto = n => n >= 1e6 ? (n / 1e6).toFixed(2).replace(/\.?0+$/, "").replace(".", LANG === "en" ? "." : ",") + "M" : Math.round(n / 1e3) + "K";
 const mitad = b => b == null ? null : (b % 1 ? Math.floor(b) + "½" : b);
 function precioOp(o, conDesde = true) {
+  if (o.precio == null) return t("consultar_precio"); /* temporada marcada en la planilla, sin tarifa en Tokko */
   const base = `${mon(o.moneda)} ${fmt(o.precio)}`;
   if (o.tipo === "venta") return base;
   const u = o.unidad ? ` / ${t(o.unidad)}` : "";
@@ -415,6 +478,7 @@ const UNI_CORTA = {
   pt: { quincena: "quinz.", mes: "mês", dia: "dia", periodo: "per." },
 };
 function precioCorto(o) {
+  if (o.precio == null) return t("consultar_precio");
   const b = `${mon(o.moneda)} ${fmt(o.precio)}`;
   return o.tipo === "venta" ? b : `${b} / ${UNI_CORTA[LANG][o.unidad || "mes"]}`;
 }
@@ -488,7 +552,8 @@ const FAV = {
   },
   quitar(ref) { const l = this.lista().filter(x => x !== ref); guardarLS("cbz_fav", JSON.stringify(l)); document.dispatchEvent(new CustomEvent("fav")); },
 };
-const raiz = () => location.pathname.replace(/[^/]*\/[^/]*$/, "").replace(/\/?$/, "/");
+const raiz = () => (typeof DATOS !== "undefined" && DATOS && DATOS.raiz) ? new URL(DATOS.raiz, location.href).pathname
+  : location.pathname.replace(/[^/]*\/[^/]*$/, "").replace(/\/?$/, "/");
 function urlSeleccion(refs, para) {
   const u = new URL(location.origin + raiz() + "seleccion/");
   u.searchParams.set("p", refs.join(","));
@@ -496,6 +561,20 @@ function urlSeleccion(refs, para) {
   if (LANG !== "es") u.searchParams.set("lang", LANG);
   return u.toString();
 }
+
+/* --- desarrollos --- */
+const ICONO_EDIF = '<svg viewBox="0 0 24 24" width="16" height="16" aria-hidden="true"><path fill="none" stroke="currentColor" stroke-width="1.7" stroke-linejoin="round" d="M5 21V4.5L14 3v18M14 9l5 1.5V21M3 21h18M8 7.5h3M8 11h3M8 14.5h3M8 18h3M16.5 13h.5M16.5 16.5h.5"/></svg>';
+const ICONO_LOTES = '<svg viewBox="0 0 24 24" width="16" height="16" aria-hidden="true"><path fill="none" stroke="currentColor" stroke-width="1.7" stroke-linejoin="round" d="M3.5 6.5 12 3l8.5 3.5v11L12 21l-8.5-3.5zM12 3v18M3.5 12l8.5 3.5 8.5-3.5"/></svg>';
+const iconoDev = d => d.clase === "edificio" ? ICONO_EDIF : ICONO_LOTES;
+const claseDev = d => d.clase === "edificio" ? t("edificio") : t("barrio_dev");
+function resumenDev(d) {
+  const s = [];
+  if (d.clase === "barrio" && d.lotes) s.push(`${d.lotes} ${d.lotes === 1 ? t("lote_m") : t("lotes_m")}`);
+  else if (d.unidades) s.push(`${d.unidades} ${d.unidades === 1 ? t("unidad") : t("unidades_m")}`);
+  if (d.desde_venta) s.push(`${t("desde")} U$S ${corto(d.desde_venta)}`);
+  return s.join(" · ");
+}
+const waDev = d => `https://wa.me/${d.wa || (DATOS.sitio || {}).whatsapp_general}?text=${encodeURIComponent(TXT[LANG].msg_dev(d))}`;
 
 /* --- mapa base --- */
 function mapaBase(id) {
@@ -701,8 +780,9 @@ function htmlPin(p, filtroOp) {
 
 </script>
 <script>
-const DATOS = {"modo":"barrio","slug":"el-tesoro","nombre":"El Tesoro","zona":"La Barra · Maldonado","bajada":{},"datos":[],"puntos":[],"propiedades":[{"ref":"CAP11177175","fuente":"tokko","tipo":"depto","titulo":"Apartamento en La Barra, Punta del Este – vista al mar y al arroyo Maldonado","url":"https://ficha.info/p/eU3RbdUJixeI6a","lat":-34.9093746608,"lng":-54.8704930487,"lote":null,"dormitorios":3,"banos":3,"m2_cubiertos":130.0,"m2_terreno":10.0,"huespedes":null,"ops":[{"tipo":"venta","precio":630000,"moneda":"USD","unidad":null},{"tipo":"temporada","precio":12000,"moneda":"USD","unidad":"quincena","periodos":[{"periodo":"1ra quincena de enero","precio":20900,"moneda":"USD","n":6},{"periodo":"2da quincena de enero","precio":12000,"moneda":"USD","n":7}]}],"fotos":["https://static.tokkobroker.com/pictures/11177175_13901147925066466011289009080017067674913497257006696619230372717396258564625.jpg","https://static.tokkobroker.com/pictures/11177175_44286355305651834311692886344476235019457766401989899250224022034635348594938.jpg","https://static.tokkobroker.com/pictures/11177175_64467040693095897549852420563792910935912833856314229907937892357095236959744.jpg","https://static.tokkobroker.com/pictures/11177175_98301346668076549427284687659183713917714877926634284793491417272241742186453.jpg","https://static.tokkobroker.com/pictures/11177175_70229226156439005000855335053795077645191368360747353968417516645663327665641.jpg","https://static.tokkobroker.com/pictures/11177175_47325267336496794613520941045002620312023417074966730306981463523792749318308.jpg","https://static.tokkobroker.com/pictures/11177175_57824260612321458003940261332524225645365423157887474240523984492166371231964.jpg","https://static.tokkobroker.com/pictures/11177175_3646784130369964605632173092318434104641416863700528288962785521084874034373.jpg","https://static.tokkobroker.com/pictures/11177175_31661685804015728661977180096027435550664800248828487534006250723150605735526.jpg","https://static.tokkobroker.com/pictures/11177175_80206329300611204718595177792400176809436747718408520799372481497948486057956.jpg"],"agente":{"nombre":"Graciana Fernandez","wa":"5491169763297"},"barrio":"el-tesoro","barrio_nombre":"El Tesoro"}],"sitio":{"whatsapp_general":"5491169763297","goatcounter":"cbzetate"}};
+const DATOS = {"modo":"barrio","slug":"el-tesoro","raiz":"../","nombre":"El Tesoro","zona":"La Barra · Maldonado","bajada":{},"datos":[],"puntos":[],"propiedades":[{"ref":"CAP11177175","fuente":"tokko","tipo":"depto","titulo":"Apartamento en La Barra, Punta del Este – vista al mar y al arroyo Maldonado","url":"https://ficha.info/p/eU3RbdUJixeI6a","lat":-34.9093746608,"lng":-54.8704930487,"lote":null,"dormitorios":3,"banos":3,"m2_cubiertos":130.0,"m2_terreno":10.0,"huespedes":null,"ops":[{"tipo":"venta","precio":630000,"moneda":"USD","unidad":null},{"tipo":"temporada","precio":12000,"moneda":"USD","unidad":"quincena","periodos":[{"periodo":"1ra quincena de enero","precio":20900,"moneda":"USD","n":6},{"periodo":"2da quincena de enero","precio":12000,"moneda":"USD","n":7}]}],"fotos":["https://static.tokkobroker.com/pictures/11177175_13901147925066466011289009080017067674913497257006696619230372717396258564625.jpg","https://static.tokkobroker.com/pictures/11177175_44286355305651834311692886344476235019457766401989899250224022034635348594938.jpg","https://static.tokkobroker.com/pictures/11177175_64467040693095897549852420563792910935912833856314229907937892357095236959744.jpg","https://static.tokkobroker.com/pictures/11177175_98301346668076549427284687659183713917714877926634284793491417272241742186453.jpg","https://static.tokkobroker.com/pictures/11177175_70229226156439005000855335053795077645191368360747353968417516645663327665641.jpg","https://static.tokkobroker.com/pictures/11177175_47325267336496794613520941045002620312023417074966730306981463523792749318308.jpg","https://static.tokkobroker.com/pictures/11177175_57824260612321458003940261332524225645365423157887474240523984492166371231964.jpg","https://static.tokkobroker.com/pictures/11177175_3646784130369964605632173092318434104641416863700528288962785521084874034373.jpg","https://static.tokkobroker.com/pictures/11177175_31661685804015728661977180096027435550664800248828487534006250723150605735526.jpg","https://static.tokkobroker.com/pictures/11177175_80206329300611204718595177792400176809436747718408520799372481497948486057956.jpg"],"agente":{"nombre":"Graciana Fernandez","wa":"5491169763297"},"barrio":"el-tesoro","barrio_nombre":"El Tesoro"}],"sitio":{"whatsapp_general":"5491169763297","goatcounter":"cbzetate"}};
 const SEL = DATOS.modo === "seleccion";
+const DEV = DATOS.modo === "desarrollo" ? DATOS.desarrollo : null;
 const Q = new URLSearchParams(location.search);
 let P = DATOS.propiedades;
 let PARA = Q.get("para") || "";
@@ -749,11 +829,50 @@ function pintarTextos() {
   $("bajada").textContent = SEL ? (P.length ? "" : t("vacio")) : tl(DATOS.bajada);
   $("bajada").hidden = !$("bajada").textContent;
   $("datos-b").innerHTML = (DATOS.datos || []).map(d => `<li>${esc(tl(d))}</li>`).join("");
-  $("t-todos").textContent = t("todos_barrios");
+  $("t-todos").textContent = DEV ? t("todos_desarrollos") : t("todos_barrios");
+  if (DEV) pintarDesarrollo();
   $("t-pie").textContent = (tactil ? "" : t("hover") + " ") + t("pie");
   const ventas = P.filter(p => p.ops[0].tipo === "venta").map(p => p.ops[0].precio);
-  $("stats").innerHTML = `<div class="stat"><b id="st-cant">${P.length}</b><span>${t("propiedades")}</span></div>` +
+  const nLotes = P.filter(p => p.tipo === "terreno").length, porLote = DEV && DEV.clase === "barrio" && nLotes;
+  $("stats").innerHTML = (DEV && !P.length) ? "" : `<div class="stat"><b id="st-cant">${P.length}</b><span>${DEV ? (porLote ? t("lotes") : t("unidades")) : t("propiedades")}</span></div>` +
     (ventas.length ? `<div class="stat"><b>U$S ${corto(Math.min(...ventas))}</b><span>${t("rango")}</span></div>` : "");
+}
+
+const km = (a, b, c, d) => Math.hypot((a - c) * 111.32, (b - d) * 111.32 * Math.cos(a * Math.PI / 180));
+/* ---------- desarrollo: clase, estado, galería, WhatsApp ---------- */
+function pintarDesarrollo() {
+  document.body.classList.add("es-dev");
+  document.body.classList.toggle("con-unidades", P.length > 0);
+  const estado = tl(DEV.estado), entrega = DEV.entrega ? `${t("entrega")} ${DEV.entrega}` : "";
+  $("zona").innerHTML = `<span class="dev-clase">${iconoDev(DEV)}${esc(claseDev(DEV))}${DATOS.zona ? " · " + esc(DATOS.zona) : ""}</span>`;
+  const fotos = DEV.fotos || [];
+  $("dev-p").hidden = false;
+  $("dev-p").innerHTML = ([estado, entrega].filter(Boolean).length ? `<span class="estado">${esc([estado, entrega].filter(Boolean).join(" · "))}</span>` : "") +
+    (fotos.length ? `<div class="galeria"><div class="pista-g">${fotos.map((f, k) => `<img src="${esc(f)}" alt="" ${k ? 'loading="lazy"' : ""}>`).join("")}</div>
+      ${fotos.length > 1 ? `<button class="flecha ant" type="button" aria-label="‹">‹</button><button class="flecha sig" type="button" aria-label="›">›</button><span class="cont">1 / ${fotos.length}</span>` : ""}</div>` : "");
+  const g = $("dev-p").querySelector(".pista-g");
+  if (g && fotos.length > 1) {
+    const paso = d => g.scrollBy({ left: d * g.clientWidth, behavior: "smooth" });
+    $("dev-p").querySelector(".ant").onclick = () => paso(-1);
+    $("dev-p").querySelector(".sig").onclick = () => paso(1);
+    g.addEventListener("scroll", () => { $("dev-p").querySelector(".cont").textContent = `${Math.round(g.scrollLeft / g.clientWidth) + 1} / ${fotos.length}`; }, { passive: true });
+  }
+  const baj = $("bajada"), largo = baj.textContent.length > 260;
+  baj.classList.toggle("larga", largo);
+  if (!P.length) { baj.hidden = false; baj.textContent = (baj.textContent ? baj.textContent + "\n\n" : "") + t("unidades_pronto"); }
+  $("b-mas").hidden = !largo; $("b-mas").textContent = baj.classList.contains("abierta") ? t("ver_menos") : t("ver_mas");
+  $("b-mas").onclick = () => { baj.classList.toggle("abierta"); $("b-mas").textContent = baj.classList.contains("abierta") ? t("ver_menos") : t("ver_mas"); };
+  $("dev-acc").hidden = false;
+  $("dev-acc").innerHTML = `<a class="b-sel" href="${esc(waDev(DEV))}" target="_blank" rel="noopener" data-ev="whatsapp-dev">${ICONO_WA}${t("consultar_dev")}</a>` +
+    (DEV.url ? `<a class="b-sec" href="${esc(DEV.url)}" target="_blank" rel="noopener">${t("brochure")} ↗</a>` : "");
+  $("dev-m").hidden = false;
+  $("dev-m").innerHTML = `${fotos[0] ? `<img src="${esc(fotos[0])}" alt="">` : "<span></span>"}<div class="tx">
+    <span class="dev-clase">${iconoDev(DEV)}${esc(claseDev(DEV))}${estado ? " · " + esc(estado) : ""}</span>
+    ${resumenDev(DEV) ? `<span class="r">${esc(resumenDev(DEV))}</span>` : (entrega ? `<span class="r">${esc(entrega)}</span>` : "")}
+    <a class="b-sel" href="${esc(waDev(DEV))}" target="_blank" rel="noopener">${ICONO_WA}${t("consultar")}</a></div>`;
+  document.querySelectorAll('[href^="https://wa.me"]').forEach(a => a.onclick = () => track("whatsapp-dev/" + DEV.slug));
+  for (const id of ["volver", "volver-m"]) $(id).href = DATOS.raiz + "#desarrollos";
+  $("volver-m").setAttribute("aria-label", t("todos_desarrollos"));
 }
 
 /* ---------- filtros ---------- */
@@ -852,7 +971,7 @@ function engancharCard(it, i) {
   it.card.addEventListener("keydown", e => { if (e.key === "Enter" && !e.target.closest("a,button")) ir(); });
 }
 
-function acomodar() { acomodarEtiquetas(items, it => (it === items[actual] ? 1e12 : 0) + (it.p.ops[0].tipo === "venta" ? 1e9 : 0) + it.p.ops[0].precio); }
+function acomodar() { acomodarEtiquetas(items, it => (it === items[actual] ? 1e12 : 0) + (it.p.ops[0].tipo === "venta" ? 1e9 : 0) + (it.p.ops[0].precio || 0)); }
 mapa.on("zoomend moveend", () => requestAnimationFrame(acomodar));
 
 function aplicar(reencuadrar) {
@@ -881,6 +1000,9 @@ function encuadrar(latlngs) {
 /* ---------- puntos del barrio ---------- */
 function pintarPuntos() {
   capaPuntos.clearLayers();
+  /* rombo del desarrollo: si una unidad ya está en el mismo lugar (edificio), no se pone encima */
+  if (DEV && !P.some(p => km(p.lat, p.lng, DEV.lat, DEV.lng) < 0.08)) L.marker([DEV.lat, DEV.lng], { interactive: false, keyboard: false, zIndexOffset: -500,
+    icon: L.divIcon({ className: "punto-icon", iconSize: [0, 0], html: `<span class="dev-pin"><span class="ic">${iconoDev(DEV)}</span><span class="n">${esc(DEV.nombre)}</span></span>` }) }).addTo(capaPuntos);
   (DATOS.puntos || []).forEach(pt => L.marker([pt.lat, pt.lng], { interactive: false, keyboard: false,
     icon: L.divIcon({ className: "punto-icon", iconSize: [0, 0], html: `<span class="punto"><i></i><span>${esc(tl(pt.nombre))}</span></span>` }) }).addTo(capaPuntos));
 }
@@ -905,7 +1027,7 @@ function pintarAcciones() {
   }
   ac.innerHTML = n ? `<a class="b-sel" href="${esc(urlSeleccion(FAV.lista()))}">${ICONO_CORAZON}${t("mi_seleccion")} (${n})</a>` : "";
   ab.innerHTML = n ? `<a class="b-sel" href="${esc(urlSeleccion(FAV.lista()))}">${ICONO_CORAZON}${t("mi_seleccion")} (${n})</a>`
-    : (tactil ? `<div class="ayuda${abiertaDe != null ? " fuera" : ""}">${t("mantener")}</div>` : "");
+    : (tactil && P.length ? `<div class="ayuda${abiertaDe != null ? " fuera" : ""}">${t("mantener")}</div>` : "");
 }
 function enlazarCompartir(input, bCopiar, aWA, aviso) {
   const refs = () => P.map(p => p.ref);
@@ -971,14 +1093,13 @@ async function iniciar() {
     const refs = (Q.get("p") || "").split(",").filter(Boolean);
     const lista = refs.length ? refs : FAV.lista();
     try {
-      const d = await (await fetch("../datos.json", { cache: "no-cache" })).json();
+      const d = await (await fetch(DATOS.raiz + "datos.json", { cache: "no-cache" })).json();
       const idx = new Map(d.propiedades.map(p => [p.ref, p]));
       P = lista.map(r => idx.get(r)).filter(Boolean);
     } catch (_) { P = []; }
-    $("volver").href = "../";
   }
   todo(true);
-  if (!P.length) mapa.setView([-34.86, -54.75], 11);
+  if (!P.length) DEV ? mapa.setView([DEV.lat, DEV.lng], 15.5) : mapa.setView([-34.86, -54.75], 11);
 }
 iniciar();
 window.addEventListener("resize", () => { mapa.invalidateSize(); requestAnimationFrame(acomodar); });

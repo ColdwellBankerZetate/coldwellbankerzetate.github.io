@@ -4,12 +4,12 @@
 <meta charset="utf-8">
 <meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
 <meta name="theme-color" content="#0a0a0a">
-<meta name="description" content="d">
-<meta property="og:title" content="t">
-<meta property="og:description" content="d">
+<meta name="description" content="103 propiedades de Coldwell Banker Zetaté en 17 barrios de Punta del Este y José Ignacio.">
+<meta property="og:title" content="Mapas · Coldwell Banker Zetaté">
+<meta property="og:description" content="103 propiedades de Coldwell Banker Zetaté en 17 barrios de Punta del Este y José Ignacio.">
 <style>body{margin:0}img{max-width:100%}[hidden]{display:none!important}</style>
 <script data-goatcounter="https://cbzetate.goatcounter.com/count" async src="//gc.zgo.at/count.js"></script>
-<title>t</title>
+<title>Mapas · Coldwell Banker Zetaté</title>
 <link rel="preconnect" href="https://fonts.googleapis.com">
 <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Bodoni+Moda:ital,opsz,wght@0,6..96,500;1,6..96,500&family=Hanken+Grotesk:wght@400;500;600;700&display=swap">
 <style>
@@ -45,7 +45,7 @@ h1{font-family:var(--f-display);font-style:italic;font-weight:500;font-size:42px
 .stat{display:grid;gap:2px}
 .stat b{font-size:20px;font-weight:600}
 .stat span{font-size:10.5px;letter-spacing:.18em;text-transform:uppercase;color:var(--dim)}
-.lista{list-style:none;margin:0;padding-block:6px 28px;padding-left:max(28px,env(safe-area-inset-left,0px));padding-right:28px;display:grid;gap:14px;overflow:auto;min-height:0;scrollbar-width:thin;scrollbar-color:var(--line-2) transparent}
+.lista{flex:1;list-style:none;margin:0;padding-block:6px 28px;padding-left:max(28px,env(safe-area-inset-left,0px));padding-right:28px;display:grid;gap:14px;overflow:auto;min-height:0;scrollbar-width:thin;scrollbar-color:var(--line-2) transparent}
 .bc{display:grid;grid-template-columns:120px 1fr;gap:14px;align-items:center;text-decoration:none;border-radius:6px;padding:6px;margin:-6px;transition:background .15s}
 .bc:hover,.bc.on{background:var(--raise)}
 .bc img{width:120px;height:84px;object-fit:cover;border-radius:4px;display:block;background:var(--raise)}
@@ -78,6 +78,48 @@ i.venta{background:var(--venta)}i.temporada{background:var(--temporada)}i.alquil
 .bm.grupo.izq{transform:translate(calc(20px - 100%),-20px)}
 .bm:hover .c,.bm.on .c{transform:scale(1.15)}
 @media (hover:hover){.bm:hover .l{opacity:1}}
+/* Secciones: título que se desliza (Propiedades ↔ Desarrollos) */
+.secciones{display:grid;gap:10px;min-width:0}
+.pista-t{display:flex;overflow-x:auto;scroll-snap-type:x mandatory;scrollbar-width:none;overscroll-behavior-x:contain;-webkit-overflow-scrolling:touch}
+.pista-t::-webkit-scrollbar{display:none}
+.pista-t>*{flex:0 0 100%;scroll-snap-align:start;scroll-snap-stop:always;cursor:grab}
+.pestanas{display:flex;gap:18px}
+.pestanas button{background:none;border:0;padding:0 0 6px;font-size:11px;font-weight:600;letter-spacing:.2em;text-transform:uppercase;color:var(--dim);cursor:pointer;position:relative}
+.pestanas button[aria-selected="true"]{color:var(--fg)}
+.pestanas button[aria-selected="true"]::after{content:"";position:absolute;left:0;right:0;bottom:0;height:2px;background:var(--venta)}
+.pestanas button.dev[aria-selected="true"]::after{background:var(--champ)}
+.pestanas .n{color:var(--champ);margin-left:6px}
+.chips{display:flex;flex-wrap:wrap;gap:6px}
+.chip{display:inline-flex;align-items:center;gap:7px;border:1px solid var(--line-2);background:transparent;border-radius:999px;padding:6px 13px;font-size:12.5px;font-weight:600;color:var(--muted);cursor:pointer}
+.chip:hover{color:var(--fg);border-color:var(--fg)}
+.chip[aria-pressed="true"]{background:var(--fg);border-color:var(--fg);color:var(--ink)}
+.chip svg{width:14px;height:14px}
+/* tarjetas de desarrollo: grandes, foto arriba */
+.dc{display:grid;gap:10px;text-decoration:none;border-radius:8px;padding:8px;margin:-8px;transition:background .15s}
+.dc:hover,.dc.on{background:var(--raise)}
+.dc .media{display:block;position:relative;aspect-ratio:16/10;border-radius:6px;overflow:hidden;background:var(--raise)}
+.dc .media img{width:100%;height:100%;object-fit:cover;display:block;transition:transform .6s cubic-bezier(.2,.7,.2,1)}
+.dc:hover .media img,.dc.on .media img{transform:scale(1.04)}
+.dc .media::after{content:"";position:absolute;inset:0;background:linear-gradient(180deg,transparent 55%,rgba(0,0,0,.55))}
+.dc .sello{position:absolute;left:10px;top:10px;z-index:1;display:inline-flex;align-items:center;gap:6px;background:rgba(10,10,10,.7);backdrop-filter:blur(8px);-webkit-backdrop-filter:blur(8px);border:1px solid rgba(200,178,138,.45);color:var(--champ);padding:5px 10px;border-radius:999px;font-size:10px;font-weight:600;letter-spacing:.16em;text-transform:uppercase}
+.dc .sello svg{width:13px;height:13px}
+.dc .est{position:absolute;right:10px;bottom:10px;z-index:1;color:#fff;font-size:10.5px;font-weight:600;letter-spacing:.16em;text-transform:uppercase}
+.dc .n{font-family:var(--f-display);font-style:italic;font-size:28px;line-height:1.02}
+.dc .z{font-size:12.5px;color:var(--muted)}
+.dc .r{font-size:13px;color:var(--fg)}
+.dc .tx{display:grid;gap:4px}
+.dc .k{font-size:10.5px;font-weight:600;letter-spacing:.18em;text-transform:uppercase;color:var(--champ)}
+.pron{display:grid;gap:14px;padding:22px;border:1px solid rgba(200,178,138,.35);border-radius:10px;background:linear-gradient(160deg,rgba(200,178,138,.10),transparent 60%)}
+.pron b{font-family:var(--f-display);font-style:italic;font-weight:500;font-size:30px;line-height:1}
+.pron p{margin:0;color:var(--muted);font-size:14px}
+.b-wa{display:inline-flex;align-items:center;justify-content:center;gap:8px;background:var(--fg);color:var(--ink);border-radius:999px;padding:11px 16px;font-size:12px;font-weight:700;letter-spacing:.14em;text-transform:uppercase;text-decoration:none;width:max-content}
+/* pin de desarrollo: rombo champagne con ícono */
+.bm.dev .c{background:var(--champ);color:#0a0a0a;border-radius:9px;transform:rotate(45deg);box-shadow:0 0 0 2px rgba(255,255,255,.9),0 0 0 7px rgba(200,178,138,.3),0 4px 12px rgba(0,0,0,.55)}
+.bm.dev .c>*{transform:rotate(-45deg)}
+.bm.dev .c svg{width:17px;height:17px}
+.bm.dev:hover .c,.bm.dev.on .c{transform:rotate(45deg) scale(1.15)}
+.bm.dev.on .c{animation:latido 1.8s ease-out infinite}
+@keyframes latido{0%{box-shadow:0 0 0 2px rgba(255,255,255,.9),0 0 0 4px rgba(200,178,138,.55),0 4px 12px rgba(0,0,0,.55)}100%{box-shadow:0 0 0 2px rgba(255,255,255,.9),0 0 0 16px rgba(200,178,138,0),0 4px 12px rgba(0,0,0,.55)}}
 .top,.tira{display:none}
 @media (max-width:899px){
   .app{display:block;height:100%}
@@ -90,7 +132,30 @@ i.venta{background:var(--venta)}i.temporada{background:var(--temporada)}i.alquil
   .top .idiomas button[aria-pressed="true"]{color:#fff}
   .top img{height:15px;width:auto;margin-top:14px;filter:drop-shadow(0 1px 3px rgba(0,0,0,.8))}
   .top h2{font-family:var(--f-display);font-style:italic;font-weight:500;font-size:28px;line-height:1.05;margin:12px 0 0;color:#fff;text-align:center;text-wrap:balance}
-  .top .raya{display:block;width:72px;height:1px;margin:12px 0 0;background:rgba(255,255,255,.85)}
+  .top .pista-t{pointer-events:auto;width:100%;margin-top:4px;touch-action:pan-x}
+  .top .pista-t>h2{flex:0 0 100%;padding-bottom:14px;position:relative}
+  .top .pista-t>h2::after{content:"";position:absolute;left:50%;bottom:0;width:72px;height:1px;margin-left:-36px;background:rgba(255,255,255,.85)}
+  .top .pista-t>h2:nth-child(2)::after{background:var(--champ)}
+  .puntos-t{display:flex;gap:16px;margin-top:10px;pointer-events:auto}
+  .puntos-t button{background:none;border:0;padding:4px 2px 8px;font-size:10px;font-weight:600;letter-spacing:.18em;text-transform:uppercase;color:rgba(255,255,255,.55);position:relative;cursor:pointer;text-shadow:inherit}
+  .puntos-t button[aria-selected="true"]{color:#fff}
+  .puntos-t button::after{content:"";position:absolute;left:50%;bottom:0;width:5px;height:5px;margin-left:-2.5px;border-radius:50%;background:var(--venta);transform:scale(0);transition:transform .2s}
+  .puntos-t button.dev::after{background:var(--champ)}
+  .puntos-t button[aria-selected="true"]::after{transform:scale(1)}
+  .top .chips{pointer-events:auto;flex-wrap:nowrap;gap:14px;margin-top:2px}
+  .top .chip{background:none;border:0;border-radius:0;padding:4px 2px;font-size:10px;letter-spacing:.16em;text-transform:uppercase;color:rgba(255,255,255,.5)}
+  .top .chip[aria-pressed="true"]{background:none;color:var(--champ)}
+  .top .chip svg{display:none}
+  .tira .dc{margin:0;background:rgba(10,10,10,.9);backdrop-filter:blur(12px);-webkit-backdrop-filter:blur(12px);border:1px solid rgba(200,178,138,.4);border-radius:14px;padding:8px;grid-template-columns:118px 1fr;gap:12px;align-items:center;box-shadow:0 14px 40px rgba(0,0,0,.5)}
+  .tira .dc .media{aspect-ratio:auto;height:96px;border-radius:9px}
+  .tira .dc .media::after,.tira .dc .est{display:none}
+  .tira .dc .sello{left:6px;top:6px;padding:3px 6px;font-size:0;gap:0}
+  .tira .dc .tx{display:grid;gap:3px;min-width:0}
+  .tira .dc .n{font-size:22px}
+  .tira .dc .k{font-size:9.5px;font-weight:600;letter-spacing:.18em;text-transform:uppercase;color:var(--champ)}
+  .tira .pron{background:rgba(10,10,10,.9);backdrop-filter:blur(12px);-webkit-backdrop-filter:blur(12px);padding:16px;gap:10px}
+  .tira .pron b{font-size:24px}.tira .pron p{font-size:13px}
+  .tira li.ancho{flex-basis:calc(100% - 4px);max-width:420px}
   .bm{flex-direction:column;gap:5px;transform:translate(-50%,-17px)}
   .bm.grupo{transform:translate(-50%,-20px)}
   .bm .l{font-size:15px}
@@ -111,7 +176,11 @@ i.venta{background:var(--venta)}i.temporada{background:var(--temporada)}i.alquil
     <header class="head">
       <div class="barra-sup"><div class="idiomas" id="idiomas-p"></div></div>
       <div class="logo-wrap"><img class="logo" src="assets/logo-apilado.png" alt="Coldwell Banker Zetaté" width="220" height="46"></div>
-      <h1 id="titulo"></h1>
+      <div class="secciones">
+        <div class="pestanas" id="pestanas-p" role="tablist"></div>
+        <div class="pista-t" id="pista-p"><h1></h1><h1></h1></div>
+      </div>
+      <div class="chips" id="chips-p" hidden></div>
       <p class="bajada" id="bajada"></p>
       <div class="stats" id="stats"></div>
     </header>
@@ -120,7 +189,7 @@ i.venta{background:var(--venta)}i.temporada{background:var(--temporada)}i.alquil
   </aside>
   <main class="mapa-wrap">
     <div id="mapa" aria-label="Mapa satelital de la zona"></div>
-    <div class="top"><div class="idiomas" id="idiomas-m"></div><img src="assets/logo-horizontal.png" alt="Coldwell Banker Zetaté" width="138" height="15"><h2 id="titulo-m"></h2><span class="raya" aria-hidden="true"></span></div>
+    <div class="top"><div class="idiomas" id="idiomas-m"></div><img src="assets/logo-horizontal.png" alt="Coldwell Banker Zetaté" width="138" height="15"><div class="pista-t" id="pista-m"><h2></h2><h2></h2></div><div class="puntos-t" id="puntos-m" role="tablist"></div><div class="chips" id="chips-m" hidden></div></div>
     <ul class="tira" id="tira"></ul>
   </main>
 </div>
@@ -129,7 +198,14 @@ i.venta{background:var(--venta)}i.temporada{background:var(--temporada)}i.alquil
 /* ===== Común a todas las páginas: idiomas, formato, pines, ventanita, WhatsApp, selección ===== */
 const TXT = {
   es: {
-    ver_disp: "Ver disponibilidad", ocultar_disp: "Ocultar disponibilidad", agenda: "Agenda", disponible: "Disponible", sin_tarifa: "Sin tarifa", libre_dias: "Libre", libre: "Libre", ocupado: "Ocupado",
+    desarrollos: "Desarrollos", desarrollo: "Desarrollo", edificio: "Edificio", edificios: "Edificios", barrio_dev: "Barrio en desarrollo", barrios_dev: "Barrios · lotes",
+    unidades: "Unidades", unidad: "unidad", unidades_m: "unidades", lotes: "Lotes", lote_m: "lote", lotes_m: "lotes", entrega: "Entrega", todos: "Todos",
+    desarrollos_b: "Edificios y barrios en desarrollo: unidades y lotes para invertir desde el inicio.", proximamente: "Próximamente",
+    proximamente_b: "Estamos cargando los nuevos desarrollos. Escribinos y te avisamos primero.", consultar_dev: "Consultar por este desarrollo",
+    ver_desarrollos: "Desarrollos", todos_desarrollos: "Todos los desarrollos", unidades_pronto: "Unidades disponibles a consultar.",
+    ver_mas: "Ver más", ver_menos: "Ver menos", brochure: "Más información", deslizar: "Deslizá para ver desarrollos", msg_devs: "Hola, quiero recibir información de los nuevos desarrollos de Coldwell Banker Zetaté.",
+    msg_dev: d => `Hola, me interesa el desarrollo ${d.nombre} (${d.zona}). ¿Me pasan información? ${location.origin}${raiz()}desarrollos/${d.slug}/`,
+    consultar_precio: "Consultar precio", ver_disp: "Ver disponibilidad", ocultar_disp: "Ocultar disponibilidad", agenda: "Agenda", disponible: "Disponible", sin_tarifa: "Sin tarifa", libre_dias: "Libre", libre: "Libre", ocupado: "Ocupado",
     libres_mes: "Libre", sin_libres: "Sin días libres este mes", todo_libre: "Todo el mes libre", dias_sem: "LMMJVSD",
     todas: "Todas", venta: "Venta", temporada: "Temporada", alquiler: "Alquiler", terrenos: "Terrenos",
     casa: "Casa", depto: "Departamento", terreno: "Terreno",
@@ -152,7 +228,14 @@ const TXT = {
     msg_sel: (para, url) => `${para ? "Selección para " + para : "Te comparto una selección de propiedades"} — Coldwell Banker Zetaté: ${url}`,
   },
   en: {
-    ver_disp: "See availability", ocultar_disp: "Hide availability", agenda: "Availability", disponible: "Available", sin_tarifa: "No rate", libre_dias: "Free", libre: "Available", ocupado: "Booked",
+    desarrollos: "Developments", desarrollo: "Development", edificio: "Building", edificios: "Buildings", barrio_dev: "Community in development", barrios_dev: "Communities · lots",
+    unidades: "Units", unidad: "unit", unidades_m: "units", lotes: "Lots", lote_m: "lot", lotes_m: "lots", entrega: "Delivery", todos: "All",
+    desarrollos_b: "Buildings and communities under development: units and lots to invest from day one.", proximamente: "Coming soon",
+    proximamente_b: "We are loading the new developments. Message us and you'll hear first.", consultar_dev: "Ask about this development",
+    ver_desarrollos: "Developments", todos_desarrollos: "All developments", unidades_pronto: "Units available on request.",
+    ver_mas: "Read more", ver_menos: "Show less", brochure: "More information", deslizar: "Swipe to see developments", msg_devs: "Hi, I would like information about Coldwell Banker Zetaté's new developments.",
+    msg_dev: d => `Hi, I'm interested in the ${d.nombre} development (${d.zona}). Could you send me information? ${location.origin}${raiz()}desarrollos/${d.slug}/`,
+    consultar_precio: "Price on request", ver_disp: "See availability", ocultar_disp: "Hide availability", agenda: "Availability", disponible: "Available", sin_tarifa: "No rate", libre_dias: "Free", libre: "Available", ocupado: "Booked",
     libres_mes: "Available", sin_libres: "Fully booked this month", todo_libre: "Available all month", dias_sem: "MTWTFSS",
     todas: "All", venta: "For sale", temporada: "Seasonal rent", alquiler: "Rent", terrenos: "Land",
     casa: "House", depto: "Apartment", terreno: "Land",
@@ -175,7 +258,14 @@ const TXT = {
     msg_sel: (para, url) => `${para ? "Shortlist for " + para : "Here is a shortlist of properties"} — Coldwell Banker Zetaté: ${url}`,
   },
   pt: {
-    ver_disp: "Ver disponibilidade", ocultar_disp: "Ocultar disponibilidade", agenda: "Agenda", disponible: "Disponível", sin_tarifa: "Sem tarifa", libre_dias: "Livre", libre: "Livre", ocupado: "Ocupado",
+    desarrollos: "Empreendimentos", desarrollo: "Empreendimento", edificio: "Edifício", edificios: "Edifícios", barrio_dev: "Condomínio em desenvolvimento", barrios_dev: "Condomínios · lotes",
+    unidades: "Unidades", unidad: "unidade", unidades_m: "unidades", lotes: "Lotes", lote_m: "lote", lotes_m: "lotes", entrega: "Entrega", todos: "Todos",
+    desarrollos_b: "Edifícios e condomínios em desenvolvimento: unidades e lotes para investir desde o início.", proximamente: "Em breve",
+    proximamente_b: "Estamos carregando os novos empreendimentos. Escreva para nós e avisamos primeiro.", consultar_dev: "Consultar este empreendimento",
+    ver_desarrollos: "Empreendimentos", todos_desarrollos: "Todos os empreendimentos", unidades_pronto: "Unidades disponíveis sob consulta.",
+    ver_mas: "Ver mais", ver_menos: "Ver menos", brochure: "Mais informações", deslizar: "Deslize para ver empreendimentos", msg_devs: "Olá, quero receber informações sobre os novos empreendimentos da Coldwell Banker Zetaté.",
+    msg_dev: d => `Olá, tenho interesse no empreendimento ${d.nombre} (${d.zona}). Podem me enviar informações? ${location.origin}${raiz()}desarrollos/${d.slug}/`,
+    consultar_precio: "Consultar preço", ver_disp: "Ver disponibilidade", ocultar_disp: "Ocultar disponibilidade", agenda: "Agenda", disponible: "Disponível", sin_tarifa: "Sem tarifa", libre_dias: "Livre", libre: "Livre", ocupado: "Ocupado",
     libres_mes: "Livre", sin_libres: "Sem dias livres este mês", todo_libre: "Mês todo livre", dias_sem: "STQQSSD",
     todas: "Todas", venta: "Venda", temporada: "Temporada", alquiler: "Aluguel", terrenos: "Terrenos",
     casa: "Casa", depto: "Apartamento", terreno: "Terreno",
@@ -239,6 +329,7 @@ const mon = m => m === "UYU" ? "$U" : "U$S";
 const corto = n => n >= 1e6 ? (n / 1e6).toFixed(2).replace(/\.?0+$/, "").replace(".", LANG === "en" ? "." : ",") + "M" : Math.round(n / 1e3) + "K";
 const mitad = b => b == null ? null : (b % 1 ? Math.floor(b) + "½" : b);
 function precioOp(o, conDesde = true) {
+  if (o.precio == null) return t("consultar_precio"); /* temporada marcada en la planilla, sin tarifa en Tokko */
   const base = `${mon(o.moneda)} ${fmt(o.precio)}`;
   if (o.tipo === "venta") return base;
   const u = o.unidad ? ` / ${t(o.unidad)}` : "";
@@ -250,6 +341,7 @@ const UNI_CORTA = {
   pt: { quincena: "quinz.", mes: "mês", dia: "dia", periodo: "per." },
 };
 function precioCorto(o) {
+  if (o.precio == null) return t("consultar_precio");
   const b = `${mon(o.moneda)} ${fmt(o.precio)}`;
   return o.tipo === "venta" ? b : `${b} / ${UNI_CORTA[LANG][o.unidad || "mes"]}`;
 }
@@ -323,7 +415,8 @@ const FAV = {
   },
   quitar(ref) { const l = this.lista().filter(x => x !== ref); guardarLS("cbz_fav", JSON.stringify(l)); document.dispatchEvent(new CustomEvent("fav")); },
 };
-const raiz = () => location.pathname.replace(/[^/]*\/[^/]*$/, "").replace(/\/?$/, "/");
+const raiz = () => (typeof DATOS !== "undefined" && DATOS && DATOS.raiz) ? new URL(DATOS.raiz, location.href).pathname
+  : location.pathname.replace(/[^/]*\/[^/]*$/, "").replace(/\/?$/, "/");
 function urlSeleccion(refs, para) {
   const u = new URL(location.origin + raiz() + "seleccion/");
   u.searchParams.set("p", refs.join(","));
@@ -331,6 +424,20 @@ function urlSeleccion(refs, para) {
   if (LANG !== "es") u.searchParams.set("lang", LANG);
   return u.toString();
 }
+
+/* --- desarrollos --- */
+const ICONO_EDIF = '<svg viewBox="0 0 24 24" width="16" height="16" aria-hidden="true"><path fill="none" stroke="currentColor" stroke-width="1.7" stroke-linejoin="round" d="M5 21V4.5L14 3v18M14 9l5 1.5V21M3 21h18M8 7.5h3M8 11h3M8 14.5h3M8 18h3M16.5 13h.5M16.5 16.5h.5"/></svg>';
+const ICONO_LOTES = '<svg viewBox="0 0 24 24" width="16" height="16" aria-hidden="true"><path fill="none" stroke="currentColor" stroke-width="1.7" stroke-linejoin="round" d="M3.5 6.5 12 3l8.5 3.5v11L12 21l-8.5-3.5zM12 3v18M3.5 12l8.5 3.5 8.5-3.5"/></svg>';
+const iconoDev = d => d.clase === "edificio" ? ICONO_EDIF : ICONO_LOTES;
+const claseDev = d => d.clase === "edificio" ? t("edificio") : t("barrio_dev");
+function resumenDev(d) {
+  const s = [];
+  if (d.clase === "barrio" && d.lotes) s.push(`${d.lotes} ${d.lotes === 1 ? t("lote_m") : t("lotes_m")}`);
+  else if (d.unidades) s.push(`${d.unidades} ${d.unidades === 1 ? t("unidad") : t("unidades_m")}`);
+  if (d.desde_venta) s.push(`${t("desde")} U$S ${corto(d.desde_venta)}`);
+  return s.join(" · ");
+}
+const waDev = d => `https://wa.me/${d.wa || (DATOS.sitio || {}).whatsapp_general}?text=${encodeURIComponent(TXT[LANG].msg_dev(d))}`;
 
 /* --- mapa base --- */
 function mapaBase(id) {
@@ -536,13 +643,17 @@ function htmlPin(p, filtroOp) {
 
 </script>
 <script>
-const DATOS = {"modo":"portada","barrios":[{"slug":"jose-ignacio","nombre":"José Ignacio","zona":"Maldonado · Uruguay","lat":-34.8396764,"lng":-54.6407175,"total":24,"foto":"https://static.tokkobroker.com/pictures/8639839_78625755508628164351265958465411903867529528280118572127497941793158402810211.jpg","ops":["venta","temporada","alquiler"],"desde_venta":167679},{"slug":"la-juanita","nombre":"La Juanita","zona":"José Ignacio · Maldonado","lat":-34.8357292,"lng":-54.6555769,"total":21,"foto":"https://static.tokkobroker.com/pictures/12439430_107988358599014216012067441467209527537500015999765793656927419158198518680367.jpg","ops":["venta","temporada","alquiler"],"desde_venta":195000},{"slug":"pinar-del-faro","nombre":"Pinar del Faro","zona":"José Ignacio · Maldonado","lat":-34.8324483,"lng":-54.64375709999999,"total":14,"foto":"https://static.tokkobroker.com/pictures/9574820_96907750768858196250989263214799488693355398196050935216846847469350885466930.jpg","ops":["venta","temporada","alquiler"],"desde_venta":1100000},{"slug":"laguna-escondida","nombre":"Laguna Escondida","zona":"José Ignacio · Maldonado","lat":-34.8181665,"lng":-54.6290325,"total":9,"foto":"https://static.tokkobroker.com/pictures/8583575_91439662168537245841655057862882538970586078131765096532160784411898044885794.jpg","ops":["venta","temporada","alquiler"],"desde_venta":1450000},{"slug":"eden-rock","nombre":"Eden Rock","zona":"Maldonado · Uruguay","lat":-34.86800806485,"lng":-54.754949747,"total":8,"foto":"https://static.tokkobroker.com/pictures/9579898_1529020743615928889135903916826226793342576488752714266418765396054016164902.jpg","ops":["venta"],"desde_venta":120000},{"slug":"pueblo-mio","nombre":"Pueblo Mío","zona":"Manantiales · Punta del Este","lat":-34.86479445774471,"lng":-54.82760558948853,"total":8,"foto":"https://cdn-images.xintelweb.com/upload/faf5b594fecd44aab79f44395712275a.jpg","ops":["venta"],"desde_venta":1100000},{"slug":"club-de-mar","nombre":"Club de Mar","zona":"José Ignacio · Maldonado","lat":-34.8377237,"lng":-54.6397304471,"total":5,"foto":"https://static.tokkobroker.com/pictures/10824921_32609857853372695539520598219881698776259054798248629080668010737083584409887.jpg","ops":["venta","temporada","alquiler"],"desde_venta":3000000},{"slug":"punta-ballena","nombre":"Punta Ballena","zona":"Maldonado · Uruguay","lat":-34.890252,"lng":-55.03836279999999,"total":3,"foto":"https://static.tokkobroker.com/pictures/11104004_13482659444092064052775861004407974706221207780416580764604900260923488637794.jpg","ops":["venta"],"desde_venta":260000},{"slug":"arenas-de-jose-ignacio","nombre":"Arenas de José Ignacio","zona":"José Ignacio · Maldonado","lat":-34.82229950085,"lng":-54.62321880665,"total":2,"foto":"https://static.tokkobroker.com/pictures/13214118_47606452342177398008130799863806624225760695946782967166655178769331924281617.jpg","ops":["venta","temporada"],"desde_venta":750000},{"slug":"el-chorro","nombre":"El Chorro","zona":"Maldonado · Uruguay","lat":-34.902518077068706,"lng":-54.808271424853515,"total":2,"foto":"https://static.tokkobroker.com/pictures/11816238_110247965352567213520798908679359524767193894481911403725527194414132081231362.jpg","ops":["temporada"],"desde_venta":null},{"slug":"el-tesoro","nombre":"El Tesoro","zona":"La Barra · Maldonado","lat":-34.9093746608,"lng":-54.8704930487,"total":1,"foto":"https://static.tokkobroker.com/pictures/11177175_13901147925066466011289009080017067674913497257006696619230372717396258564625.jpg","ops":["venta","temporada"],"desde_venta":630000},{"slug":"faro-bahia","nombre":"Faro Bahia","zona":"José Ignacio · Maldonado","lat":-34.8465189501,"lng":-54.6361905598,"total":1,"foto":"https://static.tokkobroker.com/pictures/11177427_34639119859094816859841822265553274013861633753636713606950578485631373609872.jpg","ops":["temporada"],"desde_venta":null},{"slug":"la-barra","nombre":"La Barra","zona":"Maldonado · Uruguay","lat":-34.9090091,"lng":-54.8706247,"total":1,"foto":"https://static.tokkobroker.com/pictures/8574538_52777507817780706817997965887729421730076614333124567696632626098393599471889.jpg","ops":["temporada"],"desde_venta":null},{"slug":"manantiales","nombre":"Manantiales","zona":"Maldonado · Uruguay","lat":-34.9061513845,"lng":-54.8201939439,"total":1,"foto":"https://static.tokkobroker.com/pictures/8696236_51473025616829823993270632624549275969206572845110789728491688035713967606097.jpg","ops":["alquiler"],"desde_venta":null},{"slug":"montoya","nombre":"Montoya","zona":"La Barra · Maldonado","lat":-34.91045228490129,"lng":-54.84935800688475,"total":1,"foto":"https://static.tokkobroker.com/pictures/11098490_37021700888477717876430293943985571886934640250995290268195592338186899005884.jpg","ops":["alquiler"],"desde_venta":null},{"slug":"ocean-park","nombre":"Ocean Park","zona":"Punta Ballena · Maldonado","lat":-34.8713896,"lng":-55.1204573,"total":1,"foto":"https://static.tokkobroker.com/pictures/13112136_62190199944634776525691353201872213191001076932921365985482143555070314604688.jpg","ops":["venta"],"desde_venta":68000},{"slug":"punta-piedras","nombre":"Punta Piedras","zona":"Manantiales · Maldonado","lat":-34.901355,"lng":-54.802042,"total":1,"foto":"https://static.tokkobroker.com/pictures/12026080_12738662399853226620864503735955293776310123841092438890646569154331086574087.jpg","ops":["temporada"],"desde_venta":null}],"sitio":{"whatsapp_general":"5491169763297","goatcounter":"cbzetate"},"total":103};
-const B = DATOS.barrios;
+const DATOS = {"modo":"portada","barrios":[{"slug":"jose-ignacio","nombre":"José Ignacio","zona":"Maldonado · Uruguay","lat":-34.8396764,"lng":-54.6407175,"total":24,"foto":"https://static.tokkobroker.com/pictures/8639839_78625755508628164351265958465411903867529528280118572127497941793158402810211.jpg","ops":["venta","temporada","alquiler"],"desde_venta":167679},{"slug":"la-juanita","nombre":"La Juanita","zona":"José Ignacio · Maldonado","lat":-34.8357292,"lng":-54.6555769,"total":21,"foto":"https://static.tokkobroker.com/pictures/12439430_107988358599014216012067441467209527537500015999765793656927419158198518680367.jpg","ops":["venta","temporada","alquiler"],"desde_venta":195000},{"slug":"pinar-del-faro","nombre":"Pinar del Faro","zona":"José Ignacio · Maldonado","lat":-34.8324483,"lng":-54.64375709999999,"total":14,"foto":"https://static.tokkobroker.com/pictures/9574820_96907750768858196250989263214799488693355398196050935216846847469350885466930.jpg","ops":["venta","temporada","alquiler"],"desde_venta":1100000},{"slug":"laguna-escondida","nombre":"Laguna Escondida","zona":"José Ignacio · Maldonado","lat":-34.8181665,"lng":-54.6290325,"total":9,"foto":"https://static.tokkobroker.com/pictures/8583575_91439662168537245841655057862882538970586078131765096532160784411898044885794.jpg","ops":["venta","temporada","alquiler"],"desde_venta":1450000},{"slug":"eden-rock","nombre":"Eden Rock","zona":"Maldonado · Uruguay","lat":-34.86800806485,"lng":-54.754949747,"total":8,"foto":"https://static.tokkobroker.com/pictures/9579898_1529020743615928889135903916826226793342576488752714266418765396054016164902.jpg","ops":["venta"],"desde_venta":120000},{"slug":"pueblo-mio","nombre":"Pueblo Mío","zona":"Manantiales · Punta del Este","lat":-34.86479445774471,"lng":-54.82760558948853,"total":8,"foto":"https://cdn-images.xintelweb.com/upload/faf5b594fecd44aab79f44395712275a.jpg","ops":["venta"],"desde_venta":1100000},{"slug":"club-de-mar","nombre":"Club de Mar","zona":"José Ignacio · Maldonado","lat":-34.8377237,"lng":-54.6397304471,"total":5,"foto":"https://static.tokkobroker.com/pictures/10824921_32609857853372695539520598219881698776259054798248629080668010737083584409887.jpg","ops":["venta","temporada","alquiler"],"desde_venta":3000000},{"slug":"punta-ballena","nombre":"Punta Ballena","zona":"Maldonado · Uruguay","lat":-34.890252,"lng":-55.03836279999999,"total":3,"foto":"https://static.tokkobroker.com/pictures/11104004_13482659444092064052775861004407974706221207780416580764604900260923488637794.jpg","ops":["venta"],"desde_venta":260000},{"slug":"arenas-de-jose-ignacio","nombre":"Arenas de José Ignacio","zona":"José Ignacio · Maldonado","lat":-34.82229950085,"lng":-54.62321880665,"total":2,"foto":"https://static.tokkobroker.com/pictures/13214118_47606452342177398008130799863806624225760695946782967166655178769331924281617.jpg","ops":["venta","temporada"],"desde_venta":750000},{"slug":"el-chorro","nombre":"El Chorro","zona":"Maldonado · Uruguay","lat":-34.902518077068706,"lng":-54.808271424853515,"total":2,"foto":"https://static.tokkobroker.com/pictures/11816238_110247965352567213520798908679359524767193894481911403725527194414132081231362.jpg","ops":["temporada"],"desde_venta":null},{"slug":"el-tesoro","nombre":"El Tesoro","zona":"La Barra · Maldonado","lat":-34.9093746608,"lng":-54.8704930487,"total":1,"foto":"https://static.tokkobroker.com/pictures/11177175_13901147925066466011289009080017067674913497257006696619230372717396258564625.jpg","ops":["venta","temporada"],"desde_venta":630000},{"slug":"faro-bahia","nombre":"Faro Bahia","zona":"José Ignacio · Maldonado","lat":-34.8465189501,"lng":-54.6361905598,"total":1,"foto":"https://static.tokkobroker.com/pictures/11177427_34639119859094816859841822265553274013861633753636713606950578485631373609872.jpg","ops":["temporada"],"desde_venta":null},{"slug":"la-barra","nombre":"La Barra","zona":"Maldonado · Uruguay","lat":-34.9090091,"lng":-54.8706247,"total":1,"foto":"https://static.tokkobroker.com/pictures/8574538_52777507817780706817997965887729421730076614333124567696632626098393599471889.jpg","ops":["temporada"],"desde_venta":null},{"slug":"manantiales","nombre":"Manantiales","zona":"Maldonado · Uruguay","lat":-34.9061513845,"lng":-54.8201939439,"total":1,"foto":"https://static.tokkobroker.com/pictures/8696236_51473025616829823993270632624549275969206572845110789728491688035713967606097.jpg","ops":["alquiler"],"desde_venta":null},{"slug":"montoya","nombre":"Montoya","zona":"La Barra · Maldonado","lat":-34.91045228490129,"lng":-54.84935800688475,"total":1,"foto":"https://static.tokkobroker.com/pictures/11098490_37021700888477717876430293943985571886934640250995290268195592338186899005884.jpg","ops":["alquiler"],"desde_venta":null},{"slug":"ocean-park","nombre":"Ocean Park","zona":"Punta Ballena · Maldonado","lat":-34.8713896,"lng":-55.1204573,"total":1,"foto":"https://static.tokkobroker.com/pictures/13112136_62190199944634776525691353201872213191001076932921365985482143555070314604688.jpg","ops":["venta"],"desde_venta":68000},{"slug":"punta-piedras","nombre":"Punta Piedras","zona":"Manantiales · Maldonado","lat":-34.901355,"lng":-54.802042,"total":1,"foto":"https://static.tokkobroker.com/pictures/12026080_12738662399853226620864503735955293776310123841092438890646569154331086574087.jpg","ops":["temporada"],"desde_venta":null}],"desarrollos":[{"slug":"punta-polo","nombre":"Punta Polo","clase":"barrio","zona":"Eden Rock · Maldonado","lat":-34.8719059378,"lng":-54.7511936254,"estado":{},"entrega":"","fotos":["https://static.tokkobroker.com/dev_pictures/170402_5680347172017651367072612374579409027634503533067962938615433914622810192517.jpg","https://static.tokkobroker.com/dev_pictures/170402_3284568099177833843229197107238459889507037172392440585781576284107850769889.jpg","https://static.tokkobroker.com/dev_pictures/170402_7821184468635503474845166022782996711578142920119647796394385336430083678263.jpg","https://static.tokkobroker.com/dev_pictures/170402_1057033153840804873253466097210107988300408818665402069672925379235511944020.jpg","https://static.tokkobroker.com/dev_pictures/170402_5703925575397713778902802477088396226984162060505583753160770133160038660133.jpg","https://static.tokkobroker.com/dev_pictures/170402_6354669283877479892148366015987341846314200609233231877743800419981713409045.jpg"],"url":"http://www.coldwellbankerzetate.com","unidades":8,"lotes":8,"desde_venta":120000,"destacado":false,"orden":100,"foto":"https://static.tokkobroker.com/dev_pictures/170402_5680347172017651367072612374579409027634503533067962938615433914622810192517.jpg"},{"slug":"playa-brava","nombre":"Playa brava","clase":"barrio","zona":"José Ignacio · Maldonado","lat":-34.8273398,"lng":-54.6417099,"estado":{},"entrega":"","fotos":["https://static.tokkobroker.com/dev_pictures/176526_1215847895705932187017156842587444791953811367478891692271598602209865077846.jpg","https://static.tokkobroker.com/dev_pictures/176526_1065852187825100283963956850181200092563840802653711211991257430077764083705.jpg","https://static.tokkobroker.com/dev_pictures/176526_5840356180369632644226667837644185762000664011592809336049797151124278959774.jpg","https://static.tokkobroker.com/dev_pictures/176526_3955506605342332091649256049554124144244315108371587082542611323582239543095.jpg","https://static.tokkobroker.com/dev_pictures/176526_4367505207378508573892760210081928796065265960062455382498561662169834357686.jpg","https://static.tokkobroker.com/dev_pictures/176526_4204978906339345889508794546002184518382877211086846528058456972318035212623.jpg"],"url":"https://www.playa-brava.com/index.html","unidades":1,"lotes":1,"desde_venta":330000,"destacado":false,"orden":100,"foto":"https://static.tokkobroker.com/dev_pictures/176526_1215847895705932187017156842587444791953811367478891692271598602209865077846.jpg"}],"sitio":{"whatsapp_general":"5491169763297","goatcounter":"cbzetate"},"total":103};
+const B = DATOS.barrios, D = DATOS.desarrollos || [];
 cargarEstadisticas(DATOS.sitio);
 const $ = id => document.getElementById(id);
 const mapa = mapaBase("mapa");
 const capa = L.layerGroup().addTo(mapa);
 let items = [];
+/* Dos secciones: 0 = propiedades por barrio, 1 = desarrollos (edificios y barrios que se venden por lotes) */
+let SECCION = location.hash === "#desarrollos" ? 1 : 0;
+let FCLASE = null; /* filtro de desarrollos: null | "edificio" | "barrio" */
+const lista = () => SECCION ? D.filter(d => !FCLASE || d.clase === FCLASE) : B;
 
 function card(b) {
   return `<a class="bc" href="${b.slug}/" data-slug="${b.slug}">${b.foto ? `<img src="${esc(b.foto)}" alt="" loading="lazy">` : `<img alt="">`}
@@ -550,41 +661,85 @@ function card(b) {
     <span class="z">${b.total} ${b.total === 1 ? t("propiedad") : t("propiedades_m")}${b.desde_venta ? ` · ${t("desde")} U$S ${corto(b.desde_venta)}` : ""}</span>
     <span class="ops">${b.ops.map(o => `<span><i class="${o}"></i>${t(o)}</span>`).join("")}</span></span></a>`;
 }
+function cardDev(d) {
+  const est = [tl(d.estado), d.entrega ? `${t("entrega")} ${d.entrega}` : ""].filter(Boolean).join(" · ");
+  return `<a class="dc" href="desarrollos/${d.slug}/" data-slug="${d.slug}">
+    <span class="media">${d.foto ? `<img src="${esc(d.foto)}" alt="" loading="lazy">` : ""}<span class="sello">${iconoDev(d)}${esc(claseDev(d))}</span>${est ? `<span class="est">${esc(est)}</span>` : ""}</span>
+    <span class="tx">${movil() ? `<span class="k">${esc(claseDev(d))}${tl(d.estado) ? " · " + esc(tl(d.estado)) : ""}</span>` : ""}<span class="n">${esc(d.nombre)}</span>
+    <span class="z">${esc(d.zona)}</span>${resumenDev(d) ? `<span class="r">${esc(resumenDev(d))}</span>` : ""}</span></a>`;
+}
+const waGeneral = () => `https://wa.me/${DATOS.sitio.whatsapp_general}?text=${encodeURIComponent(t("msg_devs"))}`;
+const htmlPron = () => `<div class="pron"><b>${t("proximamente")}</b><p>${t("proximamente_b")}</p><a class="b-wa" href="${esc(waGeneral())}" target="_blank" rel="noopener">${ICONO_WA}WhatsApp</a></div>`;
+
+function pintarSecciones() {
+  const tit = [t("portada_t"), t("desarrollos")];
+  document.querySelectorAll(".pista-t").forEach(pt => [...pt.children].forEach((h, k) => h.textContent = tit[k]));
+  $("pestanas-p").innerHTML = [t("propiedades"), t("desarrollos")].map((x, k) =>
+    `<button type="button" role="tab" class="${k ? "dev" : ""}" aria-selected="${SECCION === k}" data-k="${k}">${x}${k && D.length ? `<span class="n">${D.length}</span>` : ""}</button>`).join("");
+  $("puntos-m").innerHTML = [t("propiedades"), t("desarrollos")].map((x, k) =>
+    `<button type="button" role="tab" class="${k ? "dev" : ""}" aria-selected="${SECCION === k}" data-k="${k}">${x}</button>`).join("");
+  document.querySelectorAll("#pestanas-p button,#puntos-m button").forEach(b => b.onclick = () => irA(+b.dataset.k, true));
+}
+function pintarChips() {
+  const hay = SECCION && D.some(d => d.clase === "edificio") && D.some(d => d.clase === "barrio");
+  for (const id of ["chips-p", "chips-m"]) {
+    $(id).hidden = !hay;
+    $(id).innerHTML = hay ? [[null, t("todos"), ""], ["edificio", t("edificios"), ICONO_EDIF], ["barrio", t("barrios_dev"), ICONO_LOTES]].map(([k, x, ic]) =>
+      `<button class="chip" type="button" aria-pressed="${FCLASE === k}" data-k="${k || ""}">${ic}${x}</button>`).join("") : "";
+    $(id).querySelectorAll(".chip").forEach(b => b.onclick = () => { FCLASE = b.dataset.k || null; pintar(); encuadrar(true); track("desarrollos/filtro/" + (FCLASE || "todos")); });
+  }
+}
 function pintar() {
-  $("titulo").textContent = t("portada_t"); $("titulo-m").textContent = t("portada_t");
-  $("bajada").textContent = t("portada_b");
-  $("stats").innerHTML = `<div class="stat"><b>${DATOS.total}</b><span>${t("propiedades")}</span></div><div class="stat"><b>${B.length}</b><span>${t("barrios")}</span></div>`;
+  pintarSecciones(); pintarChips();
+  document.body.classList.toggle("seccion-dev", !!SECCION);
+  $("bajada").textContent = SECCION ? t("desarrollos_b") : t("portada_b");
+  const L0 = lista();
+  if (SECCION) {
+    const ed = D.filter(d => d.clase === "edificio").length, ba = D.length - ed;
+    $("stats").innerHTML = D.length ? `<div class="stat"><b>${D.length}</b><span>${t("desarrollos")}</span></div>` +
+      (ed ? `<div class="stat"><b>${ed}</b><span>${t("edificios")}</span></div>` : "") + (ba ? `<div class="stat"><b>${ba}</b><span>${t("barrios_dev")}</span></div>` : "") : "";
+    $("lista").innerHTML = L0.length ? L0.map(d => `<li>${cardDev(d)}</li>`).join("") : `<li>${htmlPron()}</li>`;
+    $("tira").innerHTML = L0.length ? L0.map(d => `<li>${cardDev(d)}</li>`).join("") : `<li class="ancho">${htmlPron()}</li>`;
+  } else {
+    $("stats").innerHTML = `<div class="stat"><b>${DATOS.total}</b><span>${t("propiedades")}</span></div><div class="stat"><b>${B.length}</b><span>${t("barrios")}</span></div>`;
+    $("lista").innerHTML = B.map(b => `<li>${card(b)}</li>`).join("");
+    $("tira").innerHTML = B.map(b => `<li>${card(b)}</li>`).join("");
+  }
   $("pie").textContent = t("pie");
-  $("lista").innerHTML = B.map(b => `<li>${card(b)}</li>`).join("");
-  $("tira").innerHTML = B.map(b => `<li>${card(b)}</li>`).join("");
-  document.querySelectorAll(".bc").forEach(a => {
+  document.querySelectorAll(".bc,.dc").forEach(a => {
     const g = () => grupoDe[a.dataset.slug]?.pinEl();
     a.addEventListener("mouseenter", () => g()?.classList.add("on"));
     a.addEventListener("mouseleave", () => g()?.classList.remove("on"));
+    a.addEventListener("click", () => track((SECCION ? "desarrollo/" : "barrio/") + a.dataset.slug));
   });
+  $("tira").scrollLeft = 0;
   agrupar();
 }
-/* Barrios que en pantalla quedan pegados se juntan en un solo círculo (suma de propiedades);
+/* Barrios (o desarrollos) que en pantalla quedan pegados se juntan en un solo círculo;
    tocarlo acerca el mapa hasta que se separan. */
 let grupoDe = {};
 function agrupar() {
   capa.clearLayers(); items = []; grupoDe = {};
-  const pts = B.map(b => ({ b, p: mapa.latLngToLayerPoint([b.lat, b.lng]) })).sort((x, y) => y.b.total - x.b.total);
+  const dev = !!SECCION;
+  const pts = lista().map(b => ({ b, p: mapa.latLngToLayerPoint([b.lat, b.lng]) }))
+    .sort((x, y) => dev ? (y.b.destacado - x.b.destacado) || (y.b.unidades - x.b.unidades) : y.b.total - x.b.total);
   const usados = new Set();
   for (const a of pts) {
     if (usados.has(a)) continue;
     const miembros = pts.filter(o => !usados.has(o) && a.p.distanceTo(o.p) < (movil() ? 64 : 46));
     miembros.forEach(o => usados.add(o));
-    const bs = miembros.map(o => o.b), total = bs.reduce((s, b) => s + b.total, 0);
+    const bs = miembros.map(o => o.b), total = dev ? bs.length : bs.reduce((s, b) => s + b.total, 0);
     const solo = bs.length === 1;
     const nombre = solo || movil() ? a.b.nombre : `${a.b.nombre} +${bs.length - 1}`;
+    const href = solo ? (dev ? "desarrollos/" : "") + a.b.slug + "/" : "#";
+    const centro = dev && solo ? `<span>${iconoDev(a.b)}</span>` : `<span>${total}</span>`;
     const m = L.marker([a.b.lat, a.b.lng], { keyboard: false, icon: L.divIcon({ className: "bm-icon", iconSize: [0, 0],
-      html: `<a class="bm${solo ? "" : " grupo"}" href="${solo ? a.b.slug + "/" : "#"}" aria-label="${esc(nombre)}"><span class="c">${total}</span><span class="l tag">${esc(nombre)}</span></a>` }) }).addTo(capa);
+      html: `<a class="bm${solo ? "" : " grupo"}${dev ? " dev" : ""}" href="${href}" aria-label="${esc(nombre)}"><span class="c">${centro}</span><span class="l tag">${esc(nombre)}</span></a>` }) }).addTo(capa);
     if (!solo) m.on("click", e => {
       e.originalEvent?.preventDefault();
       mapa.flyToBounds(L.latLngBounds(bs.map(b => [b.lat, b.lng])), { ...pad, maxZoom: 17, duration: .8 });
     });
-    const it = { b: a.b, total, m, visible: true, pinEl: () => m.getElement()?.querySelector(".bm") };
+    const it = { b: a.b, total: dev ? (a.b.destacado ? 1e6 : 0) + a.b.unidades + 1 : total, m, visible: true, pinEl: () => m.getElement()?.querySelector(".bm") };
     items.push(it); bs.forEach(b => grupoDe[b.slug] = it);
   }
   marcarTira();
@@ -597,8 +752,8 @@ function acomodar() {
   vis.forEach(it => it.pinEl().classList.remove("sin-tag", "izq"));
   const circulos = vis.map(it => it.pinEl().querySelector(".c").getBoundingClientRect());
   const orden = vis.map((it, k) => ({ it, k })).sort((a, b) =>
-    ((b.it.pinEl().classList.contains("on") ? 1e6 : 0) + b.it.total) - ((a.it.pinEl().classList.contains("on") ? 1e6 : 0) + a.it.total));
-  const puestas = movil() ? [$("titulo-m").getBoundingClientRect(), $("tira").getBoundingClientRect()] : [];
+    ((b.it.pinEl().classList.contains("on") ? 1e9 : 0) + b.it.total) - ((a.it.pinEl().classList.contains("on") ? 1e9 : 0) + a.it.total));
+  const puestas = movil() ? [document.querySelector(".top .pista-t").getBoundingClientRect(), $("puntos-m").getBoundingClientRect(), $("tira").getBoundingClientRect()] : [];
   for (const { it, k } of orden) {
     const el = it.pinEl();
     let r = el.querySelector(".tag").getBoundingClientRect();
@@ -609,20 +764,53 @@ function acomodar() {
 }
 mapa.on("zoomend", agrupar);
 mapa.on("moveend", () => requestAnimationFrame(acomodar));
+const pad = movil() ? { paddingTopLeft: [60, 230], paddingBottomRight: [70, 200] } : { paddingTopLeft: [80, 80], paddingBottomRight: [230, 80] };
+function encuadrar(volar) {
+  const L0 = lista(), pts = (L0.length ? L0 : B).map(b => [b.lat, b.lng]);
+  const op = { ...pad, maxZoom: L0.length === 1 ? 15 : 16 };
+  volar ? mapa.flyToBounds(L.latLngBounds(pts), { ...op, duration: .9 }) : mapa.fitBounds(L.latLngBounds(pts), op);
+}
+/* cambiar de sección: deslizando el título, tocando las pestañas o con #desarrollos en el link */
+function irA(k, mover) {
+  if (mover) document.querySelectorAll(".pista-t").forEach(pt => pt.scrollTo({ left: k * pt.clientWidth, behavior: "smooth" }));
+  if (k === SECCION) return;
+  SECCION = k; FCLASE = null;
+  try { history.replaceState(null, "", k ? "#desarrollos" : location.pathname + location.search); } catch (_) {}
+  track(k ? "seccion/desarrollos" : "seccion/propiedades");
+  pintar(); encuadrar(true);
+}
+document.querySelectorAll(".pista-t").forEach(pt => {
+  let timer = null;
+  pt.addEventListener("scroll", () => {
+    clearTimeout(timer);
+    timer = setTimeout(() => { const k = Math.round(pt.scrollLeft / pt.clientWidth); if (k !== SECCION) irA(k, false); }, 90);
+  }, { passive: true });
+  /* compu: arrastrar con el mouse también desliza */
+  let x0 = null, s0 = 0;
+  pt.addEventListener("pointerdown", e => { if (e.pointerType === "mouse") { x0 = e.clientX; s0 = pt.scrollLeft; pt.style.scrollSnapType = "none"; } });
+  window.addEventListener("pointermove", e => { if (x0 != null) pt.scrollLeft = s0 - (e.clientX - x0); });
+  window.addEventListener("pointerup", e => {
+    if (x0 == null) return;
+    const dx = e.clientX - x0; x0 = null; pt.style.scrollSnapType = "";
+    const k = Math.abs(dx) > 40 ? (dx < 0 ? 1 : 0) : SECCION;
+    pt.scrollTo({ left: k * pt.clientWidth, behavior: "smooth" }); irA(k, false);
+  });
+});
+window.addEventListener("hashchange", () => irA(location.hash === "#desarrollos" ? 1 : 0, true));
 for (const id of ["idiomas-p", "idiomas-m"]) armarIdiomas($(id), pintar);
-const pad = movil() ? { paddingTopLeft: [60, 190], paddingBottomRight: [70, 200] } : { paddingTopLeft: [80, 80], paddingBottomRight: [230, 80] };
 pintar();
-mapa.fitBounds(L.latLngBounds(B.map(b => [b.lat, b.lng])), pad);
-/* celular: al deslizar la tira, el mapa resalta ese barrio */
+encuadrar(false);
+requestAnimationFrame(() => document.querySelectorAll(".pista-t").forEach(pt => pt.scrollLeft = SECCION * pt.clientWidth));
+/* celular: al deslizar la tira, el mapa resalta ese barrio o desarrollo */
 const tira = $("tira");
 function marcarTira() {
   if (!movil()) return;
   const t0 = $("tira"), k = Math.round(t0.scrollLeft / (t0.firstElementChild?.offsetWidth + 10 || 1));
-  const on = grupoDe[B[k]?.slug];
+  const on = grupoDe[lista()[k]?.slug];
   items.forEach(it => it.pinEl()?.classList.toggle("on", it === on));
 }
 tira.addEventListener("scroll", () => { marcarTira(); requestAnimationFrame(acomodar); }, { passive: true });
-window.addEventListener("resize", () => mapa.invalidateSize());
+window.addEventListener("resize", () => { mapa.invalidateSize(); document.querySelectorAll(".pista-t").forEach(pt => pt.scrollLeft = SECCION * pt.clientWidth); });
 </script>
 
 </body>
