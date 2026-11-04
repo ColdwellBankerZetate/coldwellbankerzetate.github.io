@@ -23,8 +23,8 @@ El usuario es Mateo (Coldwell Banker Zetaté, Punta del Este). Habla español ri
 
 ## Disponibilidad (agenda de temporada)
 
-- Planilla de Google "Disponibilidad temporada" (la carga solo Mateo), hoja `Disponibilidad`: `Barrio | Casa | Código | Ocupado`.
-- La lista de casas la mantiene sola el script `planilla/Codigo.gs` (pegado en Extensiones → Apps Script de la planilla, función `instalar` una vez): todos los días lee `datos.json` del sitio, agrega casas nuevas de temporada, ordena por barrio, linkea la ficha y conserva "Ocupado". Casas que salen de Tokko con fechas cargadas quedan abajo en gris.
+- Planilla de Google "Disponibilidad temporada" (la carga solo Mateo), hoja `Disponibilidad`: `Barrio | Casa | Difusión | Código | Ocupado`. "Casa" = dirección de Tokko (nombre interno: casa, barrio, lote); "Difusión" = título publicado.
+- La lista de casas la mantiene sola el script `planilla/Codigo.gs` (pegado en Extensiones → Apps Script de la planilla, función `instalar` una vez): todos los días lee `datos.json` del sitio y las direcciones de Tokko (clave guardada solo en el script de la planilla, nunca en el repo), agrega casas nuevas de temporada, ordena por barrio, linkea la ficha y conserva "Ocupado". Casas que salen de Tokko con fechas cargadas quedan abajo en gris.
 - Por defecto la casa está **disponible** en los períodos con precio en Tokko (1ra/2da quincena, mes, Fin de año = 26/12–2/1, Semana santa = lunes a domingo de Pascua). Días sin tarifa = gris.
 - `Ocupado` = fechas tomadas, ej. `26/12-10/1, 15/1 al 27/1` (inclusive; sin año = temporada que viene): se tachan. Vacío o `libre` = todo disponible. Fecha mal escrita = no se tacha nada de esa casa y queda en `avisos.txt`.
 - Si Mateo pasa "casa + fechas" por el chat, no hay herramienta para editar la planilla: decirle qué escribir en qué fila.
