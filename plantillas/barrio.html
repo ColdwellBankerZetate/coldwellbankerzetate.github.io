@@ -432,7 +432,7 @@ function engancharCard(it, i) {
   it.card.addEventListener("keydown", e => { if (e.key === "Enter" && !e.target.closest("a,button")) ir(); });
 }
 
-function acomodar() { acomodarEtiquetas(items, it => (it === items[actual] ? 1e12 : 0) + (it.p.ops[0].tipo === "venta" ? 1e9 : 0) + it.p.ops[0].precio); }
+function acomodar() { acomodarEtiquetas(items, it => (it === items[actual] ? 1e12 : 0) + (it.p.ops[0].tipo === "venta" ? 1e9 : 0) + (it.p.ops[0].precio || 0)); }
 mapa.on("zoomend moveend", () => requestAnimationFrame(acomodar));
 
 function aplicar(reencuadrar) {

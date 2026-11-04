@@ -377,6 +377,11 @@ def main():
                 p["verificado"] = True
             if p["ref"].upper() in disp:
                 p["ocupado"] = disp[p["ref"].upper()]
+                # casa sin "Alquiler temporario" en Tokko (solo venta, o mal cargada como alquiler) pero con
+                # algo en "Ocupado" de la planilla: se alquila por temporada, precio a consultar
+                if p["tipo"] != "terreno" and not any(o["tipo"] == "temporada" for o in p["ops"]):
+                    p["ops"].append({"tipo": "temporada", "precio": None, "moneda": "USD", "unidad": None,
+                                     "periodos": [], "consultar": True})
             p["barrio"] = slug
             p["barrio_nombre"] = c["nombre"]
         # fuera de zona: a más de 5 km de la mediana del barrio (probable error de carga en Tokko)
@@ -399,7 +404,7 @@ def main():
                     if not p.get("verificado"):
                         p["aprox"] = True
                         avisos.append(f"{c['nombre']}: {p['ref']} comparte ubicación con {len(grupo) - 1} más")
-        props.sort(key=lambda p: (p["ops"][0]["tipo"] != "venta", p["ops"][0]["precio"]))
+        props.sort(key=lambda p: (p["ops"][0]["tipo"] != "venta", p["ops"][0]["precio"] or 0))
         datos = {"modo": "barrio", "slug": slug, "nombre": c["nombre"], "zona": c.get("zona", ""),
                  "bajada": c.get("bajada") or {}, "datos": c.get("datos") or [], "puntos": c.get("puntos") or [],
                  "propiedades": props, "sitio": sitio}

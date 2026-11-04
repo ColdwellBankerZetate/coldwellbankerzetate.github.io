@@ -1,9 +1,11 @@
 /**
  * Planilla de disponibilidad — mapas Coldwell Banker Zetaté
  *
- * Mantiene sola la lista de casas de temporada (las lee de los mapas, que se sincronizan con Tokko):
+ * Mantiene sola la lista de casas y apartamentos (sin terrenos) de los mapas, que se sincronizan con Tokko:
  * agrega las nuevas, ordena por barrio, pone el link a la ficha y conserva lo escrito en "Ocupado".
- * "Casa" = la dirección que figura en Tokko (nombre interno: casa, barrio y lote); "Difusión" = el título publicado.
+ * "Casa" = la dirección que figura en Tokko (nombre interno: casa, barrio y lote); "Difusión" = el título publicado;
+ * "En Tokko" = cómo está cargada (Temporada / Venta / Alquiler). Si una que no es "Temporada" tiene algo en
+ * "Ocupado" (fechas o "libre"), el mapa la muestra también como temporada con precio a consultar.
  * Casas que salen de Tokko: si tenían fechas quedan abajo en gris; si no, se borran.
  *
  * Instalación (una sola vez): en la planilla, Extensiones → Apps Script, pegar este archivo,
@@ -17,7 +19,7 @@ const TOKKO_KEY = "";
 const DATOS = "https://coldwellbankerzetate.github.io/datos.json";
 const TOKKO = "https://www.tokkobroker.com/api/v1/property/";
 const HOJA = "Disponibilidad";
-const CAB = ["Barrio", "Casa", "Difusión", "Código", "Ocupado"];
+const CAB = ["Barrio", "Casa", "Difusión", "En Tokko", "Código", "Ocupado"];
 const C_OC = CAB.indexOf("Ocupado") + 1, C_COD = CAB.indexOf("Código") + 1;
 
 function onOpen() {
@@ -75,14 +77,16 @@ function actualizar() {
     // 2) Casas de temporada de los mapas + dirección de Tokko
     const datos = JSON.parse(UrlFetchApp.fetch(DATOS + "?t=" + Date.now()).getContentText());
     const dir = direccionesTokko();
+    const NOMBRE_OP = { temporada: "Temporada", venta: "Venta", alquiler: "Alquiler" };
     const casas = datos.propiedades
-      .filter(p => p.ops.some(o => o.tipo === "temporada"))
-      .map(p => ({ barrio: p.barrio_nombre, casa: dir[p.ref] || casaPrevia[p.ref] || "", difusion: difusion(p), cod: p.ref, url: p.url }))
+      .filter(p => p.tipo !== "terreno" && p.fuente === "tokko") /* sin terrenos ni fichas de otras inmobiliarias */
+      .map(p => ({ barrio: p.barrio_nombre, casa: dir[p.ref] || casaPrevia[p.ref] || "", difusion: difusion(p), cod: p.ref, url: p.url,
+                   op: p.ops.filter(o => !o.consultar).map(o => NOMBRE_OP[o.tipo]).join(" + ") }))
       .sort((a, b) => a.barrio.localeCompare(b.barrio, "es") ||
                       a.casa.localeCompare(b.casa, "es", { numeric: true }) || a.difusion.localeCompare(b.difusion, "es"));
     const activas = new Set(casas.map(c => c.cod));
     const viejas = Object.keys(previo).filter(c => !activas.has(c) && previo[c])
-      .map(c => ({ barrio: "Ya no está en Tokko", casa: casaPrevia[c] || "", difusion: "", cod: c, url: "" }));
+      .map(c => ({ barrio: "Ya no está en Tokko", casa: casaPrevia[c] || "", difusion: "", op: "", cod: c, url: "" }));
     const filas = casas.concat(viejas);
 
     // 3) Reescribir la hoja prolija
@@ -92,7 +96,7 @@ function actualizar() {
     if (filas.length) {
       const n = filas.length;
       hoja.getRange(2, C_OC, n, 1).setNumberFormat("@"); // texto: que Google no convierta "1/2" en fecha
-      hoja.getRange(2, 1, n, CAB.length).setValues(filas.map(f => [f.barrio, f.casa, f.difusion, f.cod, previo[f.cod] || ""]));
+      hoja.getRange(2, 1, n, CAB.length).setValues(filas.map(f => [f.barrio, f.casa, f.difusion, f.op, f.cod, previo[f.cod] || ""]));
       hoja.getRange(2, 2, n, 1).setRichTextValues(filas.map(f => [f.url && f.casa
         ? SpreadsheetApp.newRichTextValue().setText(f.casa).setLinkUrl(f.url).build()
         : SpreadsheetApp.newRichTextValue().setText(f.casa).build()]));
@@ -101,16 +105,16 @@ function actualizar() {
       const fondos = filas.map(f => { if (f.barrio !== ant) { tono = !tono; ant = f.barrio; } return Array(CAB.length).fill(tono ? "#ffffff" : "#f4f2ee"); });
       hoja.getRange(2, 1, n, CAB.length).setBackgrounds(fondos).setVerticalAlignment("middle");
       hoja.getRange(2, 2, n, 1).setFontWeight("bold");
-      hoja.getRange(2, 3, n, 2).setFontColor("#888888");
+      hoja.getRange(2, 3, n, 3).setFontColor("#888888");
       hoja.getRange(2, C_OC, n, 1).setFontWeight("bold");
       if (viejas.length) hoja.getRange(casas.length + 2, 1, viejas.length, CAB.length).setFontColor("#999999");
     }
     hoja.setFrozenRows(1);
-    [150, 260, 340, 110, 300].forEach((w, i) => hoja.setColumnWidth(i + 1, w));
-    hoja.getRange(1, C_OC).setNote('Fechas ocupadas, ej: 26/12-10/1, 15/1 al 27/1\nVacío = disponible en los períodos con precio de Tokko');
+    [150, 260, 320, 120, 110, 300].forEach((w, i) => hoja.setColumnWidth(i + 1, w));
+    hoja.getRange(1, C_OC).setNote('Fechas ocupadas, ej: 26/12-10/1, 15/1 al 27/1\nTemporada: vacío = disponible en los períodos con precio de Tokko\nVenta/Alquiler: escribí fechas o "libre" para que el mapa la muestre en temporada (precio a consultar)');
     hoja.getRange(1, 2).setNote("Dirección cargada en Tokko (nombre interno). Para cambiarla, cambiala en Tokko.");
     const sinDir = casas.filter(c => !c.casa).length;
-    libro.toast(`${casas.length} casas de temporada` + (sinDir ? ` · ${sinDir} sin dirección en Tokko` : ""), "Mapas", 6);
+    libro.toast(`${casas.length} casas` + (sinDir ? ` · ${sinDir} sin dirección en Tokko` : ""), "Mapas", 6);
   } finally {
     lock.releaseLock();
   }
