@@ -156,10 +156,10 @@ h1{font-family:var(--f-display);font-style:italic;font-weight:500;font-size:44px
 .tarifas td+td{text-align:right;color:var(--fg)}
 .tarifas td:first-child{color:var(--muted)}
 .agenda .cal{margin-top:4px;font-variant-numeric:tabular-nums}
-.b-agenda{display:inline-flex;align-items:center;justify-content:center;gap:6px;font:inherit;font-size:11px;font-weight:700;letter-spacing:.12em;text-transform:uppercase;cursor:pointer;background:none;color:var(--champ);border:1px solid rgba(201,178,135,.45);border-radius:8px;padding:9px 8px}
-.b-agenda:hover,.b-agenda[aria-expanded="true"]{border-color:var(--champ);background:rgba(201,178,135,.08)}
-.prev .acciones .b-agenda{grid-column:1/-1}
-.b-agenda.ver{border:0;border-bottom:1px solid rgba(201,178,135,.45);border-radius:0;padding:0 0 2px;font-size:12px;font-weight:600;letter-spacing:.14em;background:none}
+.b-agenda{display:flex;align-items:center;justify-content:center;gap:8px;width:100%;font:inherit;font-size:12px;font-weight:700;letter-spacing:.14em;text-transform:uppercase;cursor:pointer;background:var(--champ);color:var(--ink);border:0;border-radius:8px;padding:11px 10px;transition:filter .2s}
+.b-agenda:hover{filter:brightness(1.08)}
+.b-agenda[aria-expanded="true"]{background:none;color:var(--champ);box-shadow:inset 0 0 0 1px var(--champ)}
+.card .b-agenda{max-width:300px}
 .card .agenda{max-width:300px}
 .cal-wa,.leaflet-container a.cal-wa{display:inline-flex;align-items:center;gap:6px;color:var(--fg);font-size:11px;font-weight:700;letter-spacing:.12em;text-transform:uppercase;text-decoration:none;border-bottom:1px solid var(--line-2);padding-bottom:2px;width:max-content}
 .cal-cab{display:flex;align-items:center;justify-content:space-between;font-size:12px;font-weight:600;letter-spacing:.06em;margin-bottom:6px}
@@ -379,11 +379,11 @@ function htmlCard(p) {
     <div class="fila"><span class="precio">${esc(precioOp(o))}</span></div>
     ${otras.map(x => `<span class="otra-op">${t(x.tipo)} · ${esc(precioOp(x))}</span>`).join("")}
     <div class="specs">${specs(p)}${SEL ? `<span>${esc(p.barrio_nombre)}</span>` : (p.lote ? `<span>${t("lote")} ${esc(p.lote)}</span>` : "")}</div>
+    ${tieneAgenda(p) ? htmlBotonAgenda() + `<div class="agenda" hidden><div class="cal"></div></div>` : ""}
     <div class="enlaces"><a class="ver" href="${esc(p.url)}" target="_blank" rel="noopener">${t("ver_ficha")} ↗</a>
       <a class="ver wa" href="${esc(linkWA(p))}" target="_blank" rel="noopener">${ICONO_WA}${t("consultar")}</a>
-      ${tieneAgenda(p) ? htmlBotonAgenda("ver") : ""}
       ${SEL ? `<button class="ver" type="button" data-quitar style="background:none;border:0;border-bottom:1px solid var(--line-2);cursor:pointer;color:var(--muted)">${t("quitar")}</button>` : ""}</div>
-    ${tieneAgenda(p) ? `<div class="agenda" hidden><div class="cal"></div></div>` : ""}`;
+    `;
 }
 
 function construir() {

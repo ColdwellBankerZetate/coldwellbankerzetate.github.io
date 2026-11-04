@@ -164,7 +164,7 @@ function linkWA(p) {
 const ICONO_WA = '<svg viewBox="0 0 24 24" width="15" height="15" aria-hidden="true"><path fill="currentColor" d="M12 2a10 10 0 0 0-8.6 15.1L2 22l5-1.3A10 10 0 1 0 12 2Zm0 18.2a8.2 8.2 0 0 1-4.2-1.1l-.3-.2-3 .8.8-2.9-.2-.3A8.2 8.2 0 1 1 12 20.2Zm4.5-6.1c-.2-.1-1.5-.7-1.7-.8-.2-.1-.4-.1-.6.1l-.8 1c-.1.2-.3.2-.5.1a6.7 6.7 0 0 1-3.3-2.9c-.2-.4.2-.4.7-1.3.1-.2 0-.3 0-.4l-.8-1.8c-.2-.5-.4-.4-.6-.4h-.5a1 1 0 0 0-.7.3 3 3 0 0 0-.9 2.2 5.2 5.2 0 0 0 1.1 2.7 11.8 11.8 0 0 0 4.5 4c1.7.7 2.3.8 3.2.6a2.7 2.7 0 0 0 1.8-1.2 2.2 2.2 0 0 0 .1-1.3c0-.1-.2-.2-.4-.3Z"/></svg>';
 const ICONO_CAL = '<svg viewBox="0 0 24 24" width="14" height="14" aria-hidden="true"><path fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" d="M4.5 6.5h15v13h-15zM4.5 10.5h15M8.5 4v4M15.5 4v4"/></svg>';
 const tieneAgenda = p => p.ops.some(o => o.tipo === "temporada");
-const htmlBotonAgenda = (clase = "") => `<button class="b-agenda ${clase}" type="button" aria-expanded="false">${ICONO_CAL}${t("agenda")}</button>`;
+const htmlBotonAgenda = (clase = "") => `<button class="b-agenda ${clase}" type="button" aria-expanded="false">${ICONO_CAL}<span>${t("ver_disp")}</span></button>`;
 /* botón Agenda: abre/cierra el calendario en `caja` (o "a confirmar" si la casa no tiene fechas en la planilla) */
 function engancharAgenda(btn, caja, p, alCambiar) {
   if (!btn || !caja) return;
@@ -172,6 +172,7 @@ function engancharAgenda(btn, caja, p, alCambiar) {
     e.preventDefault(); e.stopPropagation();
     const abrir = caja.hidden;
     caja.hidden = !abrir; btn.setAttribute("aria-expanded", String(abrir));
+    btn.querySelector("span").textContent = abrir ? t("ocultar_disp") : t("ver_disp");
     if (abrir) {
       if (Array.isArray(p.ocupado)) armarCalendario(caja.querySelector(".cal"), p);
       else caja.querySelector(".cal").innerHTML = `<div class="cal-pie"><span class="cal-res">${t("sin_agenda")}</span>
@@ -254,14 +255,13 @@ function htmlVista(p, filtroOp) {
       ${ops}
       <span class="specs">${specs(p)}</span>
       ${p.aprox ? `<span class="aprox">${t("aprox")}</span>` : ""}
+      ${tieneAgenda(p) ? htmlBotonAgenda() + `<div class="agenda" hidden><div class="cal"></div></div>` : ""}
       ${tarifas}
       <div class="acciones">
         <a class="b-ficha" href="${esc(p.url)}" target="_blank" rel="noopener" data-ev="ficha">${t("ver_ficha")} ↗</a>
         <a class="b-wa" href="${esc(linkWA(p))}" target="_blank" rel="noopener" data-ev="whatsapp">${ICONO_WA}${t("consultar")}</a>
         <button class="b-fav" type="button" aria-pressed="${fav}" aria-label="${fav ? t("guardada") : t("guardar")}" title="${fav ? t("guardada") : t("guardar")}">${ICONO_CORAZON}</button>
-        ${tieneAgenda(p) ? htmlBotonAgenda() : ""}
       </div>
-      ${tieneAgenda(p) ? `<div class="agenda" hidden><div class="cal"></div></div>` : ""}
     </div></div>`;
 }
 function armarVista(raizEl, p) {
