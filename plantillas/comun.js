@@ -1,7 +1,7 @@
 /* ===== Común a todas las páginas: idiomas, formato, pines, ventanita, WhatsApp, selección ===== */
 const TXT = {
   es: {
-    ver_disp: "Ver disponibilidad", ocultar_disp: "Ocultar disponibilidad", libre: "Libre", ocupado: "Ocupado",
+    ver_disp: "Ver disponibilidad", ocultar_disp: "Ocultar disponibilidad", agenda: "Agenda", sin_agenda: "Disponibilidad a confirmar.", consultar_disp: "Consultar por WhatsApp", libre: "Libre", ocupado: "Ocupado",
     libres_mes: "Libre", sin_libres: "Sin días libres este mes", todo_libre: "Todo el mes libre", dias_sem: "LMMJVSD",
     todas: "Todas", venta: "Venta", temporada: "Temporada", alquiler: "Alquiler", terrenos: "Terrenos",
     casa: "Casa", depto: "Departamento", terreno: "Terreno",
@@ -24,7 +24,7 @@ const TXT = {
     msg_sel: (para, url) => `${para ? "Selección para " + para : "Te comparto una selección de propiedades"} — Coldwell Banker Zetaté: ${url}`,
   },
   en: {
-    ver_disp: "See availability", ocultar_disp: "Hide availability", libre: "Available", ocupado: "Booked",
+    ver_disp: "See availability", ocultar_disp: "Hide availability", agenda: "Availability", sin_agenda: "Availability to be confirmed.", consultar_disp: "Ask on WhatsApp", libre: "Available", ocupado: "Booked",
     libres_mes: "Available", sin_libres: "Fully booked this month", todo_libre: "Available all month", dias_sem: "MTWTFSS",
     todas: "All", venta: "For sale", temporada: "Seasonal rent", alquiler: "Rent", terrenos: "Land",
     casa: "House", depto: "Apartment", terreno: "Land",
@@ -47,7 +47,7 @@ const TXT = {
     msg_sel: (para, url) => `${para ? "Shortlist for " + para : "Here is a shortlist of properties"} — Coldwell Banker Zetaté: ${url}`,
   },
   pt: {
-    ver_disp: "Ver disponibilidade", ocultar_disp: "Ocultar disponibilidade", libre: "Livre", ocupado: "Ocupado",
+    ver_disp: "Ver disponibilidade", ocultar_disp: "Ocultar disponibilidade", agenda: "Agenda", sin_agenda: "Disponibilidade a confirmar.", consultar_disp: "Consultar pelo WhatsApp", libre: "Livre", ocupado: "Ocupado",
     libres_mes: "Livre", sin_libres: "Sem dias livres este mês", todo_libre: "Mês todo livre", dias_sem: "STQQSSD",
     todas: "Todas", venta: "Venda", temporada: "Temporada", alquiler: "Aluguel", terrenos: "Terrenos",
     casa: "Casa", depto: "Apartamento", terreno: "Terreno",
@@ -162,6 +162,27 @@ function linkWA(p) {
   return `https://wa.me/${p.agente.wa}?text=${encodeURIComponent(TXT[LANG].msg(a, p).replace(/^(Hola|Hi|Olá) ,/, "$1,"))}`;
 }
 const ICONO_WA = '<svg viewBox="0 0 24 24" width="15" height="15" aria-hidden="true"><path fill="currentColor" d="M12 2a10 10 0 0 0-8.6 15.1L2 22l5-1.3A10 10 0 1 0 12 2Zm0 18.2a8.2 8.2 0 0 1-4.2-1.1l-.3-.2-3 .8.8-2.9-.2-.3A8.2 8.2 0 1 1 12 20.2Zm4.5-6.1c-.2-.1-1.5-.7-1.7-.8-.2-.1-.4-.1-.6.1l-.8 1c-.1.2-.3.2-.5.1a6.7 6.7 0 0 1-3.3-2.9c-.2-.4.2-.4.7-1.3.1-.2 0-.3 0-.4l-.8-1.8c-.2-.5-.4-.4-.6-.4h-.5a1 1 0 0 0-.7.3 3 3 0 0 0-.9 2.2 5.2 5.2 0 0 0 1.1 2.7 11.8 11.8 0 0 0 4.5 4c1.7.7 2.3.8 3.2.6a2.7 2.7 0 0 0 1.8-1.2 2.2 2.2 0 0 0 .1-1.3c0-.1-.2-.2-.4-.3Z"/></svg>';
+const ICONO_CAL = '<svg viewBox="0 0 24 24" width="14" height="14" aria-hidden="true"><path fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" d="M4.5 6.5h15v13h-15zM4.5 10.5h15M8.5 4v4M15.5 4v4"/></svg>';
+const tieneAgenda = p => p.ops.some(o => o.tipo === "temporada");
+const htmlBotonAgenda = (clase = "") => `<button class="b-agenda ${clase}" type="button" aria-expanded="false">${ICONO_CAL}<span>${t("ver_disp")}</span></button>`;
+/* botón Agenda: abre/cierra el calendario en `caja` (o "a confirmar" si la casa no tiene fechas en la planilla) */
+function engancharAgenda(btn, caja, p, alCambiar) {
+  if (!btn || !caja) return;
+  btn.addEventListener("click", e => {
+    e.preventDefault(); e.stopPropagation();
+    const abrir = caja.hidden;
+    caja.hidden = !abrir; btn.setAttribute("aria-expanded", String(abrir));
+    btn.querySelector("span").textContent = abrir ? t("ocultar_disp") : t("ver_disp");
+    if (abrir) {
+      if (Array.isArray(p.ocupado)) armarCalendario(caja.querySelector(".cal"), p);
+      else caja.querySelector(".cal").innerHTML = `<div class="cal-pie"><span class="cal-res">${t("sin_agenda")}</span>
+        <a class="cal-wa" href="${esc(linkWA(p))}" target="_blank" rel="noopener">${ICONO_WA}${t("consultar_disp")}</a></div>`;
+      track("disponibilidad/" + p.ref);
+    }
+    alCambiar && alCambiar(abrir);
+  });
+  caja.addEventListener("click", e => { if (!e.target.closest("a")) e.stopPropagation(); });
+}
 const ICONO_CORAZON = '<svg viewBox="0 0 24 24" width="15" height="15" aria-hidden="true"><path fill="currentColor" d="M12 21s-7.5-4.6-9.6-9.2C.9 8.4 3 4.5 6.7 4.5c2 0 3.5 1.1 4.3 2.4.8-1.3 2.3-2.4 4.3-2.4 3.7 0 5.8 3.9 4.3 7.3C19.5 16.4 12 21 12 21Z"/></svg>';
 
 /* --- selección (favoritos, guardados en este navegador) --- */
@@ -220,7 +241,6 @@ function htmlVista(p, filtroOp) {
   const temp = p.ops.find(o => o.tipo === "temporada" && o.periodos && o.periodos.length > 1);
   const tarifas = temp ? `<details class="tarifas"><summary>${t("ver_tarifas")}</summary><table>${temp.periodos.map(x =>
     `<tr><td>${esc(periodo(x.periodo))}</td><td>${mon(x.moneda)} ${fmt(x.precio)}</td></tr>`).join("")}</table></details>` : "";
-  const agenda = Array.isArray(p.ocupado) ? `<details class="tarifas agenda"><summary>${t("ver_disp")}</summary><div class="cal"></div></details>` : "";
   const fav = FAV.tiene(p.ref);
   return `<div class="prev">
     ${f.length ? `<div class="carr">
@@ -235,8 +255,8 @@ function htmlVista(p, filtroOp) {
       ${ops}
       <span class="specs">${specs(p)}</span>
       ${p.aprox ? `<span class="aprox">${t("aprox")}</span>` : ""}
+      ${tieneAgenda(p) ? htmlBotonAgenda() + `<div class="agenda" hidden><div class="cal"></div></div>` : ""}
       ${tarifas}
-      ${agenda}
       <div class="acciones">
         <a class="b-ficha" href="${esc(p.url)}" target="_blank" rel="noopener" data-ev="ficha">${t("ver_ficha")} ↗</a>
         <a class="b-wa" href="${esc(linkWA(p))}" target="_blank" rel="noopener" data-ev="whatsapp">${ICONO_WA}${t("consultar")}</a>
@@ -268,15 +288,11 @@ function armarVista(raizEl, p) {
   const det = raizEl.querySelector(".tarifas:not(.agenda)");
   if (det) { det.addEventListener("toggle", () => det.querySelector("summary").textContent = det.open ? t("ocultar_tarifas") : t("ver_tarifas")); L.DomEvent.disableScrollPropagation(det); }
   const ag = raizEl.querySelector(".agenda");
-  if (ag) {
-    ag.addEventListener("toggle", () => {
-      ag.querySelector("summary").textContent = ag.open ? t("ocultar_disp") : t("ver_disp");
-      if (ag.open) { armarCalendario(ag.querySelector(".cal"), p); track("disponibilidad/" + p.ref); }
-      raizEl.querySelector(".prev")?.classList.toggle("con-agenda", ag.open);
-      raizEl.dispatchEvent(new CustomEvent("crece", { bubbles: true }));
-    });
-    L.DomEvent.disableScrollPropagation(ag); L.DomEvent.disableClickPropagation(ag);
-  }
+  engancharAgenda(raizEl.querySelector(".b-agenda"), ag, p, abierta => {
+    raizEl.querySelector(".prev")?.classList.toggle("con-agenda", abierta);
+    raizEl.dispatchEvent(new CustomEvent("crece", { bubbles: true }));
+  });
+  if (ag) { L.DomEvent.disableScrollPropagation(ag); L.DomEvent.disableClickPropagation(ag); }
 }
 
 /* --- agenda de disponibilidad (días ocupados vienen de la planilla, inclusive) --- */
