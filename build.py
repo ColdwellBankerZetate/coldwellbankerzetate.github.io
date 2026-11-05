@@ -311,7 +311,8 @@ def leer_kmz(ruta):
             continue
         m = LOTE_RE.match(p["nombre"])
         if m or re.search(r"(?i)lote|lots?\b|parcela", p["carpeta"]):
-            lotes.append({"n": m.group(1) if m else p["nombre"], "c": p["c"], "m2": p["m2"]})
+            n = m.group(1) if m else re.sub(r"(?i)^\s*(lote|lot)\s*[-nº°#.]*\s*", "", p["nombre"]) or p["nombre"]
+            lotes.append({"n": n, "c": p["c"], "m2": p["m2"]})
         else:
             areas.append({"nombre": p["nombre"], "c": p["c"], "m2": p["m2"]})
     return {"perimetro": per["c"] if per else None, "ha": round(per["m2"] / 10000) if per else None,
@@ -331,6 +332,26 @@ def archivo_dev(c, slug, clave, exts):
     return None
 
 
+IDIOMAS_BROCHURE = ("es", "en", "pt", "de", "fr", "it")
+
+
+def brochures_dev(c, slug):
+    """Brochures por idioma → {"es": url, "de": url, ...}.
+    En el JSON: "brochure": "url" (español) o {"es": url, "de": url}. En el repo: desarrollos/<slug>.pdf (español)
+    y desarrollos/<slug>-<idioma>.pdf (ej. <slug>-de.pdf)."""
+    v = c.get("brochure") or {}
+    out = dict(v) if isinstance(v, dict) else ({"es": v} if v else {})
+    for lang in IDIOMAS_BROCHURE:
+        if lang in out:
+            continue
+        nombre = f"{slug}.pdf" if lang == "es" else f"{slug}-{lang}.pdf"
+        if os.path.exists(os.path.join(AQUI, "desarrollos", nombre)):
+            out[lang] = "../" + nombre
+    if c.get("brochure_pdf") and "es" not in out:
+        out["es"] = "../" + c["brochure_pdf"]
+    return {k: (u if u.startswith(("http", "../")) else "../" + u) for k, u in out.items() if u}
+
+
 def fotos_carpeta(slug):
     """Fotos guardadas en el sitio: desarrollos/<slug>/fotos/*.jpg|png|webp (orden por nombre)."""
     d = os.path.join(AQUI, "desarrollos", slug, "fotos")
@@ -346,7 +367,7 @@ def armar_desarrollos(sitio, wa_general, avisos):
     os.makedirs(carpeta, exist_ok=True)
     resumen = []
     for f in sorted(os.listdir(carpeta)):
-        if not f.endswith(".json"):
+        if not f.endswith(".json") or f.endswith("-calco.json"):  # <slug>-calco.json = puntos de control de calcar.py
             continue
         c = json.load(open(os.path.join(carpeta, f), encoding="utf-8"))
         slug = c.get("slug") or f[:-5]
@@ -374,17 +395,26 @@ def armar_desarrollos(sitio, wa_general, avisos):
                 print(f"    plano: {len(plano['lotes'])} lotes, {len(plano['areas'])} áreas, {len(plano['puntos'])} puntos")
             except Exception as e:
                 avisos.append(f"Desarrollo {nombre}: no pude leer el KMZ ({e})")
-        brochure = c.get("brochure") or ""
-        r_pdf = archivo_dev(c, slug, "brochure_pdf", [".pdf"])
-        if not brochure and r_pdf:
-            brochure = r_pdf if r_pdf.startswith("http") else "../" + os.path.basename(r_pdf)
+        brochures = brochures_dev(c, slug)
+        if plano and c.get("lotes_m2"):  # m² reales del lote (el plano calcado de un brochure no siempre está a escala)
+            m2 = {str(k).strip().lower(): v for k, v in c["lotes_m2"].items()}
+            for lt in plano["lotes"]:
+                if str(lt["n"]).lower() in m2:
+                    lt["m2"] = m2[str(lt["n"]).lower()]
+        if plano and c.get("lotes_estado"):
+            est = {str(k).strip().lower(): str(v).strip().lower() for k, v in c["lotes_estado"].items()}
+            for lt in plano["lotes"]:
+                e = est.get(str(lt["n"]).lower())
+                if e in ("vendido", "reservado", "disponible"):
+                    lt["estado"] = e
         mp = c.get("masterplan") or next((f"../{slug}-masterplan{e}" for e in (".jpg", ".png", ".webp")
                                             if os.path.exists(os.path.join(carpeta, f"{slug}-masterplan{e}"))), "")
         kmz_url = ("../" + os.path.basename(r_kmz)) if r_kmz and not r_kmz.startswith("http") else (r_kmz or "")
         datos = {"modo": "desarrollo", "slug": slug, "nombre": nombre, "zona": info["zona"], "raiz": "../../",
                  "bajada": texto_es(c.get("bajada")), "amenities": c.get("amenities") or [],
                  "ventajas": c.get("ventajas") or [], "cifras": info["cifras"],
-                 "cerca": cercanias(lat, lng), "plano": plano, "masterplan": mp, "brochure": brochure, "kmz": kmz_url,
+                 "cerca": cercanias(lat, lng), "plano": plano, "masterplan": mp, "brochures": brochures, "kmz": kmz_url,
+                 "drive": c.get("drive") or "",
                  "sitio": sitio, "desarrollo": {**info, "wa": c.get("whatsapp") or wa_general}}
         desc = f"{nombre}: {'edificio' if clase == 'edificio' else 'barrio en desarrollo'} de Coldwell Banker Zetaté{' en ' + info['zona'] if info['zona'] else ''}."
         escribir(os.path.join(carpeta, slug, "index.html"),

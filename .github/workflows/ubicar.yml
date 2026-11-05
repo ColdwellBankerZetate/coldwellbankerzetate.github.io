@@ -1,0 +1,35 @@
+name: Ubicar desarrollos (OpenStreetMap + satélite)
+
+# Corre ubicar.py (busca el cruce de calles del plano y arma recortes del satélite; si hay puntos de control,
+# también calcar.py) y deja las imágenes en la rama "verificacion-ci" para revisarlas. No toca main.
+on:
+  workflow_dispatch:
+  push:
+    branches: ["claude/**"]
+    paths: ["desarrollos/*-calco.json", "ubicar.py", "calcar.py", ".github/workflows/ubicar.yml"]
+
+permissions:
+  contents: write
+
+jobs:
+  ubicar:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-python@v5
+        with:
+          python-version: "3.12"
+      - run: pip install pillow numpy
+      - run: mkdir -p verificacion && python3 ubicar.py 2>&1 | tee verificacion/log.txt
+      - name: Guardar resultados en la rama verificacion-ci
+        if: always()
+        run: |
+          mkdir -p /tmp/salida && cp -r verificacion /tmp/salida/ && cp desarrollos/*.kml /tmp/salida/ 2>/dev/null || true
+          git config user.name "Claude"
+          git config user.email "noreply@anthropic.com"
+          git checkout --orphan verificacion-ci
+          git rm -rqf . && git clean -fdxq
+          cp -r /tmp/salida/* .
+          git add -A -f
+          git commit -qm "Verificación de ${GITHUB_SHA::7}"
+          git push -qf origin verificacion-ci
