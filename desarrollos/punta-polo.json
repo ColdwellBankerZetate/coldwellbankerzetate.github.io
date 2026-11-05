@@ -2,10 +2,119 @@
   "slug": "punta-polo",
   "tokko_id": 170402,
   "nombre": "Punta Polo",
-  "clase": "",
+  "clase": "barrio",
   "estado": {},
   "entrega": "",
   "bajada": {},
   "datos": [],
-  "puntos": []
+  "puntos": [],
+  "zona": "Manantiales · José Ignacio",
+  "cifras": [
+    {
+      "valor": "104",
+      "nombre": {
+        "es": "hectáreas",
+        "en": "hectares",
+        "pt": "hectares"
+      }
+    },
+    {
+      "valor": "≈240",
+      "nombre": {
+        "es": "lotes en el masterplan",
+        "en": "lots in the masterplan",
+        "pt": "lotes no masterplan"
+      }
+    },
+    {
+      "valor": "+40 ha",
+      "nombre": {
+        "es": "áreas comunes",
+        "en": "common areas",
+        "pt": "áreas comuns"
+      }
+    },
+    {
+      "valor": "1.000–4.000",
+      "nombre": {
+        "es": "m² por lote",
+        "en": "m² per lot",
+        "pt": "m² por lote"
+      }
+    }
+  ],
+  "ventajas": [
+    {
+      "es": "Frente a kilómetros de playas naturales, entre Manantiales y José Ignacio, con acceso por Ruta 10.",
+      "en": "Facing miles of natural beaches between Manantiales and José Ignacio, with access from Route 10.",
+      "pt": "De frente para quilômetros de praias naturais, entre Manantiales e José Ignacio, com acesso pela Rota 10."
+    },
+    {
+      "es": "A unos 5 minutos de Manantiales, 10 de José Ignacio y 20 de Punta del Este.",
+      "en": "About 5 minutes from Manantiales, 10 from José Ignacio and 20 from Punta del Este.",
+      "pt": "A cerca de 5 minutos de Manantiales, 10 de José Ignacio e 20 de Punta del Este."
+    },
+    {
+      "es": "Más de 40 de sus 104 hectáreas son áreas comunes, lagunas, instalaciones deportivas y recreación.",
+      "en": "Over 40 of its 104 hectares are common areas, lagoons, sports facilities and recreation.",
+      "pt": "Mais de 40 dos seus 104 hectares são áreas comuns, lagoas, instalações esportivas e lazer."
+    },
+    {
+      "es": "Infraestructura completa: red eléctrica subterránea, agua corriente, saneamiento, paisajismo e iluminación.",
+      "en": "Full infrastructure: underground power, running water, sewage, landscaping and lighting.",
+      "pt": "Infraestrutura completa: rede elétrica subterrânea, água encanada, saneamento, paisagismo e iluminação."
+    },
+    {
+      "es": "Lotes de 1.000 a 4.000 m² en sectores de mar, bosque y reserva.",
+      "en": "Lots from 1,000 to 4,000 m² in sea, forest and reserve sectors.",
+      "pt": "Lotes de 1.000 a 4.000 m² em setores de mar, bosque e reserva."
+    },
+    {
+      "es": "Residencia permanente, casa de veraneo o inversión patrimonial en una de las zonas con mayor proyección de la costa uruguaya.",
+      "en": "Permanent home, summer house or long-term investment in one of the fastest-growing areas of the Uruguayan coast.",
+      "pt": "Residência permanente, casa de veraneio ou investimento patrimonial em uma das áreas com maior projeção da costa uruguaia."
+    }
+  ],
+  "amenities": [
+    {
+      "es": "Club House histórico renovado",
+      "en": "Restored historic Club House",
+      "pt": "Club House histórico renovado"
+    },
+    {
+      "es": "Social Club",
+      "en": "Social Club",
+      "pt": "Social Club"
+    },
+    {
+      "es": "Piscina",
+      "en": "Swimming pool",
+      "pt": "Piscina"
+    },
+    {
+      "es": "Gimnasio",
+      "en": "Gym",
+      "pt": "Academia"
+    },
+    {
+      "es": "Canchas de tenis y pádel",
+      "en": "Tennis and padel courts",
+      "pt": "Quadras de tênis e padel"
+    },
+    {
+      "es": "Canchas de polo",
+      "en": "Polo fields",
+      "pt": "Campos de polo"
+    },
+    {
+      "es": "Lagunas y espacios verdes",
+      "en": "Lagoons and green spaces",
+      "pt": "Lagoas e áreas verdes"
+    },
+    {
+      "es": "Seguridad permanente con control de acceso y CCTV",
+      "en": "Round-the-clock security with access control and CCTV",
+      "pt": "Segurança permanente com controle de acesso e CCTV"
+    }
+  ]
 }

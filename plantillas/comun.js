@@ -1,6 +1,7 @@
 /* ===== Común a todas las páginas: idiomas, formato, pines, ventanita, WhatsApp, selección ===== */
 const TXT = {
   es: {
+    hectareas: "hectáreas", en_venta: "en venta", el_proyecto: "El proyecto", ventajas: "Por qué invertir", amenities: "Amenities", ubicacion: "Ubicación", linea_recta: "Distancias aproximadas en línea recta.", ver_en_mapa: "Ver en el mapa", lotes_venta: "Lotes en venta", otros_lotes: "Otros lotes", areas_comunes: "Áreas comunes", superficie_l: "Superficie", brochure_b: "Brochure", bajar_kmz: "Descargar plano (Google Earth)", plano: "Plano",
     desarrollos: "Desarrollos", desarrollo: "Desarrollo", edificio: "Edificio", edificios: "Edificios", barrio_dev: "Barrio en desarrollo", barrios_dev: "Barrios · lotes",
     unidades: "Unidades", unidad: "unidad", unidades_m: "unidades", lotes: "Lotes", lote_m: "lote", lotes_m: "lotes", entrega: "Entrega", todos: "Todos",
     desarrollos_b: "Edificios y barrios en desarrollo: unidades y lotes para invertir desde el inicio.", proximamente: "Próximamente",
@@ -31,6 +32,7 @@ const TXT = {
     msg_sel: (para, url) => `${para ? "Selección para " + para : "Te comparto una selección de propiedades"} — Coldwell Banker Zetaté: ${url}`,
   },
   en: {
+    hectareas: "hectares", en_venta: "for sale", el_proyecto: "The project", ventajas: "Why invest", amenities: "Amenities", ubicacion: "Location", linea_recta: "Approximate straight-line distances.", ver_en_mapa: "See on the map", lotes_venta: "Lots for sale", otros_lotes: "Other lots", areas_comunes: "Common areas", superficie_l: "Size", brochure_b: "Brochure", bajar_kmz: "Download plan (Google Earth)", plano: "Plan",
     desarrollos: "Developments", desarrollo: "Development", edificio: "Building", edificios: "Buildings", barrio_dev: "Community in development", barrios_dev: "Communities · lots",
     unidades: "Units", unidad: "unit", unidades_m: "units", lotes: "Lots", lote_m: "lot", lotes_m: "lots", entrega: "Delivery", todos: "All",
     desarrollos_b: "Buildings and communities under development: units and lots to invest from day one.", proximamente: "Coming soon",
@@ -61,6 +63,7 @@ const TXT = {
     msg_sel: (para, url) => `${para ? "Shortlist for " + para : "Here is a shortlist of properties"} — Coldwell Banker Zetaté: ${url}`,
   },
   pt: {
+    hectareas: "hectares", en_venta: "à venda", el_proyecto: "O projeto", ventajas: "Por que investir", amenities: "Amenities", ubicacion: "Localização", linea_recta: "Distâncias aproximadas em linha reta.", ver_en_mapa: "Ver no mapa", lotes_venta: "Lotes à venda", otros_lotes: "Outros lotes", areas_comunes: "Áreas comuns", superficie_l: "Área", brochure_b: "Brochure", bajar_kmz: "Baixar planta (Google Earth)", plano: "Planta",
     desarrollos: "Empreendimentos", desarrollo: "Empreendimento", edificio: "Edifício", edificios: "Edifícios", barrio_dev: "Condomínio em desenvolvimento", barrios_dev: "Condomínios · lotes",
     unidades: "Unidades", unidad: "unidade", unidades_m: "unidades", lotes: "Lotes", lote_m: "lote", lotes_m: "lotes", entrega: "Entrega", todos: "Todos",
     desarrollos_b: "Edifícios e condomínios em desenvolvimento: unidades e lotes para investir desde o início.", proximamente: "Em breve",
