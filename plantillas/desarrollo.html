@@ -42,6 +42,7 @@ h1{font-family:var(--f-display);font-style:italic;font-weight:500;font-size:50px
 .galeria .flecha{position:absolute;top:50%;transform:translateY(-50%);width:34px;height:34px;border-radius:50%;border:1px solid rgba(255,255,255,.25);background:rgba(10,10,10,.6);color:#fff;display:grid;place-items:center;cursor:pointer;font-size:16px;line-height:1;padding:0}
 .galeria .ant{left:10px}.galeria .sig{right:10px}
 .galeria .cont{position:absolute;right:10px;bottom:10px;background:rgba(10,10,10,.65);color:#fff;font-size:11px;font-weight:600;padding:3px 8px;border-radius:999px;font-variant-numeric:tabular-nums}
+.cifras.par{grid-template-columns:1fr 1fr}
 .cifras{display:grid;grid-template-columns:repeat(auto-fit,minmax(110px,1fr));gap:1px;background:var(--line);border:1px solid var(--line);border-radius:8px;overflow:hidden;margin-top:6px}
 .cifra{background:var(--panel);padding:14px 14px 12px;display:grid;gap:2px}
 .cifra b{font-family:var(--f-display);font-size:28px;font-weight:500;line-height:1;font-variant-numeric:lining-nums}
@@ -91,7 +92,7 @@ h1{font-family:var(--f-display);font-style:italic;font-weight:500;font-size:50px
 
 /* mapa */
 .mapa-wrap{position:relative;min-width:0;min-height:0;overflow:hidden}
-#mapa{position:absolute;inset:0;background:#0c0f0c}
+#mapa{position:absolute;inset:0;background:#0c0f0c;z-index:0;isolation:isolate}
 .mapa-wrap::after{content:"";position:absolute;inset:0;pointer-events:none;z-index:450;background:radial-gradient(120% 90% at 50% 45%,transparent 60%,rgba(0,0,0,.4) 100%)}
 .leaflet-tile-pane{filter:brightness(.8) contrast(1.08) saturate(.85)}
 .leaflet-container{font-family:var(--f-body);background:#0c0f0c}
@@ -100,6 +101,10 @@ h1{font-family:var(--f-display);font-style:italic;font-weight:500;font-size:50px
 .leaflet-bar{border:1px solid var(--line-2)!important;box-shadow:none!important;border-radius:999px!important;overflow:hidden}
 .leaflet-bar a{background:var(--glass)!important;color:var(--fg)!important;border-bottom:1px solid var(--line)!important;width:36px!important;height:36px!important;line-height:36px!important}
 .leaflet-bar a:last-child{border-bottom:0!important}
+#mp{position:absolute;inset:0;z-index:1;isolation:isolate;background:#0c0c0c}
+#mp .leaflet-control-attribution{display:none}
+.ayuda-mp{position:absolute;z-index:600;left:50%;transform:translateX(-50%);bottom:18px;background:var(--glass);backdrop-filter:blur(10px);-webkit-backdrop-filter:blur(10px);border:1px solid var(--line);color:var(--fg);font-size:10.5px;font-weight:600;letter-spacing:.12em;text-transform:uppercase;padding:8px 14px;border-radius:999px;white-space:nowrap;pointer-events:none;transition:opacity .4s}
+.ayuda-mp.fuera{opacity:0}
 .vista{position:absolute;z-index:600;top:16px;right:16px;display:flex;gap:2px;background:var(--glass);backdrop-filter:blur(10px);-webkit-backdrop-filter:blur(10px);border:1px solid var(--line-2);border-radius:999px;padding:3px}
 .vista button{background:none;border:0;border-radius:999px;padding:7px 14px;font-size:10.5px;font-weight:700;letter-spacing:.16em;text-transform:uppercase;color:var(--muted);cursor:pointer}
 .vista button[aria-pressed="true"]{background:var(--fg);color:var(--ink)}
@@ -154,13 +159,14 @@ h1{font-family:var(--f-display);font-style:italic;font-weight:500;font-size:50px
   .vista{top:auto;right:auto;left:50%;transform:translateX(-50%);bottom:calc(var(--hoja-min) + 14px + env(safe-area-inset-bottom,0px))}
   :root{--hoja-min:150px}
   .leaflet-bottom{bottom:calc(var(--hoja-min) + env(safe-area-inset-bottom,0px))}
+  .ayuda-mp{bottom:auto;top:calc(138px + env(safe-area-inset-top,0px))}
   .hoja{display:block;position:absolute;z-index:700;left:0;right:0;bottom:0;height:calc(100% - 150px - env(safe-area-inset-top,0px));background:rgba(12,12,12,.97);backdrop-filter:blur(14px);-webkit-backdrop-filter:blur(14px);border-top:1px solid var(--line-2);border-radius:18px 18px 0 0;box-shadow:0 -20px 50px rgba(0,0,0,.55);transform:translateY(calc(100% - var(--hoja-min) - env(safe-area-inset-bottom,0px)));transition:transform .35s cubic-bezier(.2,.8,.2,1);display:flex;flex-direction:column}
   .hoja.abierta{transform:none}
   .hoja .asa{flex:none;display:grid;gap:10px;padding:10px 16px 14px;cursor:pointer;touch-action:none}
   .hoja .asa::before{content:"";justify-self:center;width:40px;height:4px;border-radius:2px;background:rgba(255,255,255,.3)}
   .hoja .resumen{display:flex;justify-content:space-between;align-items:baseline;gap:10px}
-  .hoja .resumen b{font-family:var(--f-display);font-style:italic;font-weight:500;font-size:22px}
-  .hoja .resumen span{font-size:11px;color:var(--champ);font-weight:600;letter-spacing:.14em;text-transform:uppercase;white-space:nowrap}
+  .hoja .resumen b{font-family:var(--f-display);font-style:italic;font-weight:500;font-size:22px;white-space:nowrap}
+  .hoja .resumen span{font-size:10.5px;color:var(--champ);font-weight:600;letter-spacing:.12em;text-transform:uppercase;white-space:nowrap;overflow:hidden;text-overflow:ellipsis;min-width:0}
   .hoja .acciones{margin:0}
   .hoja .cuerpo{overflow:auto;flex:1;padding:0 16px calc(24px + env(safe-area-inset-bottom,0px));overscroll-behavior:contain}
   .hoja .pad{padding-inline:0}
@@ -174,7 +180,9 @@ h1{font-family:var(--f-display);font-style:italic;font-weight:500;font-size:50px
 <div class="app">
   <aside class="panel" id="panel"></aside>
   <main class="mapa-wrap">
-    <div id="mapa" aria-label="Plano del desarrollo sobre el satélite"></div>
+    <div id="mapa" aria-label="Ubicación del desarrollo sobre el satélite"></div>
+    <div id="mp" aria-label="Masterplan del desarrollo" hidden></div>
+    <span class="ayuda-mp" id="ayuda-mp" hidden></span>
     <div class="vista" id="vista" role="group"></div>
     <div class="top">
       <div class="esquinas"><a class="volver" id="volver-m" href="__RAIZ__#desarrollos" aria-label="Desarrollos">←</a><div class="idiomas" id="idiomas-m"></div></div>
@@ -194,7 +202,8 @@ h1{font-family:var(--f-display);font-style:italic;font-weight:500;font-size:50px
 </script>
 <script>
 const DATOS = /*__DATOS__*/null;
-const DEV = DATOS.desarrollo, PL = DATOS.plano, LOTES = DATOS.lotes || [];
+const DEV = DATOS.desarrollo, PL = DATOS.plano, MP = DATOS.masterplan;
+const LOTES = []; /* la página presenta el proyecto: no lista los lotes en venta */
 cargarEstadisticas(DATOS.sitio);
 const $ = id => document.getElementById(id);
 const mapa = mapaBase("mapa");
@@ -213,8 +222,6 @@ function htmlCuerpo(conTitulo) {
   const fijas = (DATOS.cifras || []).map(c => [tl(c.valor) || c.valor, tl(c.nombre)]);
   const cif = [
     ...(fijas.length ? fijas : [ha ? [fmt(ha), t("hectareas")] : null, lotesPlano ? [lotesPlano, t("lotes")] : null]),
-    LOTES.length ? [LOTES.length, t("lotes_venta")] : null,
-    DEV.desde_venta ? [`U$S ${corto(DEV.desde_venta)}`, t("desde")] : null,
   ].filter(Boolean).slice(0, 6);
   const amen = (DATOS.amenities || []).map(tl).filter(Boolean);
   const vent = (DATOS.ventajas || []).map(tl).filter(Boolean);
@@ -224,7 +231,7 @@ function htmlCuerpo(conTitulo) {
       ${est ? `<span class="estado">${esc(est)}</span>` : ""}
       ${fotos.length ? `<div class="galeria"><div class="pista">${fotos.map((f, k) => `<img src="${esc(f)}" alt="" ${k ? 'loading="lazy"' : ""}>`).join("")}</div>
         ${fotos.length > 1 ? `<button class="flecha ant" type="button" aria-label="‹">‹</button><button class="flecha sig" type="button" aria-label="›">›</button><span class="cont">1 / ${fotos.length}</span>` : ""}</div>` : ""}
-      ${cif.length ? `<div class="cifras">${cif.map(([v, n]) => `<div class="cifra"><b>${esc(v)}</b><span>${esc(n)}</span></div>`).join("")}</div>` : ""}
+      ${cif.length ? `<div class="cifras${cif.length % 2 ? "" : " par"}">${cif.map(([v, n]) => `<div class="cifra"><b>${esc(v)}</b><span>${esc(n)}</span></div>`).join("")}</div>` : ""}
       ${conTitulo ? htmlAcciones() : ""}
     </div>
     ${texto ? `<section class="sec pad"><h2>${t("el_proyecto")}</h2><p class="texto corto">${esc(texto)}</p><button class="mas" type="button">${t("ver_mas")}</button></section>` : ""}
@@ -285,11 +292,12 @@ function pintar() {
     <div class="logo-wrap pad"><img class="logo" src="${DATOS.raiz}assets/logo-apilado.png" alt="Coldwell Banker Zetaté" width="210" height="44"></div>` + htmlCuerpo(true);
   $("kicker-m").textContent = claseDev(DEV);
   $("nombre-m").textContent = DEV.nombre;
-  $("asa").innerHTML = `<div class="resumen"><b>${t("el_proyecto")}</b><span>${esc(resumenDev(DEV))}</span></div>${htmlAcciones(true)}`;
+  const res = (DATOS.cifras || []).slice(0, 2).map(c => `${tl(c.valor) || c.valor} ${tl(c.nombre).split(" ")[0]}`).join(" · ");
+  $("asa").innerHTML = `<div class="resumen"><b>${t("el_proyecto")}</b><span>${esc(res)}</span></div>${htmlAcciones(true)}`;
   $("cuerpo-m").innerHTML = htmlCuerpo(false);
   armarIdiomas($("idiomas-p"), todo);
   enganchar($("panel")); enganchar($("cuerpo-m")); enganchar($("asa"));
-  $("vista").innerHTML = [["plano", t("plano")], ["zona", t("ubicacion")]].map(([k, x]) => `<button type="button" data-k="${k}" aria-pressed="${VISTA === k}">${x}</button>`).join("");
+  $("vista").innerHTML = [...(MP ? [["mp", t("masterplan")]] : []), ["plano", t(MP ? "satelite" : "plano")], ["zona", t("ubicacion")]].map(([k, x]) => `<button type="button" data-k="${k}" aria-pressed="${VISTA === k}">${x}</button>`).join("");
   $("vista").querySelectorAll("button").forEach(b => b.onclick = () => ponerVista(b.dataset.k));
 }
 
@@ -364,6 +372,9 @@ const pad = () => movil() ? { paddingTopLeft: [24, 150], paddingBottomRight: [24
 function ponerVista(k, sinMover) {
   VISTA = k;
   $("vista").querySelectorAll("button").forEach(b => b.setAttribute("aria-pressed", String(b.dataset.k === k)));
+  $("mp").hidden = k !== "mp"; $("ayuda-mp").hidden = k !== "mp";
+  if (k === "mp") { armarMasterplan(); track("vista/mp"); return; }
+  mapa.invalidateSize();
   if (k === "zona") { capaLugares.addTo(mapa); if (!sinMover) mapa.flyToBounds(encuadrePlano().extend(L.latLngBounds(DATOS.cerca.map(l => [l.lat, l.lng]))), { ...pad(), duration: 1 }); }
   else { mapa.removeLayer(capaLugares); if (!sinMover) mapa.flyToBounds(encuadrePlano(), { ...pad(), maxZoom: 17, duration: 1 }); }
   track("vista/" + k);
@@ -381,10 +392,30 @@ $("asa").addEventListener("touchend", e => {
   if (dy < -30) hoja.classList.add("abierta"); else if (dy > 30) cerrarHoja();
 });
 
-function todo() { pintar(); dibujarPlano(); if (VISTA === "zona") capaLugares.addTo(mapa); else mapa.removeLayer(capaLugares); }
+/* ---------- masterplan (imagen del plano, con zoom) ---------- */
+let mpMapa = null;
+function armarMasterplan() {
+  if (mpMapa) { mpMapa.invalidateSize(); return; }
+  mpMapa = L.map("mp", { crs: L.CRS.Simple, zoomControl: !movil(), attributionControl: false, zoomSnap: 0.1, minZoom: -5, maxZoom: 1, bounceAtZoomLimits: false });
+  if (mpMapa.zoomControl) mpMapa.zoomControl.setPosition("bottomright");
+  const img = new Image();
+  img.onload = () => {
+    const b = [[0, 0], [img.naturalHeight, img.naturalWidth]];
+    L.imageOverlay(MP, b).addTo(mpMapa);
+    const encuadre = () => mpMapa.fitBounds(b, { padding: movil() ? [8, 8] : [30, 30], paddingTopLeft: movil() ? [8, 150] : [30, 80], paddingBottomRight: movil() ? [8, 280] : [30, 30] });
+    encuadre();
+    mpMapa.setMinZoom(mpMapa.getZoom() - .5);
+    mpMapa.setMaxBounds(L.latLngBounds(b).pad(.25));
+    mpMapa.once("zoomstart dragstart", () => $("ayuda-mp").classList.add("fuera"));
+  };
+  img.src = MP;
+}
+
+function todo() { pintar(); dibujarPlano(); if (VISTA === "zona") capaLugares.addTo(mapa); else mapa.removeLayer(capaLugares); if (MP) $("ayuda-mp").textContent = t(tactil ? "ayuda_mp_t" : "ayuda_mp"); }
 armarIdiomas($("idiomas-m"), todo);
 todo();
-mapa.fitBounds(encuadrePlano(), { ...pad(), maxZoom: PL ? 17 : 16 });
+mapa.fitBounds(encuadrePlano(), { ...pad(), maxZoom: PL ? 17 : 15.5 });
+if (MP) ponerVista("mp");
 mapa.getContainer().classList.toggle("sin-num", mapa.getZoom() < 16.5);
-window.addEventListener("resize", () => mapa.invalidateSize());
+window.addEventListener("resize", () => { mapa.invalidateSize(); mpMapa?.invalidateSize(); });
 </script>

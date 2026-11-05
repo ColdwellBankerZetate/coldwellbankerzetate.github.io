@@ -467,7 +467,7 @@ def armar_desarrollos(tokko, todas, sitio, wa_general, avisos):
                 "url": c.get("url") or d.get("web_url") or d.get("public_url") or "",
                 "unidades": len(uni), "lotes": sum(u["tipo"] == "terreno" for u in uni),
                 "desde_venta": min(ventas) if ventas else None, "destacado": bool(c.get("destacado")),
-                "orden": c.get("orden", 100)}
+                "orden": c.get("orden", 100), "cifras": c.get("cifras") or []}
         # plano del KMZ (Google Earth): lotes, perímetro, áreas comunes y amenities
         plano = None
         r_kmz = archivo_dev(c, slug, "kmz", [".kmz", ".kml"])
@@ -493,17 +493,15 @@ def armar_desarrollos(tokko, todas, sitio, wa_general, avisos):
             u_f = f.get("file") or f.get("url") if isinstance(f, dict) else None
             if not brochure and u_f and ".pdf" in u_f.lower():
                 brochure = u_f
+        mp = c.get("masterplan") or next((f"../{slug}-masterplan{e}" for e in (".jpg", ".png", ".webp")
+                                            if os.path.exists(os.path.join(AQUI, "desarrollos", f"{slug}-masterplan{e}"))), "")
         kmz_url = ("../" + os.path.basename(r_kmz)) if r_kmz and not r_kmz.startswith("http") else (r_kmz or "")
         m2s = [u["m2_terreno"] for u in uni if u.get("m2_terreno")]
         datos = {"modo": "desarrollo", "slug": slug, "nombre": info["nombre"], "zona": zona, "raiz": "../../",
                  "bajada": bajada, "amenities": c.get("amenities") or c.get("datos") or [],
                  "ventajas": c.get("ventajas") or [], "cifras": c.get("cifras") or [],
                  "puntos": c.get("puntos") or [], "cerca": cercanias(lat, lng),
-                 "lotes": [{k: u.get(k) for k in ("ref", "url", "lote", "lote_plano", "m2_terreno", "m2_cubiertos",
-                                                   "dormitorios", "tipo", "lat", "lng", "titulo", "agente")}
-                           | {"precio": u["ops"][0]["precio"], "op": u["ops"][0]["tipo"], "moneda": u["ops"][0]["moneda"],
-                              "foto": (u["fotos"] or [None])[0]} for u in uni],
-                 "plano": plano, "brochure": brochure, "kmz": kmz_url, "planos": planos, "video": c.get("video") or "",
+                 "plano": plano, "masterplan": mp, "brochure": brochure, "kmz": kmz_url, "planos": planos, "video": c.get("video") or "",
                  "m2_rango": [min(m2s), max(m2s)] if m2s else None,
                  "sitio": sitio, "desarrollo": {**info, "wa": c.get("whatsapp") or wa_general}}
         if plano and plano.get("ha"):
