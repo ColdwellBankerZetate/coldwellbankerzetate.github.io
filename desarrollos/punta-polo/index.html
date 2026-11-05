@@ -83,22 +83,6 @@ h1{font-family:var(--f-display);font-style:italic;font-weight:500;font-size:50px
 .ventajas{list-style:none;margin:0;padding:0;display:grid;gap:12px;counter-reset:v}
 .ventajas li{display:grid;grid-template-columns:30px 1fr;gap:10px;font-size:14px;line-height:1.4;counter-increment:v}
 .ventajas li::before{content:counter(v,decimal-leading-zero);font-family:var(--f-display);font-style:italic;color:var(--champ);font-size:18px;line-height:1.1}
-.lotes{width:100%;border-collapse:collapse;font-size:13.5px;font-variant-numeric:tabular-nums}
-.lotes th{font-size:10px;font-weight:600;letter-spacing:.18em;text-transform:uppercase;color:var(--dim);text-align:left;padding:0 0 8px}
-.lotes td{padding:10px 0;border-top:1px solid var(--line)}
-.lotes th:nth-child(n+2),.lotes td:nth-child(n+2){text-align:right}
-.lotes tr.f{cursor:pointer;transition:background .15s}
-.lotes tr.f:hover td,.lotes tr.f.on td{background:rgba(200,178,138,.08)}
-.lotes td:first-child{padding-left:6px}
-.lotes td:last-child{padding-right:6px;width:28px}
-.lotes .p{font-weight:600}
-.lotes a{color:var(--champ);text-decoration:none}
-.ley{display:flex;flex-wrap:wrap;gap:6px 16px;font-size:11.5px;color:var(--muted)}
-.ley span{display:inline-flex;align-items:center;gap:7px}
-.ley i{width:12px;height:10px;border-radius:2px;display:inline-block}
-.ley i.d{background:rgba(200,178,138,.55);box-shadow:inset 0 0 0 1px var(--champ)}
-.ley i.o{box-shadow:inset 0 0 0 1px rgba(255,255,255,.7)}
-.ley i.a{background:rgba(120,170,120,.35);box-shadow:inset 0 0 0 1px rgba(160,200,160,.7)}
 .pie{padding-block:24px calc(24px + env(safe-area-inset-bottom,0px));font-size:11px;color:var(--dim)}
 
 /* mapa */
@@ -132,26 +116,11 @@ h1{font-family:var(--f-display);font-style:italic;font-weight:500;font-size:50px
 .amen-pin i{width:11px;height:11px;background:var(--champ);transform:rotate(45deg);box-shadow:0 0 0 2px rgba(10,10,10,.85),0 2px 6px rgba(0,0,0,.5);flex:none}
 .amen-pin span{font-size:10.5px;font-weight:600;letter-spacing:.14em;text-transform:uppercase;color:#fff;text-shadow:0 1px 2px rgba(0,0,0,.95),0 0 10px rgba(0,0,0,.8)}
 .n-lote{font-size:10px;font-weight:700;color:#fff;text-shadow:0 1px 2px rgba(0,0,0,.95);transform:translate(-50%,-50%);position:absolute;white-space:nowrap;pointer-events:none}
-.n-lote.d{color:#0a0a0a;text-shadow:none;background:var(--champ);border-radius:4px;padding:1px 5px}
-.sin-num .n-lote:not(.d){display:none}
-.pin-lote{position:absolute;left:0;top:0;transform:translate(-8px,-8px);width:16px;height:16px;border-radius:50%;background:var(--champ);box-shadow:0 0 0 2px rgba(255,255,255,.9),0 3px 8px rgba(0,0,0,.5);cursor:pointer}
-.pin-lote.on{transform:translate(-8px,-8px) scale(1.35)}
+.sin-num .n-lote{display:none}
 .leaflet-tooltip.tt{background:#0d0d0d;color:var(--fg);border:1px solid var(--line-2);border-radius:8px;padding:8px 11px;box-shadow:0 10px 30px rgba(0,0,0,.55);font-family:var(--f-body);font-size:12.5px;line-height:1.35}
 .leaflet-tooltip.tt::before{display:none}
 .tt b{display:block;font-family:var(--f-display);font-size:18px;font-weight:500}
 .tt span{color:var(--muted)}
-.leaflet-popup.pop .leaflet-popup-content-wrapper{background:#0d0d0d;color:var(--fg);border:1px solid var(--line-2);border-radius:10px;padding:0;overflow:hidden;box-shadow:0 18px 50px rgba(0,0,0,.65)}
-.leaflet-popup.pop .leaflet-popup-content{margin:0;width:250px!important;line-height:1.4}
-.leaflet-popup.pop .leaflet-popup-tip{background:#0d0d0d}
-.pop img{width:100%;aspect-ratio:16/10;object-fit:cover;display:block}
-.pop .c{padding:12px 14px 14px;display:grid;gap:6px}
-.pop .k{font-size:10px;font-weight:600;letter-spacing:.18em;text-transform:uppercase;color:var(--champ)}
-.pop .pr{font-family:var(--f-display);font-size:22px;line-height:1}
-.pop .s{font-size:12.5px;color:var(--muted)}
-.pop .bb{display:grid;grid-template-columns:1fr 1fr;gap:6px;margin-top:4px}
-.pop .bb a{display:inline-flex;align-items:center;justify-content:center;gap:6px;text-decoration:none;font-size:10.5px;font-weight:700;letter-spacing:.12em;text-transform:uppercase;padding:9px 6px;border-radius:8px}
-.pop .bb a:first-child{background:var(--fg);color:var(--ink)}
-.pop .bb a+a{border:1px solid var(--line-2)}
 
 .top,.hoja{display:none}
 @media (max-width:899px){
@@ -452,13 +421,8 @@ const ICONO_EDIF = '<svg viewBox="0 0 24 24" width="16" height="16" aria-hidden=
 const ICONO_LOTES = '<svg viewBox="0 0 24 24" width="16" height="16" aria-hidden="true"><path fill="none" stroke="currentColor" stroke-width="1.7" stroke-linejoin="round" d="M3.5 6.5 12 3l8.5 3.5v11L12 21l-8.5-3.5zM12 3v18M3.5 12l8.5 3.5 8.5-3.5"/></svg>';
 const iconoDev = d => d.clase === "edificio" ? ICONO_EDIF : ICONO_LOTES;
 const claseDev = d => d.clase === "edificio" ? t("edificio") : t("barrio_dev");
-function resumenDev(d) {
-  if (d.cifras && d.cifras.length) return d.cifras.slice(0, 2).map(x => `${tl(x.valor) || x.valor} ${tl(x.nombre).split(" ")[0]}`).join(" · ");
-  const s = [];
-  if (d.clase === "barrio" && d.lotes) s.push(`${d.lotes} ${d.lotes === 1 ? t("lote_m") : t("lotes_m")}`);
-  else if (d.unidades) s.push(`${d.unidades} ${d.unidades === 1 ? t("unidad") : t("unidades_m")}`);
-  if (d.desde_venta) s.push(`${t("desde")} U$S ${corto(d.desde_venta)}`);
-  return s.join(" · ");
+function resumenDev(d) { /* cifras del proyecto cargadas por nosotros (ej. "104 hectáreas · ≈240 lotes") */
+  return (d.cifras || []).slice(0, 2).map(x => `${tl(x.valor) || x.valor} ${tl(x.nombre).split(" ")[0]}`).join(" · ");
 }
 const waDev = d => `https://wa.me/${d.wa || (DATOS.sitio || {}).whatsapp_general}?text=${encodeURIComponent(TXT[LANG].msg_dev(d))}`;
 
@@ -666,19 +630,14 @@ function htmlPin(p, filtroOp) {
 
 </script>
 <script>
-const DATOS = {"modo":"desarrollo","slug":"punta-polo","nombre":"Punta Polo","zona":"Manantiales · José Ignacio","raiz":"../../","bajada":{"es":"Ubicado sobre la costa oceánica de Maldonado, entre Manantiales y José Ignacio, Punta Polo Club de Campo es un desarrollo que combina vida de playa, naturaleza y tradición deportiva en un entorno de gran escala. Con acceso desde la Ruta 10 y una ubicación estratégica, se encuentra a aproximadamente 10 minutos de José Ignacio, 5 minutos de Manantiales y 20 minutos de Punta del Este.\n\nEl proyecto se desarrolla sobre un predio de 104 hectáreas frente a kilómetros de playas naturales y preserva el espíritu del histórico club de polo que dio origen al lugar. Su diseño integra mar, bosque y espacios verdes, generando un equilibrio entre privacidad, deporte y vida social. Más de 40 hectáreas están destinadas a áreas comunes, lagunas, instalaciones deportivas y sectores de recreación.\n\nEl masterplan contempla aproximadamente 240 lotes distribuidos entre sectores de mar, bosque y reserva, con superficies que van desde los 1.000 m² hasta 4.000 m². El emprendimiento cuenta con infraestructura completa, incluyendo red eléctrica subterránea, agua corriente, saneamiento, paisajismo, iluminación y seguridad permanente con control de acceso y sistema CCTV.\n\nEntre sus amenities se destacan el Club House, Social Club, piscina, gimnasio, canchas de tenis y pádel, además de las tradicionales canchas de polo que forman parte de la identidad del proyecto. El histórico club house ha sido renovado preservando su arquitectura original y continúa siendo el punto de encuentro social del desarrollo.\n\nPensado para quienes valoran el contacto con la naturaleza sin resignar servicios y confort, Punta Polo propone una forma de vida vinculada al mar, al deporte y a los espacios abiertos. Una alternativa para desarrollar una residencia permanente, una casa de veraneo o una inversión patrimonial en una de las áreas con mayor proyección de la costa uruguaya."},"amenities":[{"es":"Club House histórico renovado","en":"Restored historic Club House","pt":"Club House histórico renovado"},{"es":"Social Club","en":"Social Club","pt":"Social Club"},{"es":"Piscina","en":"Swimming pool","pt":"Piscina"},{"es":"Gimnasio","en":"Gym","pt":"Academia"},{"es":"Canchas de tenis y pádel","en":"Tennis and padel courts","pt":"Quadras de tênis e padel"},{"es":"Canchas de polo","en":"Polo fields","pt":"Campos de polo"},{"es":"Lagunas y espacios verdes","en":"Lagoons and green spaces","pt":"Lagoas e áreas verdes"},{"es":"Seguridad permanente con control de acceso y CCTV","en":"Round-the-clock security with access control and CCTV","pt":"Segurança permanente com controle de acesso e CCTV"}],"ventajas":[{"es":"Frente a kilómetros de playas naturales, entre Manantiales y José Ignacio, con acceso por Ruta 10.","en":"Facing miles of natural beaches between Manantiales and José Ignacio, with access from Route 10.","pt":"De frente para quilômetros de praias naturais, entre Manantiales e José Ignacio, com acesso pela Rota 10."},{"es":"A unos 5 minutos de Manantiales, 10 de José Ignacio y 20 de Punta del Este.","en":"About 5 minutes from Manantiales, 10 from José Ignacio and 20 from Punta del Este.","pt":"A cerca de 5 minutos de Manantiales, 10 de José Ignacio e 20 de Punta del Este."},{"es":"Más de 40 de sus 104 hectáreas son áreas comunes, lagunas, instalaciones deportivas y recreación.","en":"Over 40 of its 104 hectares are common areas, lagoons, sports facilities and recreation.","pt":"Mais de 40 dos seus 104 hectares são áreas comuns, lagoas, instalações esportivas e lazer."},{"es":"Infraestructura completa: red eléctrica subterránea, agua corriente, saneamiento, paisajismo e iluminación.","en":"Full infrastructure: underground power, running water, sewage, landscaping and lighting.","pt":"Infraestrutura completa: rede elétrica subterrânea, água encanada, saneamento, paisagismo e iluminação."},{"es":"Lotes de 1.000 a 4.000 m² en sectores de mar, bosque y reserva.","en":"Lots from 1,000 to 4,000 m² in sea, forest and reserve sectors.","pt":"Lotes de 1.000 a 4.000 m² em setores de mar, bosque e reserva."},{"es":"Residencia permanente, casa de veraneo o inversión patrimonial en una de las zonas con mayor proyección de la costa uruguaya.","en":"Permanent home, summer house or long-term investment in one of the fastest-growing areas of the Uruguayan coast.","pt":"Residência permanente, casa de veraneio ou investimento patrimonial em uma das áreas com maior projeção da costa uruguaia."}],"cifras":[{"valor":"104","nombre":{"es":"hectáreas","en":"hectares","pt":"hectares"}},{"valor":"≈240","nombre":{"es":"lotes en el masterplan","en":"lots in the masterplan","pt":"lotes no masterplan"}},{"valor":"+40 ha","nombre":{"es":"áreas comunes","en":"common areas","pt":"áreas comuns"}},{"valor":"1.000–4.000","nombre":{"es":"m² por lote","en":"m² per lot","pt":"m² por lote"}}],"puntos":[],"cerca":[{"nombre":{"es":"Manantiales","en":"Manantiales","pt":"Manantiales"},"lat":-34.899,"lng":-54.826,"km":7.5},{"nombre":{"es":"La Barra","en":"La Barra","pt":"La Barra"},"lat":-34.9117,"lng":-54.8593,"km":10.8},{"nombre":{"es":"José Ignacio","en":"José Ignacio","pt":"José Ignacio"},"lat":-34.8458,"lng":-54.6331,"km":11.2},{"nombre":{"es":"Laguna Garzón","en":"Laguna Garzón","pt":"Lagoa Garzón"},"lat":-34.8017,"lng":-54.5718,"km":18.2},{"nombre":{"es":"Aeropuerto de Punta del Este","en":"Punta del Este airport","pt":"Aeroporto de Punta del Este"},"lat":-34.8551,"lng":-55.0943,"km":31.4}],"plano":null,"masterplan":"../punta-polo-masterplan.jpg","brochure":"","kmz":"","planos":[],"video":"","m2_rango":[1002.0,4005.0],"sitio":{"whatsapp_general":"5491169763297","goatcounter":"cbzetate"},"desarrollo":{"slug":"punta-polo","nombre":"Punta Polo","clase":"barrio","zona":"Manantiales · José Ignacio","lat":-34.8719059378,"lng":-54.7511936254,"estado":{},"entrega":"","fotos":["https://static.tokkobroker.com/dev_pictures/170402_5680347172017651367072612374579409027634503533067962938615433914622810192517.jpg","https://static.tokkobroker.com/dev_pictures/170402_3284568099177833843229197107238459889507037172392440585781576284107850769889.jpg","https://static.tokkobroker.com/dev_pictures/170402_7821184468635503474845166022782996711578142920119647796394385336430083678263.jpg","https://static.tokkobroker.com/dev_pictures/170402_1057033153840804873253466097210107988300408818665402069672925379235511944020.jpg","https://static.tokkobroker.com/dev_pictures/170402_5703925575397713778902802477088396226984162060505583753160770133160038660133.jpg","https://static.tokkobroker.com/dev_pictures/170402_6354669283877479892148366015987341846314200609233231877743800419981713409045.jpg","https://static.tokkobroker.com/dev_pictures/170402_2091757279792157771048346869889402589559399974221806723030375204074770328008.jpg","https://static.tokkobroker.com/dev_pictures/170402_9404890250195527881078570366343507475003284330136616214477539520751203750064.jpg","https://static.tokkobroker.com/dev_pictures/170402_5978078347615885193654391236429518952554002384105956715279336293538918835082.jpg","https://static.tokkobroker.com/dev_pictures/170402_8244963497070706465877118701770244541840392419388251618828157498340249862494.jpg","https://static.tokkobroker.com/dev_pictures/170402_8242106436641329223844730128949903651821859697071203376200698533005206119695.jpg","https://static.tokkobroker.com/dev_pictures/170402_7997816236692383780140101170665781414299596803301170971164643024750549938698.jpg","https://static.tokkobroker.com/dev_pictures/170402_8376148776982065006414074664122767578529217867191621244542494119416698295276.jpg","https://static.tokkobroker.com/dev_pictures/170402_6813830367129447994310556571709334602230345366895051700622652089420517672325.jpg","https://static.tokkobroker.com/dev_pictures/170402_9031545765382207164925816372661076959070278671998917862511941708984576199376.jpg","https://static.tokkobroker.com/dev_pictures/170402_9989259332585484708123039971345901253564528992638473168623979823538978249318.jpg","https://static.tokkobroker.com/dev_pictures/170402_6491250641712329207883243321734953054391941606631761611941534709078728243326.jpg","https://static.tokkobroker.com/dev_pictures/170402_6373074338287071594274808543725142599110730359572974158148734393101458001614.jpg","https://static.tokkobroker.com/dev_pictures/170402_5886170694214900498536594800752018208233488217866109336773475587804053509263.jpg","https://static.tokkobroker.com/dev_pictures/170402_4431090670558575529044999774118361344313764336316681987742558945411355190770.jpg"],"planos":[],"url":"http://www.coldwellbankerzetate.com","unidades":8,"lotes":8,"desde_venta":120000,"destacado":false,"orden":100,"cifras":[{"valor":"104","nombre":{"es":"hectáreas","en":"hectares","pt":"hectares"}},{"valor":"≈240","nombre":{"es":"lotes en el masterplan","en":"lots in the masterplan","pt":"lotes no masterplan"}},{"valor":"+40 ha","nombre":{"es":"áreas comunes","en":"common areas","pt":"áreas comuns"}},{"valor":"1.000–4.000","nombre":{"es":"m² por lote","en":"m² per lot","pt":"m² por lote"}}],"wa":"5491169763297"}};
+const DATOS = {"modo":"desarrollo","slug":"punta-polo","nombre":"Punta Polo","zona":"Manantiales · José Ignacio","raiz":"../../","bajada":{"es":"Ubicado sobre la costa oceánica de Maldonado, entre Manantiales y José Ignacio, Punta Polo Club de Campo es un desarrollo que combina vida de playa, naturaleza y tradición deportiva en un entorno de gran escala. Con acceso desde la Ruta 10 y una ubicación estratégica, se encuentra a aproximadamente 10 minutos de José Ignacio, 5 minutos de Manantiales y 20 minutos de Punta del Este.\n\nEl proyecto se desarrolla sobre un predio de 104 hectáreas frente a kilómetros de playas naturales y preserva el espíritu del histórico club de polo que dio origen al lugar. Su diseño integra mar, bosque y espacios verdes, generando un equilibrio entre privacidad, deporte y vida social. Más de 40 hectáreas están destinadas a áreas comunes, lagunas, instalaciones deportivas y sectores de recreación.\n\nEl masterplan contempla aproximadamente 240 lotes distribuidos entre sectores de mar, bosque y reserva, con superficies que van desde los 1.000 m² hasta 4.000 m². El emprendimiento cuenta con infraestructura completa, incluyendo red eléctrica subterránea, agua corriente, saneamiento, paisajismo, iluminación y seguridad permanente con control de acceso y sistema CCTV.\n\nEntre sus amenities se destacan el Club House, Social Club, piscina, gimnasio, canchas de tenis y pádel, además de las tradicionales canchas de polo que forman parte de la identidad del proyecto. El histórico club house ha sido renovado preservando su arquitectura original y continúa siendo el punto de encuentro social del desarrollo.\n\nPensado para quienes valoran el contacto con la naturaleza sin resignar servicios y confort, Punta Polo propone una forma de vida vinculada al mar, al deporte y a los espacios abiertos. Una alternativa para desarrollar una residencia permanente, una casa de veraneo o una inversión patrimonial en una de las áreas con mayor proyección de la costa uruguaya.","en":"Set on Maldonado's ocean coast between Manantiales and José Ignacio, Punta Polo Country Club combines beach life, nature and sporting tradition on a grand scale. With access from Route 10 and a strategic location, it is about 10 minutes from José Ignacio, 5 minutes from Manantiales and 20 minutes from Punta del Este.\n\nThe project spans 104 hectares facing miles of natural beaches and preserves the spirit of the historic polo club that gave the place its origin. Its design brings together sea, forest and green spaces, balancing privacy, sport and social life. More than 40 hectares are set aside for common areas, lagoons, sports facilities and recreation.\n\nThe masterplan includes about 240 lots across sea, forest and reserve sectors, from 1,000 m² to 4,000 m². The development has full infrastructure, including underground power, running water, sewage, landscaping, lighting and round-the-clock security with access control and CCTV.\n\nHighlights include the Club House, Social Club, swimming pool, gym, tennis and padel courts, plus the traditional polo fields that are part of the project's identity. The historic club house has been restored, preserving its original architecture, and remains the social heart of the development.\n\nDesigned for those who value contact with nature without giving up services and comfort, Punta Polo offers a way of life tied to the sea, sport and open spaces: an option for a permanent home, a summer house or a long-term investment in one of the most promising areas of the Uruguayan coast.","pt":"Localizado na costa oceânica de Maldonado, entre Manantiales e José Ignacio, o Punta Polo Club de Campo é um empreendimento que combina vida de praia, natureza e tradição esportiva em grande escala. Com acesso pela Rota 10 e localização estratégica, fica a cerca de 10 minutos de José Ignacio, 5 de Manantiales e 20 de Punta del Este.\n\nO projeto ocupa 104 hectares de frente para quilômetros de praias naturais e preserva o espírito do histórico clube de polo que deu origem ao lugar. Seu desenho integra mar, bosque e áreas verdes, equilibrando privacidade, esporte e vida social. Mais de 40 hectares são destinados a áreas comuns, lagoas, instalações esportivas e lazer.\n\nO masterplan prevê cerca de 240 lotes distribuídos entre setores de mar, bosque e reserva, com áreas de 1.000 m² a 4.000 m². O empreendimento conta com infraestrutura completa, incluindo rede elétrica subterrânea, água encanada, saneamento, paisagismo, iluminação e segurança permanente com controle de acesso e CCTV.\n\nEntre as amenities destacam-se o Club House, o Social Club, piscina, academia, quadras de tênis e padel, além dos tradicionais campos de polo que fazem parte da identidade do projeto. O histórico club house foi renovado preservando sua arquitetura original e continua sendo o ponto de encontro social do empreendimento.\n\nPensado para quem valoriza o contato com a natureza sem abrir mão de serviços e conforto, Punta Polo propõe um estilo de vida ligado ao mar, ao esporte e aos espaços abertos: uma alternativa para residência permanente, casa de veraneio ou investimento patrimonial em uma das áreas com maior projeção da costa uruguaia."},"amenities":[{"es":"Club House histórico renovado","en":"Restored historic Club House","pt":"Club House histórico renovado"},{"es":"Social Club","en":"Social Club","pt":"Social Club"},{"es":"Piscina","en":"Swimming pool","pt":"Piscina"},{"es":"Gimnasio","en":"Gym","pt":"Academia"},{"es":"Canchas de tenis y pádel","en":"Tennis and padel courts","pt":"Quadras de tênis e padel"},{"es":"Canchas de polo","en":"Polo fields","pt":"Campos de polo"},{"es":"Lagunas y espacios verdes","en":"Lagoons and green spaces","pt":"Lagoas e áreas verdes"},{"es":"Seguridad permanente con control de acceso y CCTV","en":"Round-the-clock security with access control and CCTV","pt":"Segurança permanente com controle de acesso e CCTV"}],"ventajas":[{"es":"Frente a kilómetros de playas naturales, entre Manantiales y José Ignacio, con acceso por Ruta 10.","en":"Facing miles of natural beaches between Manantiales and José Ignacio, with access from Route 10.","pt":"De frente para quilômetros de praias naturais, entre Manantiales e José Ignacio, com acesso pela Rota 10."},{"es":"A unos 5 minutos de Manantiales, 10 de José Ignacio y 20 de Punta del Este.","en":"About 5 minutes from Manantiales, 10 from José Ignacio and 20 from Punta del Este.","pt":"A cerca de 5 minutos de Manantiales, 10 de José Ignacio e 20 de Punta del Este."},{"es":"Más de 40 de sus 104 hectáreas son áreas comunes, lagunas, instalaciones deportivas y recreación.","en":"Over 40 of its 104 hectares are common areas, lagoons, sports facilities and recreation.","pt":"Mais de 40 dos seus 104 hectares são áreas comuns, lagoas, instalações esportivas e lazer."},{"es":"Infraestructura completa: red eléctrica subterránea, agua corriente, saneamiento, paisajismo e iluminación.","en":"Full infrastructure: underground power, running water, sewage, landscaping and lighting.","pt":"Infraestrutura completa: rede elétrica subterrânea, água encanada, saneamento, paisagismo e iluminação."},{"es":"Lotes de 1.000 a 4.000 m² en sectores de mar, bosque y reserva.","en":"Lots from 1,000 to 4,000 m² in sea, forest and reserve sectors.","pt":"Lotes de 1.000 a 4.000 m² em setores de mar, bosque e reserva."},{"es":"Residencia permanente, casa de veraneo o inversión patrimonial en una de las zonas con mayor proyección de la costa uruguaya.","en":"Permanent home, summer house or long-term investment in one of the fastest-growing areas of the Uruguayan coast.","pt":"Residência permanente, casa de veraneio ou investimento patrimonial em uma das áreas com maior projeção da costa uruguaia."}],"cifras":[{"valor":"104","nombre":{"es":"hectáreas","en":"hectares","pt":"hectares"}},{"valor":"≈240","nombre":{"es":"lotes en el masterplan","en":"lots in the masterplan","pt":"lotes no masterplan"}},{"valor":"+40 ha","nombre":{"es":"áreas comunes","en":"common areas","pt":"áreas comuns"}},{"valor":"1.000–4.000","nombre":{"es":"m² por lote","en":"m² per lot","pt":"m² por lote"}}],"cerca":[{"nombre":{"es":"Manantiales","en":"Manantiales","pt":"Manantiales"},"lat":-34.899,"lng":-54.826,"km":7.5},{"nombre":{"es":"La Barra","en":"La Barra","pt":"La Barra"},"lat":-34.9117,"lng":-54.8593,"km":10.8},{"nombre":{"es":"José Ignacio","en":"José Ignacio","pt":"José Ignacio"},"lat":-34.8458,"lng":-54.6331,"km":11.2},{"nombre":{"es":"Laguna Garzón","en":"Laguna Garzón","pt":"Lagoa Garzón"},"lat":-34.8017,"lng":-54.5718,"km":18.2},{"nombre":{"es":"Aeropuerto de Punta del Este","en":"Punta del Este airport","pt":"Aeroporto de Punta del Este"},"lat":-34.8551,"lng":-55.0943,"km":31.4}],"plano":null,"masterplan":"../punta-polo-masterplan.jpg","brochure":"","kmz":"","sitio":{"whatsapp_general":"5491169763297","goatcounter":"cbzetate"},"desarrollo":{"slug":"punta-polo","nombre":"Punta Polo","clase":"barrio","zona":"Manantiales · José Ignacio","lat":-34.8719,"lng":-54.7512,"estado":{},"entrega":"","fotos":["https://static.tokkobroker.com/dev_pictures/170402_5680347172017651367072612374579409027634503533067962938615433914622810192517.jpg","https://static.tokkobroker.com/dev_pictures/170402_3284568099177833843229197107238459889507037172392440585781576284107850769889.jpg","https://static.tokkobroker.com/dev_pictures/170402_7821184468635503474845166022782996711578142920119647796394385336430083678263.jpg","https://static.tokkobroker.com/dev_pictures/170402_1057033153840804873253466097210107988300408818665402069672925379235511944020.jpg","https://static.tokkobroker.com/dev_pictures/170402_5703925575397713778902802477088396226984162060505583753160770133160038660133.jpg","https://static.tokkobroker.com/dev_pictures/170402_6354669283877479892148366015987341846314200609233231877743800419981713409045.jpg","https://static.tokkobroker.com/dev_pictures/170402_2091757279792157771048346869889402589559399974221806723030375204074770328008.jpg","https://static.tokkobroker.com/dev_pictures/170402_9404890250195527881078570366343507475003284330136616214477539520751203750064.jpg","https://static.tokkobroker.com/dev_pictures/170402_5978078347615885193654391236429518952554002384105956715279336293538918835082.jpg","https://static.tokkobroker.com/dev_pictures/170402_8244963497070706465877118701770244541840392419388251618828157498340249862494.jpg","https://static.tokkobroker.com/dev_pictures/170402_8242106436641329223844730128949903651821859697071203376200698533005206119695.jpg","https://static.tokkobroker.com/dev_pictures/170402_7997816236692383780140101170665781414299596803301170971164643024750549938698.jpg","https://static.tokkobroker.com/dev_pictures/170402_8376148776982065006414074664122767578529217867191621244542494119416698295276.jpg","https://static.tokkobroker.com/dev_pictures/170402_6813830367129447994310556571709334602230345366895051700622652089420517672325.jpg","https://static.tokkobroker.com/dev_pictures/170402_9031545765382207164925816372661076959070278671998917862511941708984576199376.jpg","https://static.tokkobroker.com/dev_pictures/170402_9989259332585484708123039971345901253564528992638473168623979823538978249318.jpg","https://static.tokkobroker.com/dev_pictures/170402_6491250641712329207883243321734953054391941606631761611941534709078728243326.jpg","https://static.tokkobroker.com/dev_pictures/170402_6373074338287071594274808543725142599110730359572974158148734393101458001614.jpg","https://static.tokkobroker.com/dev_pictures/170402_5886170694214900498536594800752018208233488217866109336773475587804053509263.jpg","https://static.tokkobroker.com/dev_pictures/170402_4431090670558575529044999774118361344313764336316681987742558945411355190770.jpg"],"url":"","destacado":true,"orden":100,"cifras":[{"valor":"104","nombre":{"es":"hectáreas","en":"hectares","pt":"hectares"}},{"valor":"≈240","nombre":{"es":"lotes en el masterplan","en":"lots in the masterplan","pt":"lotes no masterplan"}},{"valor":"+40 ha","nombre":{"es":"áreas comunes","en":"common areas","pt":"áreas comuns"}},{"valor":"1.000–4.000","nombre":{"es":"m² por lote","en":"m² per lot","pt":"m² por lote"}}],"wa":"5491169763297"}};
 const DEV = DATOS.desarrollo, PL = DATOS.plano, MP = DATOS.masterplan;
-const LOTES = []; /* la página presenta el proyecto: no lista los lotes en venta */
 cargarEstadisticas(DATOS.sitio);
 const $ = id => document.getElementById(id);
 const mapa = mapaBase("mapa");
 const capaPlano = L.layerGroup().addTo(mapa), capaLugares = L.layerGroup().addTo(mapa);
 let VISTA = "plano", actual = null;
-const porRef = new Map(), filas = new Map();
 
-const precio = l => l.precio ? `${mon(l.moneda)} ${fmt(l.precio)}` : t("consultar_precio");
-const m2 = n => n ? `${fmt(n)} m²` : "—";
-const nLote = l => l.lote_plano || l.lote || "";
 
 /* ---------- textos del panel (compu) y de la hoja (celular) ---------- */
 function htmlCuerpo(conTitulo) {
@@ -705,11 +664,6 @@ function htmlCuerpo(conTitulo) {
     ${(DATOS.cerca || []).length ? `<section class="sec pad"><h2>${t("ubicacion")}</h2><ul class="cerca">${DATOS.cerca.map(l =>
         `<li><span>${esc(tl(l.nombre))}</span><b>${fmtKm(l.km)}</b></li>`).join("")}</ul><span class="nota">${t("linea_recta")}</span>
         <button class="mas" type="button" data-vista="zona">${t("ver_en_mapa")} →</button></section>` : ""}
-    ${LOTES.length ? `<section class="sec pad"><h2>${t("lotes_venta")}</h2>
-        ${PL && PL.lotes.length ? `<div class="ley"><span><i class="d"></i>${t("disponible")}</span><span><i class="o"></i>${t("otros_lotes")}</span>${PL.areas.length ? `<span><i class="a"></i>${t("areas_comunes")}</span>` : ""}</div>` : ""}
-        <table class="lotes"><thead><tr><th>${t("lote")}</th><th>${t("superficie_l")}</th><th>${t("precio")}</th><th></th></tr></thead>
-        <tbody>${LOTES.map(l => `<tr class="f" data-ref="${esc(l.ref)}" tabindex="0"><td>${esc(nLote(l) || "—")}</td><td>${m2(l.m2_terreno)}</td><td class="p">${esc(precio(l))}</td>
-          <td><a href="${esc(l.url)}" target="_blank" rel="noopener" aria-label="${t("ver_ficha")}">↗</a></td></tr>`).join("")}</tbody></table></section>` : ""}
     ${!conTitulo ? `<section class="sec pad">${htmlAcciones()}</section>` : ""}
     <div class="pie pad">${t("pie")}</div>`;
 }
@@ -740,18 +694,8 @@ function enganchar(raiz) {
   });
   raiz.querySelectorAll("[data-vista]").forEach(b => b.onclick = () => { ponerVista(b.dataset.vista); cerrarHoja(); });
   raiz.querySelectorAll("[data-ev]").forEach(a => a.addEventListener("click", () => track(a.dataset.ev + "/" + DEV.slug)));
-  raiz.querySelectorAll("tr.f").forEach(tr => {
-    const ref = tr.dataset.ref;
-    (filas.get(ref) || filas.set(ref, []).get(ref)).push(tr);
-    tr.addEventListener("mouseenter", () => resaltar(ref, true));
-    tr.addEventListener("mouseleave", () => resaltar(ref, false));
-    const ir = e => { if (e.target.closest("a")) return; irALote(ref); cerrarHoja(); };
-    tr.addEventListener("click", ir);
-    tr.addEventListener("keydown", e => { if (e.key === "Enter") ir(e); });
-  });
 }
 function pintar() {
-  filas.clear();
   document.title = `${DEV.nombre} · ${t("desarrollos")} · Coldwell Banker Zetaté`;
   $("panel").innerHTML = `<div class="barra-sup pad"><a class="volver" href="${DATOS.raiz}#desarrollos">← ${t("todos_desarrollos")}</a><div class="idiomas" id="idiomas-p"></div></div>
     <div class="logo-wrap pad"><img class="logo" src="${DATOS.raiz}assets/logo-apilado.png" alt="Coldwell Banker Zetaté" width="210" height="44"></div>` + htmlCuerpo(true);
@@ -767,38 +711,23 @@ function pintar() {
 }
 
 /* ---------- plano (KMZ) sobre el satélite ---------- */
-const capasLote = new Map();
 function dibujarPlano() {
-  capaPlano.clearLayers(); capasLote.clear();
-  const disp = new Map(LOTES.filter(l => l.lote_plano).map(l => [String(l.lote_plano), l]));
+  capaPlano.clearLayers();
   if (PL) {
     if (PL.perimetro) L.polygon(PL.perimetro, { color: "#c8b28a", weight: 2.5, fill: false, interactive: false }).addTo(capaPlano);
     PL.areas.forEach(a => L.polygon(a.c, { color: "rgba(170,210,170,.85)", weight: 1, fillColor: "#6fa56f", fillOpacity: .28 })
       .bindTooltip(`<b>${esc(a.nombre)}</b>${a.m2 > 5000 ? `<span>${fmt(a.m2 / 10000)} ha</span>` : ""}`, { className: "tt", sticky: true }).addTo(capaPlano));
     PL.lineas.forEach(l => L.polyline(l.c, { color: "rgba(255,255,255,.55)", weight: 1.5, interactive: false }).addTo(capaPlano));
     PL.lotes.forEach(lt => {
-      const u = disp.get(String(lt.n)) || (lt.ref && LOTES.find(x => x.ref === lt.ref));
-      const pol = L.polygon(lt.c, u ? { color: "#c8b28a", weight: 1.5, fillColor: "#c8b28a", fillOpacity: .5 }
-                                    : { color: "rgba(255,255,255,.6)", weight: .8, fillColor: "#fff", fillOpacity: .04 }).addTo(capaPlano);
-      pol.bindTooltip(u ? `<b>${t("lote")} ${esc(lt.n)} · ${esc(precio(u))}</b><span>${m2(u.m2_terreno || lt.m2)}</span>`
-                        : `<b>${t("lote")} ${esc(lt.n)}</b><span>${m2(lt.m2)}${LOTES.length ? " · " + t("consultar") : ""}</span>`, { className: "tt", sticky: true });
-      const c = pol.getBounds().getCenter();
-      L.marker(c, { interactive: false, keyboard: false, icon: L.divIcon({ className: "ico", iconSize: [0, 0], html: `<span class="n-lote${u ? " d" : ""}">${esc(lt.n)}</span>` }) }).addTo(capaPlano);
-      if (u) { capasLote.set(u.ref, pol); pol.on("click", () => abrirLote(u, c)); pol.on("mouseover", () => resaltar(u.ref, true)); pol.on("mouseout", () => resaltar(u.ref, false)); }
+      const pol = L.polygon(lt.c, { color: "rgba(255,255,255,.7)", weight: .8, fillColor: "#fff", fillOpacity: .05 }).addTo(capaPlano);
+      pol.bindTooltip(`<b>${t("lote")} ${esc(lt.n)}</b><span>${fmt(lt.m2)} m²</span>`, { className: "tt", sticky: true });
+      L.marker(pol.getBounds().getCenter(), { interactive: false, keyboard: false, icon: L.divIcon({ className: "ico", iconSize: [0, 0], html: `<span class="n-lote">${esc(lt.n)}</span>` }) }).addTo(capaPlano);
     });
     PL.puntos.forEach(p => L.marker([p.lat, p.lng], { interactive: false, keyboard: false,
       icon: L.divIcon({ className: "ico", iconSize: [0, 0], html: `<span class="amen-pin"><i></i><span>${esc(p.nombre)}</span></span>` }) }).addTo(capaPlano));
   }
-  /* lotes en venta que no están en el plano (o no hay KMZ): punto champagne */
-  LOTES.filter(l => !capasLote.has(l.ref)).forEach(l => {
-    const m = L.marker([l.lat, l.lng], { keyboard: false, icon: L.divIcon({ className: "ico", iconSize: [0, 0], html: `<span class="pin-lote" data-ref="${esc(l.ref)}"></span>` }) }).addTo(capaPlano);
-    m.bindTooltip(`<b>${esc(precio(l))}</b><span>${m2(l.m2_terreno)}${nLote(l) ? " · " + t("lote") + " " + esc(nLote(l)) : ""}</span>`, { className: "tt", direction: "top", offset: [0, -10] });
-    m.on("click", () => abrirLote(l, m.getLatLng()));
-    m.on("mouseover", () => resaltar(l.ref, true)); m.on("mouseout", () => resaltar(l.ref, false));
-    capasLote.set(l.ref, m);
-  });
-  if (!PL || !PL.perimetro) L.marker([DEV.lat, DEV.lng], { interactive: false, keyboard: false, zIndexOffset: -500,
-    icon: L.divIcon({ className: "ico", iconSize: [0, 0], html: `<span class="dev-pin"><span class="ic">${iconoDev(DEV)}</span><span class="n">${LOTES.length ? "" : esc(DEV.nombre)}</span></span>` }) }).addTo(capaPlano);
+  if (!PL || !PL.perimetro) L.marker([DEV.lat, DEV.lng], { interactive: false, keyboard: false,
+    icon: L.divIcon({ className: "ico", iconSize: [0, 0], html: `<span class="dev-pin"><span class="ic">${iconoDev(DEV)}</span><span class="n">${esc(DEV.nombre)}</span></span>` }) }).addTo(capaPlano);
   capaLugares.clearLayers();
   (DATOS.cerca || []).forEach(l => {
     L.polyline([[DEV.lat, DEV.lng], [l.lat, l.lng]], { color: "rgba(200,178,138,.55)", weight: 1, dashArray: "4 6", interactive: false }).addTo(capaLugares);
@@ -806,30 +735,8 @@ function dibujarPlano() {
       html: `<span class="lugar"><i></i><span>${esc(tl(l.nombre))} <b>${fmtKm(l.km)}</b></span></span>` }) }).addTo(capaLugares);
   });
 }
-function resaltar(ref, on) {
-  (filas.get(ref) || []).forEach(tr => tr.classList.toggle("on", on));
-  const c = capasLote.get(ref); if (!c) return;
-  if (c.setStyle) c.setStyle({ fillOpacity: on ? .85 : .5, weight: on ? 2.5 : 1.5 });
-  else c.getElement()?.querySelector(".pin-lote")?.classList.toggle("on", on);
-}
-const popLote = L.popup({ className: "pop", closeButton: false, offset: [0, -6], autoPanPaddingTopLeft: L.point(16, movil() ? 150 : 20), autoPanPaddingBottomRight: L.point(16, movil() ? 200 : 20) });
-function abrirLote(l, donde) {
-  popLote.setLatLng(donde).setContent(`${l.foto ? `<img src="${esc(l.foto)}" alt="">` : ""}<div class="c">
-    <span class="k">${nLote(l) ? t("lote") + " " + esc(nLote(l)) + " · " : ""}${m2(l.m2_terreno)}</span><span class="pr">${esc(precio(l))}</span>
-    ${l.titulo ? `<span class="s">${esc(l.titulo)}</span>` : ""}
-    <div class="bb"><a href="${esc(l.url)}" target="_blank" rel="noopener">${t("ver_ficha")}</a><a href="${esc(linkWA({ ...l, ops: [], barrio_nombre: DEV.nombre }))}" target="_blank" rel="noopener">${ICONO_WA}WhatsApp</a></div></div>`).openOn(mapa);
-  track("lote/" + l.ref);
-}
-function irALote(ref) {
-  const c = capasLote.get(ref), l = LOTES.find(x => x.ref === ref); if (!c || !l) return;
-  const donde = c.getBounds ? c.getBounds().getCenter() : c.getLatLng();
-  if (VISTA !== "plano") ponerVista("plano", true);
-  mapa.flyTo(donde, Math.max(mapa.getZoom(), 17), { duration: .8 });
-  mapa.once("moveend", () => abrirLote(l, donde));
-}
 function encuadrePlano() {
   const pts = PL ? [...(PL.perimetro || []), ...PL.lotes.flatMap(l => l.c)] : [];
-  LOTES.forEach(l => pts.push([l.lat, l.lng]));
   if (!pts.length) pts.push([DEV.lat, DEV.lng]);
   return L.latLngBounds(pts);
 }
