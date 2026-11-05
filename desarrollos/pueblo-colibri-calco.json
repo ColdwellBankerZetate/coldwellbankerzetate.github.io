@@ -1,9 +1,42 @@
 {
- "_nota": "Falta ubicar: 3+ puntos de control (px del masterplan -> lat/lng en el satélite), ej. esquina Bartolomé Hidalgo y Camino de los Flamencos y las esquinas del predio. El plano del brochure es esquemático: el calce es aproximado.",
- "control": [],
+ "_nota": "Ubicado con el cruce Bartolomé Hidalgo × Camino de los Flamencos (OpenStreetMap) y el camino de tierra del borde este en el satélite. El plano del brochure es esquemático: el calce es aproximado.",
+ "control": [
+  {
+   "px": [
+    168,
+    2335
+   ],
+   "lat": -34.9091694,
+   "lng": -54.8618088
+  },
+  {
+   "px": [
+    572,
+    2190
+   ],
+   "lat": -34.9084696,
+   "lng": -54.8606289
+  },
+  {
+   "px": [
+    905,
+    1110
+   ],
+   "lat": -34.9061841,
+   "lng": -54.8598137
+  },
+  {
+   "px": [
+    905,
+    95
+   ],
+   "lat": -34.903633,
+   "lng": -54.8598674
+  }
+ ],
  "umbral": 200,
- "min_m2": 200,
- "max_m2": 8000,
+ "min_m2": 300,
+ "max_m2": 12000,
  "limpiar": 1,
  "engrosar": 1,
  "ancho_corte": 5,
