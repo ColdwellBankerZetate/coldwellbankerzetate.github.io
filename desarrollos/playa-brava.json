@@ -1,8 +1,0 @@
-{
-  "slug": "playa-brava",
-  "nombre": "Playa Brava",
-  "clase": "barrio",
-  "zona": "José Ignacio",
-  "ocultar": true,
-  "nota": "Oculto hasta tener brochure/datos. Falta lat/lng, textos y fotos."
-}
