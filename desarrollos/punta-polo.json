@@ -1,14 +1,17 @@
 {
   "slug": "punta-polo",
-  "tokko_id": 170402,
   "nombre": "Punta Polo",
   "clase": "barrio",
+  "zona": "Manantiales · José Ignacio",
+  "lat": -34.8719,
+  "lng": -54.7512,
   "estado": {},
   "entrega": "",
-  "bajada": {},
-  "datos": [],
-  "puntos": [],
-  "zona": "Manantiales · José Ignacio",
+  "bajada": {
+    "es": "Ubicado sobre la costa oceánica de Maldonado, entre Manantiales y José Ignacio, Punta Polo Club de Campo es un desarrollo que combina vida de playa, naturaleza y tradición deportiva en un entorno de gran escala. Con acceso desde la Ruta 10 y una ubicación estratégica, se encuentra a aproximadamente 10 minutos de José Ignacio, 5 minutos de Manantiales y 20 minutos de Punta del Este.\n\nEl proyecto se desarrolla sobre un predio de 104 hectáreas frente a kilómetros de playas naturales y preserva el espíritu del histórico club de polo que dio origen al lugar. Su diseño integra mar, bosque y espacios verdes, generando un equilibrio entre privacidad, deporte y vida social. Más de 40 hectáreas están destinadas a áreas comunes, lagunas, instalaciones deportivas y sectores de recreación.\n\nEl masterplan contempla aproximadamente 240 lotes distribuidos entre sectores de mar, bosque y reserva, con superficies que van desde los 1.000 m² hasta 4.000 m². El emprendimiento cuenta con infraestructura completa, incluyendo red eléctrica subterránea, agua corriente, saneamiento, paisajismo, iluminación y seguridad permanente con control de acceso y sistema CCTV.\n\nEntre sus amenities se destacan el Club House, Social Club, piscina, gimnasio, canchas de tenis y pádel, además de las tradicionales canchas de polo que forman parte de la identidad del proyecto. El histórico club house ha sido renovado preservando su arquitectura original y continúa siendo el punto de encuentro social del desarrollo.\n\nPensado para quienes valoran el contacto con la naturaleza sin resignar servicios y confort, Punta Polo propone una forma de vida vinculada al mar, al deporte y a los espacios abiertos. Una alternativa para desarrollar una residencia permanente, una casa de veraneo o una inversión patrimonial en una de las áreas con mayor proyección de la costa uruguaya.",
+    "en": "Set on Maldonado's ocean coast between Manantiales and José Ignacio, Punta Polo Country Club combines beach life, nature and sporting tradition on a grand scale. With access from Route 10 and a strategic location, it is about 10 minutes from José Ignacio, 5 minutes from Manantiales and 20 minutes from Punta del Este.\n\nThe project spans 104 hectares facing miles of natural beaches and preserves the spirit of the historic polo club that gave the place its origin. Its design brings together sea, forest and green spaces, balancing privacy, sport and social life. More than 40 hectares are set aside for common areas, lagoons, sports facilities and recreation.\n\nThe masterplan includes about 240 lots across sea, forest and reserve sectors, from 1,000 m² to 4,000 m². The development has full infrastructure, including underground power, running water, sewage, landscaping, lighting and round-the-clock security with access control and CCTV.\n\nHighlights include the Club House, Social Club, swimming pool, gym, tennis and padel courts, plus the traditional polo fields that are part of the project's identity. The historic club house has been restored, preserving its original architecture, and remains the social heart of the development.\n\nDesigned for those who value contact with nature without giving up services and comfort, Punta Polo offers a way of life tied to the sea, sport and open spaces: an option for a permanent home, a summer house or a long-term investment in one of the most promising areas of the Uruguayan coast.",
+    "pt": "Localizado na costa oceânica de Maldonado, entre Manantiales e José Ignacio, o Punta Polo Club de Campo é um empreendimento que combina vida de praia, natureza e tradição esportiva em grande escala. Com acesso pela Rota 10 e localização estratégica, fica a cerca de 10 minutos de José Ignacio, 5 de Manantiales e 20 de Punta del Este.\n\nO projeto ocupa 104 hectares de frente para quilômetros de praias naturais e preserva o espírito do histórico clube de polo que deu origem ao lugar. Seu desenho integra mar, bosque e áreas verdes, equilibrando privacidade, esporte e vida social. Mais de 40 hectares são destinados a áreas comuns, lagoas, instalações esportivas e lazer.\n\nO masterplan prevê cerca de 240 lotes distribuídos entre setores de mar, bosque e reserva, com áreas de 1.000 m² a 4.000 m². O empreendimento conta com infraestrutura completa, incluindo rede elétrica subterrânea, água encanada, saneamento, paisagismo, iluminação e segurança permanente com controle de acesso e CCTV.\n\nEntre as amenities destacam-se o Club House, o Social Club, piscina, academia, quadras de tênis e padel, além dos tradicionais campos de polo que fazem parte da identidade do projeto. O histórico club house foi renovado preservando sua arquitetura original e continua sendo o ponto de encontro social do empreendimento.\n\nPensado para quem valoriza o contato com a natureza sem abrir mão de serviços e conforto, Punta Polo propõe um estilo de vida ligado ao mar, ao esporte e aos espaços abertos: uma alternativa para residência permanente, casa de veraneio ou investimento patrimonial em uma das áreas com maior projeção da costa uruguaia."
+  },
   "cifras": [
     {
       "valor": "104",
@@ -116,5 +119,28 @@
       "en": "Round-the-clock security with access control and CCTV",
       "pt": "Segurança permanente com controle de acesso e CCTV"
     }
-  ]
+  ],
+  "fotos": [
+    "https://static.tokkobroker.com/dev_pictures/170402_5680347172017651367072612374579409027634503533067962938615433914622810192517.jpg",
+    "https://static.tokkobroker.com/dev_pictures/170402_3284568099177833843229197107238459889507037172392440585781576284107850769889.jpg",
+    "https://static.tokkobroker.com/dev_pictures/170402_7821184468635503474845166022782996711578142920119647796394385336430083678263.jpg",
+    "https://static.tokkobroker.com/dev_pictures/170402_1057033153840804873253466097210107988300408818665402069672925379235511944020.jpg",
+    "https://static.tokkobroker.com/dev_pictures/170402_5703925575397713778902802477088396226984162060505583753160770133160038660133.jpg",
+    "https://static.tokkobroker.com/dev_pictures/170402_6354669283877479892148366015987341846314200609233231877743800419981713409045.jpg",
+    "https://static.tokkobroker.com/dev_pictures/170402_2091757279792157771048346869889402589559399974221806723030375204074770328008.jpg",
+    "https://static.tokkobroker.com/dev_pictures/170402_9404890250195527881078570366343507475003284330136616214477539520751203750064.jpg",
+    "https://static.tokkobroker.com/dev_pictures/170402_5978078347615885193654391236429518952554002384105956715279336293538918835082.jpg",
+    "https://static.tokkobroker.com/dev_pictures/170402_8244963497070706465877118701770244541840392419388251618828157498340249862494.jpg",
+    "https://static.tokkobroker.com/dev_pictures/170402_8242106436641329223844730128949903651821859697071203376200698533005206119695.jpg",
+    "https://static.tokkobroker.com/dev_pictures/170402_7997816236692383780140101170665781414299596803301170971164643024750549938698.jpg",
+    "https://static.tokkobroker.com/dev_pictures/170402_8376148776982065006414074664122767578529217867191621244542494119416698295276.jpg",
+    "https://static.tokkobroker.com/dev_pictures/170402_6813830367129447994310556571709334602230345366895051700622652089420517672325.jpg",
+    "https://static.tokkobroker.com/dev_pictures/170402_9031545765382207164925816372661076959070278671998917862511941708984576199376.jpg",
+    "https://static.tokkobroker.com/dev_pictures/170402_9989259332585484708123039971345901253564528992638473168623979823538978249318.jpg",
+    "https://static.tokkobroker.com/dev_pictures/170402_6491250641712329207883243321734953054391941606631761611941534709078728243326.jpg",
+    "https://static.tokkobroker.com/dev_pictures/170402_6373074338287071594274808543725142599110730359572974158148734393101458001614.jpg",
+    "https://static.tokkobroker.com/dev_pictures/170402_5886170694214900498536594800752018208233488217866109336773475587804053509263.jpg",
+    "https://static.tokkobroker.com/dev_pictures/170402_4431090670558575529044999774118361344313764336316681987742558945411355190770.jpg"
+  ],
+  "destacado": true
 }

@@ -17,9 +17,9 @@ y columna Ocupado con las fechas tomadas, ej. "26/12-10/1, 15/1 al 27/1" (inclus
 temporada que viene). Vacío = esa casa no muestra agenda; "libre" = todo libre. Se configura en sitio.json,
 "disponibilidad": id de la planilla (compartida "cualquiera con el link puede ver") o URL de un CSV.
 
-Desarrollos (edificios y barrios que se venden por lotes): salen solos de los emprendimientos de
-Tokko (con sus unidades) y cada uno tiene su JSON en desarrollos/<slug>.json para textos, estado,
-entrega, fotos o ubicación a mano. Un desarrollo que todavía no está en Tokko se agrega creando ese JSON.
+Desarrollos (edificios y barrios que se venden por lotes): NO salen de Tokko. Cada uno es
+desarrollos/<slug>.json con la información propia (brochure de Drive, textos de Mateo, ubicación a mano),
+más fotos en desarrollos/<slug>/fotos/, masterplan, KMZ y brochure PDF opcionales.
 Se ven en la portada deslizando el título a "Desarrollos" y cada uno en /desarrollos/<slug>/.
 
 Para corregir un pin: en el JSON del barrio, "ajustes": {"<referencia>": {"lat":..,"lng":..}}.
@@ -154,7 +154,6 @@ def tokko_a_prop(p, wa_general):
         "fotos": fotos,
         "agente": {"nombre": prod.get("name") or "Coldwell Banker Zetaté",
                    "wa": whatsapp(prod.get("cellphone"), prod.get("phone")) or wa_general},
-        **({"dev_id": (p.get("development") or {}).get("id")} if (p.get("development") or {}).get("id") else {}),
     }
 
 
@@ -217,52 +216,11 @@ def manual_a_prop(p, wa_general):
 
 
 # ---------------------------------------------------------------- desarrollos
-def tokko_desarrollos(offline):
-    """Emprendimientos de Tokko (edificios, barrios, loteos). Si falla, sigue con los que vienen dentro de las propiedades."""
-    cache = os.path.join(AQUI, "tokko_desarrollos_cache.json")
-    if offline or not TOKKO_KEY:
-        return json.load(open(cache, encoding="utf-8")) if os.path.exists(cache) else []
-    out, off = [], 0
-    try:
-        while True:
-            q = urllib.parse.urlencode({"key": TOKKO_KEY, "format": "json", "lang": "es_ar", "limit": 50, "offset": off})
-            d = bajar_json(f"{TOKKO}development/?{q}")
-            out += d["objects"]
-            off += 50
-            if not d["meta"].get("next"):
-                break
-    except Exception as e:
-        print(f"  ! no pude bajar los emprendimientos de Tokko ({e}); uso la última copia")
-        return json.load(open(cache, encoding="utf-8")) if os.path.exists(cache) else []
-    json.dump(out, open(cache, "w", encoding="utf-8"), ensure_ascii=False)
-    return out
-
-
 def texto_es(v):
     """'texto' o {"es":..,"en":..,"pt":..} → dict por idioma (o vacío)."""
     if not v:
         return {}
     return v if isinstance(v, dict) else {"es": str(v)}
-
-
-def limpiar_html(t):
-    t = re.sub(r"(?i)<br\s*/?>|</p>", "\n", t or "")
-    t = re.sub(r"<[^>]+>", "", t)
-    return re.sub(r"\n{3,}", "\n\n", t).strip()
-
-
-EDIFICIO = re.compile(r"(?i)edific|torre|condomin|complejo|apart|residenc|hotel|tower")
-LOTEO = re.compile(r"(?i)barrio|loteo|lote|country|chacra|club|pueblo|urbaniz|terreno|parcel")
-
-
-def clase_desarrollo(tipo, unidades):
-    if EDIFICIO.search(tipo or ""):
-        return "edificio"
-    if LOTEO.search(tipo or ""):
-        return "barrio"
-    if unidades and sum(u["tipo"] == "terreno" for u in unidades) * 2 >= len(unidades):
-        return "barrio"
-    return "edificio" if unidades and all(u["tipo"] == "depto" for u in unidades) else "barrio"
 
 
 # Lugares de referencia para "Ubicación" de los desarrollos (distancia en línea recta, redondeada)
@@ -290,14 +248,6 @@ def area_m2(anillo):
     lat0 = math.radians(sum(p[0] for p in anillo) / len(anillo))
     xy = [(p[1] * 111320 * math.cos(lat0), p[0] * 110540) for p in anillo]
     return abs(sum(x1 * y2 - x2 * y1 for (x1, y1), (x2, y2) in zip(xy, xy[1:] + xy[:1]))) / 2
-
-
-def dentro(lat, lng, anillo):
-    c = False
-    for (y1, x1), (y2, x2) in zip(anillo, anillo[1:] + anillo[:1]):
-        if (y1 > lat) != (y2 > lat) and lng < (x2 - x1) * (lat - y1) / (y2 - y1 + 1e-15) + x1:
-            c = not c
-    return c
 
 
 LOTE_RE = re.compile(r"(?i)^\s*(?:lote|lot|l)?\s*[-nº°#.]*\s*(\d+[a-z]?)\s*$")
@@ -381,94 +331,41 @@ def archivo_dev(c, slug, clave, exts):
     return None
 
 
-def armar_desarrollos(tokko, todas, sitio, wa_general, avisos):
-    """Desarrollos de Tokko + los que se cargan a mano en desarrollos/*.json. Devuelve el resumen para la portada."""
+def fotos_carpeta(slug):
+    """Fotos guardadas en el sitio: desarrollos/<slug>/fotos/*.jpg|png|webp (orden por nombre)."""
+    d = os.path.join(AQUI, "desarrollos", slug, "fotos")
+    if not os.path.isdir(d):
+        return []
+    return ["fotos/" + f for f in sorted(os.listdir(d)) if f.lower().endswith((".jpg", ".jpeg", ".png", ".webp"))]
+
+
+def armar_desarrollos(sitio, wa_general, avisos):
+    """Desarrollos = solo desarrollos/*.json (información propia: brochures de Drive y textos de Mateo; no sale de Tokko).
+    Devuelve el resumen para la portada."""
     carpeta = os.path.join(AQUI, "desarrollos")
     os.makedirs(carpeta, exist_ok=True)
-    devs = {}
-    for p in tokko:  # los que vienen dentro de las propiedades (por si falla el endpoint)
-        d = p.get("development") or {}
-        if d.get("id"):
-            devs.setdefault(d["id"], d)
-    for d in tokko_desarrollos("--offline" in sys.argv):
-        if d.get("id"):
-            devs[d["id"]] = {**devs.get(d["id"], {}), **d}
-    configs = {}
-    for f in sorted(os.listdir(carpeta)):
-        if f.endswith(".json"):
-            c = json.load(open(os.path.join(carpeta, f), encoding="utf-8"))
-            c.setdefault("slug", f[:-5])
-            configs[c["slug"]] = c
-    por_id = {c.get("tokko_id"): c for c in configs.values() if c.get("tokko_id")}
-    for i, d in devs.items():
-        if d.get("display_on_web") is False and i not in por_id:
-            continue
-        if i not in por_id:
-            nombre = (d.get("name") or "").strip()
-            if not nombre:
-                continue
-            slug = slugify(nombre)
-            while slug in configs:
-                slug += "-" + str(i)
-            c = {"slug": slug, "tokko_id": i, "nombre": nombre, "clase": "", "estado": {}, "entrega": "",
-                 "bajada": {}, "datos": [], "puntos": []}
-            json.dump(c, open(os.path.join(carpeta, slug + ".json"), "w", encoding="utf-8"), ensure_ascii=False, indent=2)
-            configs[slug] = por_id[i] = c
-            print(f"  + desarrollo nuevo desde Tokko: {nombre}")
-    unidades_de = {}
-    for p in todas:
-        if p.get("dev_id"):
-            unidades_de.setdefault(p["dev_id"], []).append(p)
-    for d in devs.values():
-        extra = {k: (len(v) if isinstance(v, list) else v) for k, v in d.items() if k in ("files", "videos", "tags", "type", "construction_status", "construction_date")}
-        print(f"  tokko emprendimiento {d.get('name')}: campos {sorted(d)} {json.dumps(extra, ensure_ascii=False)[:300]}")
     resumen = []
-    for slug, c in sorted(configs.items()):
-        if c.get("ocultar"):
+    for f in sorted(os.listdir(carpeta)):
+        if not f.endswith(".json"):
             continue
-        d = devs.get(c.get("tokko_id")) or {}
-        uni = [dict(u) for u in unidades_de.get(c.get("tokko_id"), [])]
-        for u in uni:
-            u.pop("dev_id", None)
+        c = json.load(open(os.path.join(carpeta, f), encoding="utf-8"))
+        slug = c.get("slug") or f[:-5]
+        if c.get("ocultar"):
+            print(f"  - desarrollo {c.get('nombre', slug)}: oculto")
+            continue
         try:
-            lat = float(c["lat"]) if "lat" in c else float(d.get("geo_lat"))
-            lng = float(c["lng"]) if "lng" in c else float(d.get("geo_long"))
-            if not (lat and lng):
-                raise ValueError
+            lat, lng = float(c["lat"]), float(c["lng"])
         except (TypeError, ValueError, KeyError):
-            cerca = uni or []
-            if not cerca:
-                avisos.append(f"Desarrollo {c.get('nombre', slug)}: sin ubicación (cargala en Tokko o lat/lng en desarrollos/{slug}.json)")
-                continue
-            lat = statistics.median(u["lat"] for u in cerca)
-            lng = statistics.median(u["lng"] for u in cerca)
-        fotos_d = sorted(d.get("photos") or [], key=lambda f: (not f.get("is_front_cover"), f.get("order", 0)))
-        fotos = c.get("fotos") or [f["image"] for f in fotos_d if not f.get("is_blueprint") and f.get("image")][:MAX_FOTOS * 2]
-        if not fotos:
-            fotos = [f for u in uni for f in u["fotos"][:1]][:MAX_FOTOS]
-        planos = [f["image"] for f in fotos_d if f.get("is_blueprint") and f.get("image")]
-        tipo_t = ((d.get("type") or {}).get("name") or "") if isinstance(d.get("type"), dict) else str(d.get("type") or "")
-        clase = c.get("clase") or clase_desarrollo(tipo_t, uni)
-        loc = d.get("location") if isinstance(d.get("location"), dict) else {}
-        partes = [x.strip() for x in (loc.get("full_location") or "").split("|") if x.strip()]
-        zona = c.get("zona") or (" · ".join(partes[-2:][::-1]) if len(partes) >= 2 else (loc.get("name") or "Maldonado"))
-        # descripción de Tokko (es) + traducciones o reemplazos del JSON
-        bajada = {**texto_es(limpiar_html(d.get("description") or d.get("publication_title") or "")), **texto_es(c.get("bajada"))}
-        estado = texto_es(c.get("estado"))
-        if not estado and isinstance(d.get("construction_status"), str) and d["construction_status"].strip():
-            estado = {"es": d["construction_status"].strip()}
-        entrega = c.get("entrega") or (d.get("construction_date") if isinstance(d.get("construction_date"), str) else "") or ""
-        for u in uni:
-            u["barrio"], u["barrio_nombre"] = "desarrollos/" + slug, c.get("nombre") or d.get("name")
-        uni.sort(key=lambda p: (p["ops"][0]["tipo"] != "venta", p["ops"][0]["precio"] or 0))
-        ventas = [u["ops"][0]["precio"] for u in uni if u["ops"][0]["tipo"] == "venta" and u["ops"][0]["precio"]]
-        info = {"slug": slug, "nombre": c.get("nombre") or d.get("name"), "clase": clase, "zona": zona,
-                "lat": lat, "lng": lng, "estado": estado, "entrega": entrega, "fotos": fotos, "planos": planos,
-                "url": c.get("url") or d.get("web_url") or d.get("public_url") or "",
-                "unidades": len(uni), "lotes": sum(u["tipo"] == "terreno" for u in uni),
-                "desde_venta": min(ventas) if ventas else None, "destacado": bool(c.get("destacado")),
+            avisos.append(f"Desarrollo {c.get('nombre', slug)}: falta lat/lng en desarrollos/{f} — no se publica")
+            continue
+        nombre = c.get("nombre") or slug
+        clase = c.get("clase") if c.get("clase") in ("edificio", "barrio") else "barrio"
+        fotos = c.get("fotos") or fotos_carpeta(slug)
+        info = {"slug": slug, "nombre": nombre, "clase": clase, "zona": c.get("zona") or "",
+                "lat": lat, "lng": lng, "estado": texto_es(c.get("estado")), "entrega": c.get("entrega") or "",
+                "fotos": fotos, "url": c.get("url") or "", "destacado": bool(c.get("destacado")),
                 "orden": c.get("orden", 100), "cifras": c.get("cifras") or []}
-        # plano del KMZ (Google Earth): lotes, perímetro, áreas comunes y amenities
+        # plano del KMZ (Google Earth): perímetro, lotes, áreas comunes y amenities
         plano = None
         r_kmz = archivo_dev(c, slug, "kmz", [".kmz", ".kml"])
         if r_kmz:
@@ -476,44 +373,28 @@ def armar_desarrollos(tokko, todas, sitio, wa_general, avisos):
                 plano = leer_kmz(r_kmz)
                 print(f"    plano: {len(plano['lotes'])} lotes, {len(plano['areas'])} áreas, {len(plano['puntos'])} puntos")
             except Exception as e:
-                avisos.append(f"Desarrollo {info['nombre']}: no pude leer el KMZ ({e})")
-        # lotes en venta de Tokko → polígono del plano (por número de lote o porque el pin cae adentro)
-        for u in uni:
-            if plano:
-                lt = next((l for l in plano["lotes"] if u.get("lote") and str(l["n"]).lower() == str(u["lote"]).lower()), None) \
-                     or next((l for l in plano["lotes"] if dentro(u["lat"], u["lng"], l["c"])), None)
-                if lt:
-                    lt["ref"] = u["ref"]
-                    u["lote_plano"] = lt["n"]
+                avisos.append(f"Desarrollo {nombre}: no pude leer el KMZ ({e})")
         brochure = c.get("brochure") or ""
         r_pdf = archivo_dev(c, slug, "brochure_pdf", [".pdf"])
         if not brochure and r_pdf:
             brochure = r_pdf if r_pdf.startswith("http") else "../" + os.path.basename(r_pdf)
-        for f in d.get("files") or []:  # archivos adjuntos del emprendimiento en Tokko
-            u_f = f.get("file") or f.get("url") if isinstance(f, dict) else None
-            if not brochure and u_f and ".pdf" in u_f.lower():
-                brochure = u_f
         mp = c.get("masterplan") or next((f"../{slug}-masterplan{e}" for e in (".jpg", ".png", ".webp")
-                                            if os.path.exists(os.path.join(AQUI, "desarrollos", f"{slug}-masterplan{e}"))), "")
+                                            if os.path.exists(os.path.join(carpeta, f"{slug}-masterplan{e}"))), "")
         kmz_url = ("../" + os.path.basename(r_kmz)) if r_kmz and not r_kmz.startswith("http") else (r_kmz or "")
-        m2s = [u["m2_terreno"] for u in uni if u.get("m2_terreno")]
-        datos = {"modo": "desarrollo", "slug": slug, "nombre": info["nombre"], "zona": zona, "raiz": "../../",
-                 "bajada": bajada, "amenities": c.get("amenities") or c.get("datos") or [],
-                 "ventajas": c.get("ventajas") or [], "cifras": c.get("cifras") or [],
-                 "puntos": c.get("puntos") or [], "cerca": cercanias(lat, lng),
-                 "plano": plano, "masterplan": mp, "brochure": brochure, "kmz": kmz_url, "planos": planos, "video": c.get("video") or "",
-                 "m2_rango": [min(m2s), max(m2s)] if m2s else None,
+        datos = {"modo": "desarrollo", "slug": slug, "nombre": nombre, "zona": info["zona"], "raiz": "../../",
+                 "bajada": texto_es(c.get("bajada")), "amenities": c.get("amenities") or [],
+                 "ventajas": c.get("ventajas") or [], "cifras": info["cifras"],
+                 "cerca": cercanias(lat, lng), "plano": plano, "masterplan": mp, "brochure": brochure, "kmz": kmz_url,
                  "sitio": sitio, "desarrollo": {**info, "wa": c.get("whatsapp") or wa_general}}
-        if plano and plano.get("ha"):
-            info["ha"] = plano["ha"]
-        if plano and plano["lotes"]:
-            info["lotes_plano"] = len(plano["lotes"])
-        desc = f"{info['nombre']}: {'edificio' if clase == 'edificio' else 'barrio en desarrollo'} de Coldwell Banker Zetaté en {zona}."
-        escribir(os.path.join(AQUI, "desarrollos", slug, "index.html"),
-                 pagina("desarrollo.html", f"{info['nombre']} · Desarrollos · Coldwell Banker Zetaté", datos, desc))
-        resumen.append({k: v for k, v in info.items() if k != "planos"} | {"foto": fotos[0] if fotos else None, "fotos": fotos[:6]})
-        print(f"  ok desarrollo {info['nombre']} ({clase}): {len(uni)} unidades")
-    resumen.sort(key=lambda b: (not b["destacado"], b["orden"], -b["unidades"], b["nombre"]))
+        desc = f"{nombre}: {'edificio' if clase == 'edificio' else 'barrio en desarrollo'} de Coldwell Banker Zetaté{' en ' + info['zona'] if info['zona'] else ''}."
+        escribir(os.path.join(carpeta, slug, "index.html"),
+                 pagina("desarrollo.html", f"{nombre} · Desarrollos · Coldwell Banker Zetaté", datos, desc))
+        # en la portada las fotos van con ruta desde la raíz
+        resumen.append(info | {"fotos": [x if x.startswith("http") else f"desarrollos/{slug}/{x}" for x in fotos[:6]],
+                               "foto": None})
+        resumen[-1]["foto"] = (resumen[-1]["fotos"] or [None])[0]
+        print(f"  ok desarrollo {nombre} ({clase})")
+    resumen.sort(key=lambda b: (not b["destacado"], b["orden"], b["nombre"]))
     return resumen
 
 
@@ -730,7 +611,7 @@ def main():
         todo += props
         print(f"  ok {c['nombre']}: {len(props)} propiedades")
 
-    desarrollos = armar_desarrollos(tokko, todo, sitio, wa_general, avisos)
+    desarrollos = armar_desarrollos(sitio, wa_general, avisos)
     # Datos de todo el sitio (los usa la página de selección)
     escribir(os.path.join(AQUI, "datos.json"),
              json.dumps({"propiedades": todo, "barrios": resumen, "desarrollos": desarrollos},

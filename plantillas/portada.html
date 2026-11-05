@@ -264,7 +264,7 @@ function agrupar() {
   capa.clearLayers(); items = []; grupoDe = {};
   const dev = !!SECCION;
   const pts = lista().map(b => ({ b, p: mapa.latLngToLayerPoint([b.lat, b.lng]) }))
-    .sort((x, y) => dev ? (y.b.destacado - x.b.destacado) || (y.b.unidades - x.b.unidades) : y.b.total - x.b.total);
+    .sort((x, y) => dev ? (y.b.destacado - x.b.destacado) || (x.b.orden - y.b.orden) : y.b.total - x.b.total);
   const usados = new Set();
   for (const a of pts) {
     if (usados.has(a)) continue;
@@ -281,7 +281,7 @@ function agrupar() {
       e.originalEvent?.preventDefault();
       mapa.flyToBounds(L.latLngBounds(bs.map(b => [b.lat, b.lng])), { ...pad, maxZoom: 17, duration: .8 });
     });
-    const it = { b: a.b, total: dev ? (a.b.destacado ? 1e6 : 0) + a.b.unidades + 1 : total, m, visible: true, pinEl: () => m.getElement()?.querySelector(".bm") };
+    const it = { b: a.b, total: dev ? (a.b.destacado ? 1e6 : 0) + 1000 - (a.b.orden || 100) : total, m, visible: true, pinEl: () => m.getElement()?.querySelector(".bm") };
     items.push(it); bs.forEach(b => grupoDe[b.slug] = it);
   }
   marcarTira();

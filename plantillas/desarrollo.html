@@ -72,22 +72,6 @@ h1{font-family:var(--f-display);font-style:italic;font-weight:500;font-size:50px
 .ventajas{list-style:none;margin:0;padding:0;display:grid;gap:12px;counter-reset:v}
 .ventajas li{display:grid;grid-template-columns:30px 1fr;gap:10px;font-size:14px;line-height:1.4;counter-increment:v}
 .ventajas li::before{content:counter(v,decimal-leading-zero);font-family:var(--f-display);font-style:italic;color:var(--champ);font-size:18px;line-height:1.1}
-.lotes{width:100%;border-collapse:collapse;font-size:13.5px;font-variant-numeric:tabular-nums}
-.lotes th{font-size:10px;font-weight:600;letter-spacing:.18em;text-transform:uppercase;color:var(--dim);text-align:left;padding:0 0 8px}
-.lotes td{padding:10px 0;border-top:1px solid var(--line)}
-.lotes th:nth-child(n+2),.lotes td:nth-child(n+2){text-align:right}
-.lotes tr.f{cursor:pointer;transition:background .15s}
-.lotes tr.f:hover td,.lotes tr.f.on td{background:rgba(200,178,138,.08)}
-.lotes td:first-child{padding-left:6px}
-.lotes td:last-child{padding-right:6px;width:28px}
-.lotes .p{font-weight:600}
-.lotes a{color:var(--champ);text-decoration:none}
-.ley{display:flex;flex-wrap:wrap;gap:6px 16px;font-size:11.5px;color:var(--muted)}
-.ley span{display:inline-flex;align-items:center;gap:7px}
-.ley i{width:12px;height:10px;border-radius:2px;display:inline-block}
-.ley i.d{background:rgba(200,178,138,.55);box-shadow:inset 0 0 0 1px var(--champ)}
-.ley i.o{box-shadow:inset 0 0 0 1px rgba(255,255,255,.7)}
-.ley i.a{background:rgba(120,170,120,.35);box-shadow:inset 0 0 0 1px rgba(160,200,160,.7)}
 .pie{padding-block:24px calc(24px + env(safe-area-inset-bottom,0px));font-size:11px;color:var(--dim)}
 
 /* mapa */
@@ -121,26 +105,11 @@ h1{font-family:var(--f-display);font-style:italic;font-weight:500;font-size:50px
 .amen-pin i{width:11px;height:11px;background:var(--champ);transform:rotate(45deg);box-shadow:0 0 0 2px rgba(10,10,10,.85),0 2px 6px rgba(0,0,0,.5);flex:none}
 .amen-pin span{font-size:10.5px;font-weight:600;letter-spacing:.14em;text-transform:uppercase;color:#fff;text-shadow:0 1px 2px rgba(0,0,0,.95),0 0 10px rgba(0,0,0,.8)}
 .n-lote{font-size:10px;font-weight:700;color:#fff;text-shadow:0 1px 2px rgba(0,0,0,.95);transform:translate(-50%,-50%);position:absolute;white-space:nowrap;pointer-events:none}
-.n-lote.d{color:#0a0a0a;text-shadow:none;background:var(--champ);border-radius:4px;padding:1px 5px}
-.sin-num .n-lote:not(.d){display:none}
-.pin-lote{position:absolute;left:0;top:0;transform:translate(-8px,-8px);width:16px;height:16px;border-radius:50%;background:var(--champ);box-shadow:0 0 0 2px rgba(255,255,255,.9),0 3px 8px rgba(0,0,0,.5);cursor:pointer}
-.pin-lote.on{transform:translate(-8px,-8px) scale(1.35)}
+.sin-num .n-lote{display:none}
 .leaflet-tooltip.tt{background:#0d0d0d;color:var(--fg);border:1px solid var(--line-2);border-radius:8px;padding:8px 11px;box-shadow:0 10px 30px rgba(0,0,0,.55);font-family:var(--f-body);font-size:12.5px;line-height:1.35}
 .leaflet-tooltip.tt::before{display:none}
 .tt b{display:block;font-family:var(--f-display);font-size:18px;font-weight:500}
 .tt span{color:var(--muted)}
-.leaflet-popup.pop .leaflet-popup-content-wrapper{background:#0d0d0d;color:var(--fg);border:1px solid var(--line-2);border-radius:10px;padding:0;overflow:hidden;box-shadow:0 18px 50px rgba(0,0,0,.65)}
-.leaflet-popup.pop .leaflet-popup-content{margin:0;width:250px!important;line-height:1.4}
-.leaflet-popup.pop .leaflet-popup-tip{background:#0d0d0d}
-.pop img{width:100%;aspect-ratio:16/10;object-fit:cover;display:block}
-.pop .c{padding:12px 14px 14px;display:grid;gap:6px}
-.pop .k{font-size:10px;font-weight:600;letter-spacing:.18em;text-transform:uppercase;color:var(--champ)}
-.pop .pr{font-family:var(--f-display);font-size:22px;line-height:1}
-.pop .s{font-size:12.5px;color:var(--muted)}
-.pop .bb{display:grid;grid-template-columns:1fr 1fr;gap:6px;margin-top:4px}
-.pop .bb a{display:inline-flex;align-items:center;justify-content:center;gap:6px;text-decoration:none;font-size:10.5px;font-weight:700;letter-spacing:.12em;text-transform:uppercase;padding:9px 6px;border-radius:8px}
-.pop .bb a:first-child{background:var(--fg);color:var(--ink)}
-.pop .bb a+a{border:1px solid var(--line-2)}
 
 .top,.hoja{display:none}
 @media (max-width:899px){
@@ -203,17 +172,12 @@ h1{font-family:var(--f-display);font-style:italic;font-weight:500;font-size:50px
 <script>
 const DATOS = /*__DATOS__*/null;
 const DEV = DATOS.desarrollo, PL = DATOS.plano, MP = DATOS.masterplan;
-const LOTES = []; /* la página presenta el proyecto: no lista los lotes en venta */
 cargarEstadisticas(DATOS.sitio);
 const $ = id => document.getElementById(id);
 const mapa = mapaBase("mapa");
 const capaPlano = L.layerGroup().addTo(mapa), capaLugares = L.layerGroup().addTo(mapa);
 let VISTA = "plano", actual = null;
-const porRef = new Map(), filas = new Map();
 
-const precio = l => l.precio ? `${mon(l.moneda)} ${fmt(l.precio)}` : t("consultar_precio");
-const m2 = n => n ? `${fmt(n)} m²` : "—";
-const nLote = l => l.lote_plano || l.lote || "";
 
 /* ---------- textos del panel (compu) y de la hoja (celular) ---------- */
 function htmlCuerpo(conTitulo) {
@@ -240,11 +204,6 @@ function htmlCuerpo(conTitulo) {
     ${(DATOS.cerca || []).length ? `<section class="sec pad"><h2>${t("ubicacion")}</h2><ul class="cerca">${DATOS.cerca.map(l =>
         `<li><span>${esc(tl(l.nombre))}</span><b>${fmtKm(l.km)}</b></li>`).join("")}</ul><span class="nota">${t("linea_recta")}</span>
         <button class="mas" type="button" data-vista="zona">${t("ver_en_mapa")} →</button></section>` : ""}
-    ${LOTES.length ? `<section class="sec pad"><h2>${t("lotes_venta")}</h2>
-        ${PL && PL.lotes.length ? `<div class="ley"><span><i class="d"></i>${t("disponible")}</span><span><i class="o"></i>${t("otros_lotes")}</span>${PL.areas.length ? `<span><i class="a"></i>${t("areas_comunes")}</span>` : ""}</div>` : ""}
-        <table class="lotes"><thead><tr><th>${t("lote")}</th><th>${t("superficie_l")}</th><th>${t("precio")}</th><th></th></tr></thead>
-        <tbody>${LOTES.map(l => `<tr class="f" data-ref="${esc(l.ref)}" tabindex="0"><td>${esc(nLote(l) || "—")}</td><td>${m2(l.m2_terreno)}</td><td class="p">${esc(precio(l))}</td>
-          <td><a href="${esc(l.url)}" target="_blank" rel="noopener" aria-label="${t("ver_ficha")}">↗</a></td></tr>`).join("")}</tbody></table></section>` : ""}
     ${!conTitulo ? `<section class="sec pad">${htmlAcciones()}</section>` : ""}
     <div class="pie pad">${t("pie")}</div>`;
 }
@@ -275,18 +234,8 @@ function enganchar(raiz) {
   });
   raiz.querySelectorAll("[data-vista]").forEach(b => b.onclick = () => { ponerVista(b.dataset.vista); cerrarHoja(); });
   raiz.querySelectorAll("[data-ev]").forEach(a => a.addEventListener("click", () => track(a.dataset.ev + "/" + DEV.slug)));
-  raiz.querySelectorAll("tr.f").forEach(tr => {
-    const ref = tr.dataset.ref;
-    (filas.get(ref) || filas.set(ref, []).get(ref)).push(tr);
-    tr.addEventListener("mouseenter", () => resaltar(ref, true));
-    tr.addEventListener("mouseleave", () => resaltar(ref, false));
-    const ir = e => { if (e.target.closest("a")) return; irALote(ref); cerrarHoja(); };
-    tr.addEventListener("click", ir);
-    tr.addEventListener("keydown", e => { if (e.key === "Enter") ir(e); });
-  });
 }
 function pintar() {
-  filas.clear();
   document.title = `${DEV.nombre} · ${t("desarrollos")} · Coldwell Banker Zetaté`;
   $("panel").innerHTML = `<div class="barra-sup pad"><a class="volver" href="${DATOS.raiz}#desarrollos">← ${t("todos_desarrollos")}</a><div class="idiomas" id="idiomas-p"></div></div>
     <div class="logo-wrap pad"><img class="logo" src="${DATOS.raiz}assets/logo-apilado.png" alt="Coldwell Banker Zetaté" width="210" height="44"></div>` + htmlCuerpo(true);
@@ -302,38 +251,23 @@ function pintar() {
 }
 
 /* ---------- plano (KMZ) sobre el satélite ---------- */
-const capasLote = new Map();
 function dibujarPlano() {
-  capaPlano.clearLayers(); capasLote.clear();
-  const disp = new Map(LOTES.filter(l => l.lote_plano).map(l => [String(l.lote_plano), l]));
+  capaPlano.clearLayers();
   if (PL) {
     if (PL.perimetro) L.polygon(PL.perimetro, { color: "#c8b28a", weight: 2.5, fill: false, interactive: false }).addTo(capaPlano);
     PL.areas.forEach(a => L.polygon(a.c, { color: "rgba(170,210,170,.85)", weight: 1, fillColor: "#6fa56f", fillOpacity: .28 })
       .bindTooltip(`<b>${esc(a.nombre)}</b>${a.m2 > 5000 ? `<span>${fmt(a.m2 / 10000)} ha</span>` : ""}`, { className: "tt", sticky: true }).addTo(capaPlano));
     PL.lineas.forEach(l => L.polyline(l.c, { color: "rgba(255,255,255,.55)", weight: 1.5, interactive: false }).addTo(capaPlano));
     PL.lotes.forEach(lt => {
-      const u = disp.get(String(lt.n)) || (lt.ref && LOTES.find(x => x.ref === lt.ref));
-      const pol = L.polygon(lt.c, u ? { color: "#c8b28a", weight: 1.5, fillColor: "#c8b28a", fillOpacity: .5 }
-                                    : { color: "rgba(255,255,255,.6)", weight: .8, fillColor: "#fff", fillOpacity: .04 }).addTo(capaPlano);
-      pol.bindTooltip(u ? `<b>${t("lote")} ${esc(lt.n)} · ${esc(precio(u))}</b><span>${m2(u.m2_terreno || lt.m2)}</span>`
-                        : `<b>${t("lote")} ${esc(lt.n)}</b><span>${m2(lt.m2)}${LOTES.length ? " · " + t("consultar") : ""}</span>`, { className: "tt", sticky: true });
-      const c = pol.getBounds().getCenter();
-      L.marker(c, { interactive: false, keyboard: false, icon: L.divIcon({ className: "ico", iconSize: [0, 0], html: `<span class="n-lote${u ? " d" : ""}">${esc(lt.n)}</span>` }) }).addTo(capaPlano);
-      if (u) { capasLote.set(u.ref, pol); pol.on("click", () => abrirLote(u, c)); pol.on("mouseover", () => resaltar(u.ref, true)); pol.on("mouseout", () => resaltar(u.ref, false)); }
+      const pol = L.polygon(lt.c, { color: "rgba(255,255,255,.7)", weight: .8, fillColor: "#fff", fillOpacity: .05 }).addTo(capaPlano);
+      pol.bindTooltip(`<b>${t("lote")} ${esc(lt.n)}</b><span>${fmt(lt.m2)} m²</span>`, { className: "tt", sticky: true });
+      L.marker(pol.getBounds().getCenter(), { interactive: false, keyboard: false, icon: L.divIcon({ className: "ico", iconSize: [0, 0], html: `<span class="n-lote">${esc(lt.n)}</span>` }) }).addTo(capaPlano);
     });
     PL.puntos.forEach(p => L.marker([p.lat, p.lng], { interactive: false, keyboard: false,
       icon: L.divIcon({ className: "ico", iconSize: [0, 0], html: `<span class="amen-pin"><i></i><span>${esc(p.nombre)}</span></span>` }) }).addTo(capaPlano));
   }
-  /* lotes en venta que no están en el plano (o no hay KMZ): punto champagne */
-  LOTES.filter(l => !capasLote.has(l.ref)).forEach(l => {
-    const m = L.marker([l.lat, l.lng], { keyboard: false, icon: L.divIcon({ className: "ico", iconSize: [0, 0], html: `<span class="pin-lote" data-ref="${esc(l.ref)}"></span>` }) }).addTo(capaPlano);
-    m.bindTooltip(`<b>${esc(precio(l))}</b><span>${m2(l.m2_terreno)}${nLote(l) ? " · " + t("lote") + " " + esc(nLote(l)) : ""}</span>`, { className: "tt", direction: "top", offset: [0, -10] });
-    m.on("click", () => abrirLote(l, m.getLatLng()));
-    m.on("mouseover", () => resaltar(l.ref, true)); m.on("mouseout", () => resaltar(l.ref, false));
-    capasLote.set(l.ref, m);
-  });
-  if (!PL || !PL.perimetro) L.marker([DEV.lat, DEV.lng], { interactive: false, keyboard: false, zIndexOffset: -500,
-    icon: L.divIcon({ className: "ico", iconSize: [0, 0], html: `<span class="dev-pin"><span class="ic">${iconoDev(DEV)}</span><span class="n">${LOTES.length ? "" : esc(DEV.nombre)}</span></span>` }) }).addTo(capaPlano);
+  if (!PL || !PL.perimetro) L.marker([DEV.lat, DEV.lng], { interactive: false, keyboard: false,
+    icon: L.divIcon({ className: "ico", iconSize: [0, 0], html: `<span class="dev-pin"><span class="ic">${iconoDev(DEV)}</span><span class="n">${esc(DEV.nombre)}</span></span>` }) }).addTo(capaPlano);
   capaLugares.clearLayers();
   (DATOS.cerca || []).forEach(l => {
     L.polyline([[DEV.lat, DEV.lng], [l.lat, l.lng]], { color: "rgba(200,178,138,.55)", weight: 1, dashArray: "4 6", interactive: false }).addTo(capaLugares);
@@ -341,30 +275,8 @@ function dibujarPlano() {
       html: `<span class="lugar"><i></i><span>${esc(tl(l.nombre))} <b>${fmtKm(l.km)}</b></span></span>` }) }).addTo(capaLugares);
   });
 }
-function resaltar(ref, on) {
-  (filas.get(ref) || []).forEach(tr => tr.classList.toggle("on", on));
-  const c = capasLote.get(ref); if (!c) return;
-  if (c.setStyle) c.setStyle({ fillOpacity: on ? .85 : .5, weight: on ? 2.5 : 1.5 });
-  else c.getElement()?.querySelector(".pin-lote")?.classList.toggle("on", on);
-}
-const popLote = L.popup({ className: "pop", closeButton: false, offset: [0, -6], autoPanPaddingTopLeft: L.point(16, movil() ? 150 : 20), autoPanPaddingBottomRight: L.point(16, movil() ? 200 : 20) });
-function abrirLote(l, donde) {
-  popLote.setLatLng(donde).setContent(`${l.foto ? `<img src="${esc(l.foto)}" alt="">` : ""}<div class="c">
-    <span class="k">${nLote(l) ? t("lote") + " " + esc(nLote(l)) + " · " : ""}${m2(l.m2_terreno)}</span><span class="pr">${esc(precio(l))}</span>
-    ${l.titulo ? `<span class="s">${esc(l.titulo)}</span>` : ""}
-    <div class="bb"><a href="${esc(l.url)}" target="_blank" rel="noopener">${t("ver_ficha")}</a><a href="${esc(linkWA({ ...l, ops: [], barrio_nombre: DEV.nombre }))}" target="_blank" rel="noopener">${ICONO_WA}WhatsApp</a></div></div>`).openOn(mapa);
-  track("lote/" + l.ref);
-}
-function irALote(ref) {
-  const c = capasLote.get(ref), l = LOTES.find(x => x.ref === ref); if (!c || !l) return;
-  const donde = c.getBounds ? c.getBounds().getCenter() : c.getLatLng();
-  if (VISTA !== "plano") ponerVista("plano", true);
-  mapa.flyTo(donde, Math.max(mapa.getZoom(), 17), { duration: .8 });
-  mapa.once("moveend", () => abrirLote(l, donde));
-}
 function encuadrePlano() {
   const pts = PL ? [...(PL.perimetro || []), ...PL.lotes.flatMap(l => l.c)] : [];
-  LOTES.forEach(l => pts.push([l.lat, l.lng]));
   if (!pts.length) pts.push([DEV.lat, DEV.lng]);
   return L.latLngBounds(pts);
 }
