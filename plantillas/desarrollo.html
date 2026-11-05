@@ -106,6 +106,14 @@ h1{font-family:var(--f-display);font-style:italic;font-weight:500;font-size:50px
 .amen-pin span{font-size:10.5px;font-weight:600;letter-spacing:.14em;text-transform:uppercase;color:#fff;text-shadow:0 1px 2px rgba(0,0,0,.95),0 0 10px rgba(0,0,0,.8)}
 .n-lote{font-size:10px;font-weight:700;color:#fff;text-shadow:0 1px 2px rgba(0,0,0,.95);transform:translate(-50%,-50%);position:absolute;white-space:nowrap;pointer-events:none}
 .sin-num .n-lote{display:none}
+.n-lote.vendido{color:rgba(255,255,255,.45);text-decoration:line-through}
+.n-lote.reservado{color:var(--champ)}
+.br-idiomas{display:flex;flex-wrap:wrap;align-items:center;gap:6px;margin-top:2px;font-size:10.5px;letter-spacing:.14em;text-transform:uppercase;color:var(--dim)}
+.br-idiomas span{margin-right:2px}
+.br-idiomas a{border:1px solid var(--line-2);border-radius:999px;padding:3px 9px;font-weight:700;color:var(--fg);text-decoration:none}
+.br-idiomas a:hover{border-color:var(--fg)}
+.pie .interno{display:inline-flex;align-items:center;gap:5px;margin-left:12px;color:var(--dim);text-decoration:none;letter-spacing:.06em}
+.pie .interno:hover{color:var(--muted)}
 .leaflet-tooltip.tt{background:#0d0d0d;color:var(--fg);border:1px solid var(--line-2);border-radius:8px;padding:8px 11px;box-shadow:0 10px 30px rgba(0,0,0,.55);font-family:var(--f-body);font-size:12.5px;line-height:1.35}
 .leaflet-tooltip.tt::before{display:none}
 .tt b{display:block;font-family:var(--f-display);font-size:18px;font-weight:500}
@@ -205,18 +213,25 @@ function htmlCuerpo(conTitulo) {
         `<li><span>${esc(tl(l.nombre))}</span><b>${fmtKm(l.km)}</b></li>`).join("")}</ul><span class="nota">${t("linea_recta")}</span>
         <button class="mas" type="button" data-vista="zona">${t("ver_en_mapa")} →</button></section>` : ""}
     ${!conTitulo ? `<section class="sec pad">${htmlAcciones()}</section>` : ""}
-    <div class="pie pad">${t("pie")}</div>`;
+    <div class="pie pad">${t("pie")}${DATOS.drive ? `<a class="interno" href="${esc(DATOS.drive)}" target="_blank" rel="noopener" title="${t("interno")}">${ICONO_CANDADO}${t("interno")}</a>` : ""}</div>`;
 }
+/* brochures por idioma: el botón abre el del idioma de la página (o español, o el primero); los demás van como chips */
+const BR = DATOS.brochures || {};
+const brochureLang = () => BR[LANG] ? LANG : (BR.es ? "es" : (BR.en ? "en" : Object.keys(BR)[0]));
 function htmlAcciones(sinKmz) {
-  const b = [];
-  if (DATOS.brochure) b.push(`<a class="b-pri" href="${esc(DATOS.brochure)}" target="_blank" rel="noopener" data-ev="brochure">${ICONO_DOC}${t("brochure_b")}</a>`);
-  b.push(`<a class="b-${DATOS.brochure ? "sec" : "pri"}" href="${esc(waDev(DEV))}" target="_blank" rel="noopener" data-ev="whatsapp-dev">${ICONO_WA}${t("consultar")}</a>`);
+  const b = [], bl = brochureLang();
+  if (bl) b.push(`<a class="b-pri" href="${esc(BR[bl])}" target="_blank" rel="noopener" data-ev="brochure-${bl}">${ICONO_DOC}${t("brochure_b")}</a>`);
+  b.push(`<a class="b-${bl ? "sec" : "pri"}" href="${esc(waDev(DEV))}" target="_blank" rel="noopener" data-ev="whatsapp-dev">${ICONO_WA}${t("consultar")}</a>`);
   if (DATOS.kmz && !sinKmz) b.push(`<a class="b-sec ancho" href="${esc(DATOS.kmz)}" download data-ev="kmz">${t("bajar_kmz")}</a>`);
-  if (!DATOS.brochure && DEV.url && !/coldwellbankerzetate\.com\/?$/.test(DEV.url)) b.push(`<a class="b-sec" href="${esc(DEV.url)}" target="_blank" rel="noopener">${t("brochure")} ↗</a>`);
+  if (!bl && DEV.url && !/coldwellbankerzetate\.com\/?$/.test(DEV.url)) b.push(`<a class="b-sec" href="${esc(DEV.url)}" target="_blank" rel="noopener">${t("brochure")} ↗</a>`);
   if (b.length === 1) b[0] = b[0].replace('class="b-', 'class="ancho b-');
-  return `<div class="acciones">${b.join("")}</div>`;
+  const otros = Object.keys(BR).filter(k => k !== bl);
+  const chips = otros.length ? `<div class="br-idiomas"><span>${t("brochure_b")} · ${t("brochure_en")}</span>${otros.map(k =>
+    `<a href="${esc(BR[k])}" target="_blank" rel="noopener" data-ev="brochure-${k}">${k.toUpperCase()}</a>`).join("")}</div>` : "";
+  return `<div class="acciones">${b.join("")}</div>${sinKmz ? "" : chips}`;
 }
 const fmtKm = k => k < 10 ? `${String(k).replace(".", LANG === "en" ? "." : ",")} km` : `${Math.round(k)} km`;
+const ICONO_CANDADO = '<svg viewBox="0 0 24 24" width="12" height="12" aria-hidden="true"><path fill="none" stroke="currentColor" stroke-width="1.8" d="M6 11h12v10H6zM8.5 11V8a3.5 3.5 0 0 1 7 0v3"/></svg>';
 const ICONO_DOC = '<svg viewBox="0 0 24 24" width="15" height="15" aria-hidden="true"><path fill="none" stroke="currentColor" stroke-width="1.8" stroke-linejoin="round" d="M6 3h8l4 4v14H6zM14 3v4h4M9 12h6M9 16h6"/></svg>';
 
 function enganchar(raiz) {
@@ -259,9 +274,13 @@ function dibujarPlano() {
       .bindTooltip(`<b>${esc(a.nombre)}</b>${a.m2 > 5000 ? `<span>${fmt(a.m2 / 10000)} ha</span>` : ""}`, { className: "tt", sticky: true }).addTo(capaPlano));
     PL.lineas.forEach(l => L.polyline(l.c, { color: "rgba(255,255,255,.55)", weight: 1.5, interactive: false }).addTo(capaPlano));
     PL.lotes.forEach(lt => {
-      const pol = L.polygon(lt.c, { color: "rgba(255,255,255,.7)", weight: .8, fillColor: "#fff", fillOpacity: .05 }).addTo(capaPlano);
-      pol.bindTooltip(`<b>${t("lote")} ${esc(lt.n)}</b><span>${fmt(lt.m2)} m²</span>`, { className: "tt", sticky: true });
-      L.marker(pol.getBounds().getCenter(), { interactive: false, keyboard: false, icon: L.divIcon({ className: "ico", iconSize: [0, 0], html: `<span class="n-lote">${esc(lt.n)}</span>` }) }).addTo(capaPlano);
+      const est = lt.estado === "vendido" || lt.estado === "reservado" ? lt.estado : "";
+      const estilo = est === "vendido" ? { color: "rgba(255,255,255,.35)", weight: .8, fillColor: "#000", fillOpacity: .55 }
+        : est === "reservado" ? { color: "#c8b28a", weight: 1.2, fillColor: "#c8b28a", fillOpacity: .18 }
+        : { color: "rgba(255,255,255,.8)", weight: 1, fillColor: "#fff", fillOpacity: .07 };
+      const pol = L.polygon(lt.c, estilo).addTo(capaPlano);
+      pol.bindTooltip(`<b>${t("lote")} ${esc(lt.n)}</b><span>${fmt(lt.m2)} m²${est ? " · " + t(est) : ""}</span>`, { className: "tt", sticky: true });
+      L.marker(pol.getBounds().getCenter(), { interactive: false, keyboard: false, icon: L.divIcon({ className: "ico", iconSize: [0, 0], html: `<span class="n-lote${est ? " " + est : ""}">${esc(lt.n)}</span>` }) }).addTo(capaPlano);
     });
     PL.puntos.forEach(p => L.marker([p.lat, p.lng], { interactive: false, keyboard: false,
       icon: L.divIcon({ className: "ico", iconSize: [0, 0], html: `<span class="amen-pin"><i></i><span>${esc(p.nombre)}</span></span>` }) }).addTo(capaPlano));
