@@ -20,8 +20,9 @@ jobs:
         with:
           python-version: "3.12"
       - run: pip install pillow numpy
-      - run: python3 ubicar.py
+      - run: mkdir -p verificacion && python3 ubicar.py 2>&1 | tee verificacion/log.txt
       - name: Guardar resultados en la rama verificacion-ci
+        if: always()
         run: |
           mkdir -p /tmp/salida && cp -r verificacion /tmp/salida/ && cp desarrollos/*.kml /tmp/salida/ 2>/dev/null || true
           git config user.name "Claude"

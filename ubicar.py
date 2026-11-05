@@ -12,23 +12,35 @@ escribe en verificacion/:
     <slug>-sat-limpio.jpg   el mismo recorte sin grilla
 y si el calco ya tiene "control", corre calcar.py (KML + <slug>-calco.jpg).
 """
-import glob, json, math, os, subprocess, sys, urllib.parse, urllib.request
+import glob, json, math, os, subprocess, sys, time, urllib.parse, urllib.request
 from PIL import ImageDraw
 
 AQUI = os.path.dirname(os.path.abspath(__file__))
 sys.path.insert(0, AQUI)
 from verificar import recorte  # noqa: E402
 
-OVERPASS = "https://overpass-api.de/api/interpreter"
+OVERPASS = ["https://overpass-api.de/api/interpreter", "https://overpass.kumi.systems/api/interpreter",
+            "https://overpass.private.coffee/api/interpreter"]
 
 
 def calles(patron, bbox):
     s, w, n, e = bbox
     q = f'[out:json][timeout:60];way["highway"]["name"~"{patron}",i]({s},{w},{n},{e});out geom;'
-    req = urllib.request.Request(OVERPASS, data=urllib.parse.urlencode({"data": q}).encode(),
-                                 headers={"User-Agent": "cbz-mapas/1.0"})
-    with urllib.request.urlopen(req, timeout=90) as r:
-        d = json.load(r)
+    d, ultimo = None, None
+    for intento in range(6):
+        url = OVERPASS[intento % len(OVERPASS)]
+        try:
+            req = urllib.request.Request(url, data=urllib.parse.urlencode({"data": q}).encode(),
+                                         headers={"User-Agent": "cbz-mapas/1.0"})
+            with urllib.request.urlopen(req, timeout=90) as r:
+                d = json.load(r)
+            break
+        except Exception as e:
+            ultimo = e
+            print(f"  {url}: {e}; reintento")
+            time.sleep(5 * (intento + 1))
+    if d is None:
+        raise ultimo
     return [{"id": w["id"], "nombre": w["tags"].get("name"), "c": [[p["lat"], p["lon"]] for p in w["geometry"]]}
             for w in d["elements"] if w.get("geometry")]
 
