@@ -335,6 +335,7 @@ h1{font-family:var(--f-display);font-style:italic;font-weight:500;font-size:44px
 /* ===== Común a todas las páginas: idiomas, formato, pines, ventanita, WhatsApp, selección ===== */
 const TXT = {
   es: {
+    masterplan: "Masterplan", satelite: "Satélite", ayuda_mp: "Rueda del mouse o + / − para ampliar el plano", ayuda_mp_t: "Pellizcá para ampliar el plano",
     hectareas: "hectáreas", en_venta: "en venta", el_proyecto: "El proyecto", ventajas: "Por qué invertir", amenities: "Amenities", ubicacion: "Ubicación", linea_recta: "Distancias aproximadas en línea recta.", ver_en_mapa: "Ver en el mapa", lotes_venta: "Lotes en venta", otros_lotes: "Otros lotes", areas_comunes: "Áreas comunes", superficie_l: "Superficie", brochure_b: "Brochure", bajar_kmz: "Descargar plano (Google Earth)", plano: "Plano",
     desarrollos: "Desarrollos", desarrollo: "Desarrollo", edificio: "Edificio", edificios: "Edificios", barrio_dev: "Barrio en desarrollo", barrios_dev: "Barrios · lotes",
     unidades: "Unidades", unidad: "unidad", unidades_m: "unidades", lotes: "Lotes", lote_m: "lote", lotes_m: "lotes", entrega: "Entrega", todos: "Todos",
@@ -366,6 +367,7 @@ const TXT = {
     msg_sel: (para, url) => `${para ? "Selección para " + para : "Te comparto una selección de propiedades"} — Coldwell Banker Zetaté: ${url}`,
   },
   en: {
+    masterplan: "Masterplan", satelite: "Satellite", ayuda_mp: "Scroll or + / − to zoom into the plan", ayuda_mp_t: "Pinch to zoom into the plan",
     hectareas: "hectares", en_venta: "for sale", el_proyecto: "The project", ventajas: "Why invest", amenities: "Amenities", ubicacion: "Location", linea_recta: "Approximate straight-line distances.", ver_en_mapa: "See on the map", lotes_venta: "Lots for sale", otros_lotes: "Other lots", areas_comunes: "Common areas", superficie_l: "Size", brochure_b: "Brochure", bajar_kmz: "Download plan (Google Earth)", plano: "Plan",
     desarrollos: "Developments", desarrollo: "Development", edificio: "Building", edificios: "Buildings", barrio_dev: "Community in development", barrios_dev: "Communities · lots",
     unidades: "Units", unidad: "unit", unidades_m: "units", lotes: "Lots", lote_m: "lot", lotes_m: "lots", entrega: "Delivery", todos: "All",
@@ -397,6 +399,7 @@ const TXT = {
     msg_sel: (para, url) => `${para ? "Shortlist for " + para : "Here is a shortlist of properties"} — Coldwell Banker Zetaté: ${url}`,
   },
   pt: {
+    masterplan: "Masterplan", satelite: "Satélite", ayuda_mp: "Use a roda do mouse ou + / − para ampliar a planta", ayuda_mp_t: "Faça pinça para ampliar a planta",
     hectareas: "hectares", en_venta: "à venda", el_proyecto: "O projeto", ventajas: "Por que investir", amenities: "Amenities", ubicacion: "Localização", linea_recta: "Distâncias aproximadas em linha reta.", ver_en_mapa: "Ver no mapa", lotes_venta: "Lotes à venda", otros_lotes: "Outros lotes", areas_comunes: "Áreas comuns", superficie_l: "Área", brochure_b: "Brochure", bajar_kmz: "Baixar planta (Google Earth)", plano: "Planta",
     desarrollos: "Empreendimentos", desarrollo: "Empreendimento", edificio: "Edifício", edificios: "Edifícios", barrio_dev: "Condomínio em desenvolvimento", barrios_dev: "Condomínios · lotes",
     unidades: "Unidades", unidad: "unidade", unidades_m: "unidades", lotes: "Lotes", lote_m: "lote", lotes_m: "lotes", entrega: "Entrega", todos: "Todos",
@@ -571,6 +574,7 @@ const ICONO_LOTES = '<svg viewBox="0 0 24 24" width="16" height="16" aria-hidden
 const iconoDev = d => d.clase === "edificio" ? ICONO_EDIF : ICONO_LOTES;
 const claseDev = d => d.clase === "edificio" ? t("edificio") : t("barrio_dev");
 function resumenDev(d) {
+  if (d.cifras && d.cifras.length) return d.cifras.slice(0, 2).map(x => `${tl(x.valor) || x.valor} ${tl(x.nombre).split(" ")[0]}`).join(" · ");
   const s = [];
   if (d.clase === "barrio" && d.lotes) s.push(`${d.lotes} ${d.lotes === 1 ? t("lote_m") : t("lotes_m")}`);
   else if (d.unidades) s.push(`${d.unidades} ${d.unidades === 1 ? t("unidad") : t("unidades_m")}`);
