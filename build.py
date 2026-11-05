@@ -25,7 +25,7 @@ Se ven en la portada deslizando el título a "Desarrollos" y cada uno en /desarr
 Para corregir un pin: en el JSON del barrio, "ajustes": {"<referencia>": {"lat":..,"lng":..}}.
 Las referencias son el reference_code de Tokko (ej. CHO8077066) o el código de amaira.
 """
-import csv, datetime, io, json, math, os, re, statistics, sys, unicodedata, urllib.parse, urllib.request
+import csv, datetime, io, zipfile, xml.etree.ElementTree as ET, json, math, os, re, statistics, sys, unicodedata, urllib.parse, urllib.request
 
 AQUI = os.path.dirname(os.path.abspath(__file__))
 UA = {"User-Agent": "Mozilla/5.0 (mapas-barrios)"}
@@ -265,6 +265,122 @@ def clase_desarrollo(tipo, unidades):
     return "edificio" if unidades and all(u["tipo"] == "depto" for u in unidades) else "barrio"
 
 
+# Lugares de referencia para "Ubicación" de los desarrollos (distancia en línea recta, redondeada)
+LUGARES = [
+    {"nombre": {"es": "José Ignacio", "en": "José Ignacio", "pt": "José Ignacio"}, "lat": -34.8458, "lng": -54.6331},
+    {"nombre": {"es": "Manantiales", "en": "Manantiales", "pt": "Manantiales"}, "lat": -34.8990, "lng": -54.8260},
+    {"nombre": {"es": "La Barra", "en": "La Barra", "pt": "La Barra"}, "lat": -34.9117, "lng": -54.8593},
+    {"nombre": {"es": "Punta del Este", "en": "Punta del Este", "pt": "Punta del Este"}, "lat": -34.9600, "lng": -54.9465},
+    {"nombre": {"es": "Laguna Garzón", "en": "Laguna Garzón", "pt": "Lagoa Garzón"}, "lat": -34.8017, "lng": -54.5718},
+    {"nombre": {"es": "Aeropuerto de Punta del Este", "en": "Punta del Este airport", "pt": "Aeroporto de Punta del Este"},
+     "lat": -34.8551, "lng": -55.0943, "siempre": True},
+]
+
+
+def cercanias(lat, lng):
+    ds = sorted(({**l, "km": round(km(lat, lng, l["lat"], l["lng"]), 1)} for l in LUGARES), key=lambda l: l["km"])
+    out = [l for l in ds if not l.get("siempre")][:4] + [l for l in ds if l.get("siempre")]
+    return [{k: v for k, v in l.items() if k != "siempre"} for l in out if l["km"] >= 0.5]
+
+
+def area_m2(anillo):
+    """Superficie aproximada de un polígono [[lat,lng],...] en m²."""
+    if len(anillo) < 3:
+        return 0
+    lat0 = math.radians(sum(p[0] for p in anillo) / len(anillo))
+    xy = [(p[1] * 111320 * math.cos(lat0), p[0] * 110540) for p in anillo]
+    return abs(sum(x1 * y2 - x2 * y1 for (x1, y1), (x2, y2) in zip(xy, xy[1:] + xy[:1]))) / 2
+
+
+def dentro(lat, lng, anillo):
+    c = False
+    for (y1, x1), (y2, x2) in zip(anillo, anillo[1:] + anillo[:1]):
+        if (y1 > lat) != (y2 > lat) and lng < (x2 - x1) * (lat - y1) / (y2 - y1 + 1e-15) + x1:
+            c = not c
+    return c
+
+
+LOTE_RE = re.compile(r"(?i)^\s*(?:lote|lot|l)?\s*[-nº°#.]*\s*(\d+[a-z]?)\s*$")
+
+
+def leer_kmz(ruta):
+    """KMZ/KML de Google Earth → plano: perímetro, lotes, áreas, líneas y puntos (amenities)."""
+    if ruta.startswith("http"):
+        with urllib.request.urlopen(urllib.request.Request(ruta, headers=UA), timeout=60) as r:
+            crudo = r.read()
+    else:
+        crudo = open(ruta, "rb").read()
+    if crudo[:2] == b"PK":
+        z = zipfile.ZipFile(io.BytesIO(crudo))
+        nombre = next((n for n in z.namelist() if n.lower().endswith(".kml")), None)
+        crudo = z.read(nombre)
+    raiz = ET.fromstring(crudo)
+    sin_ns = lambda e: e.tag.split("}")[-1]
+    coords = lambda txt: [[round(float(p.split(",")[1]), 6), round(float(p.split(",")[0]), 6)]
+                          for p in (txt or "").split() if p.count(",") >= 1]
+    plano = {"poligonos": [], "lineas": [], "puntos": []}
+
+    def recorrer(e, carpeta):
+        for h in e:
+            tag = sin_ns(h)
+            if tag in ("Folder", "Document"):
+                n = next((x.text for x in h if sin_ns(x) == "name"), "") or ""
+                recorrer(h, n.strip() or carpeta)
+            elif tag == "Placemark":
+                n = (next((x.text for x in h if sin_ns(x) == "name"), "") or "").strip()
+                for g in h.iter():
+                    gt = sin_ns(g)
+                    cs = next((x.text for x in g.iter() if sin_ns(x) == "coordinates"), None)
+                    if gt == "Polygon":
+                        ob = next((x for x in g.iter() if sin_ns(x) == "outerBoundaryIs"), g)
+                        cs = next((x.text for x in ob.iter() if sin_ns(x) == "coordinates"), None)
+                        anillo = coords(cs)
+                        if len(anillo) > 1 and anillo[0] == anillo[-1]:
+                            anillo = anillo[:-1]
+                        if len(anillo) >= 3:
+                            plano["poligonos"].append({"nombre": n, "carpeta": carpeta, "c": anillo})
+                    elif gt == "LineString":
+                        plano["lineas"].append({"nombre": n, "c": coords(cs)})
+                    elif gt == "Point" and cs:
+                        p = coords(cs)
+                        if p:
+                            plano["puntos"].append({"nombre": n, "carpeta": carpeta, "lat": p[0][0], "lng": p[0][1]})
+    recorrer(raiz, "")
+    # clasificar: lotes (nombre "12", "Lote 12" o carpeta de lotes), perímetro (el más grande o así llamado), áreas
+    polis = plano["poligonos"]
+    for p in polis:
+        p["m2"] = round(area_m2(p["c"]))
+    per = next((p for p in polis if re.search(r"(?i)per[ií]metro|l[ií]mite|predio|master", p["nombre"] + " " + p["carpeta"])), None)
+    if not per and polis:
+        grande = max(polis, key=lambda p: p["m2"])
+        if grande["m2"] > 4 * sorted(p["m2"] for p in polis)[len(polis) // 2]:
+            per = grande
+    lotes, areas = [], []
+    for p in polis:
+        if p is per:
+            continue
+        m = LOTE_RE.match(p["nombre"])
+        if m or re.search(r"(?i)lote|lots?\b|parcela", p["carpeta"]):
+            lotes.append({"n": m.group(1) if m else p["nombre"], "c": p["c"], "m2": p["m2"]})
+        else:
+            areas.append({"nombre": p["nombre"], "c": p["c"], "m2": p["m2"]})
+    return {"perimetro": per["c"] if per else None, "ha": round(per["m2"] / 10000) if per else None,
+            "lotes": lotes, "areas": areas, "lineas": [l for l in plano["lineas"] if len(l["c"]) > 1],
+            "puntos": [p for p in plano["puntos"] if p["nombre"] and not LOTE_RE.match(p["nombre"])]}
+
+
+def archivo_dev(c, slug, clave, exts):
+    """Archivo del desarrollo: URL o nombre en el JSON, o desarrollos/<slug>.<ext> en el repo."""
+    v = c.get(clave)
+    if v:
+        return v if v.startswith("http") else os.path.join(AQUI, "desarrollos", v)
+    for e in exts:
+        r = os.path.join(AQUI, "desarrollos", slug + e)
+        if os.path.exists(r):
+            return r
+    return None
+
+
 def armar_desarrollos(tokko, todas, sitio, wa_general, avisos):
     """Desarrollos de Tokko + los que se cargan a mano en desarrollos/*.json. Devuelve el resumen para la portada."""
     carpeta = os.path.join(AQUI, "desarrollos")
@@ -303,6 +419,9 @@ def armar_desarrollos(tokko, todas, sitio, wa_general, avisos):
     for p in todas:
         if p.get("dev_id"):
             unidades_de.setdefault(p["dev_id"], []).append(p)
+    for d in devs.values():
+        extra = {k: (len(v) if isinstance(v, list) else v) for k, v in d.items() if k in ("files", "videos", "tags", "type", "construction_status", "construction_date")}
+        print(f"  tokko emprendimiento {d.get('name')}: campos {sorted(d)} {json.dumps(extra, ensure_ascii=False)[:300]}")
     resumen = []
     for slug, c in sorted(configs.items()):
         if c.get("ocultar"):
@@ -333,7 +452,8 @@ def armar_desarrollos(tokko, todas, sitio, wa_general, avisos):
         loc = d.get("location") if isinstance(d.get("location"), dict) else {}
         partes = [x.strip() for x in (loc.get("full_location") or "").split("|") if x.strip()]
         zona = c.get("zona") or (" · ".join(partes[-2:][::-1]) if len(partes) >= 2 else (loc.get("name") or "Maldonado"))
-        bajada = texto_es(c.get("bajada")) or texto_es(limpiar_html(d.get("description") or d.get("publication_title") or ""))
+        # descripción de Tokko (es) + traducciones o reemplazos del JSON
+        bajada = {**texto_es(limpiar_html(d.get("description") or d.get("publication_title") or "")), **texto_es(c.get("bajada"))}
         estado = texto_es(c.get("estado"))
         if not estado and isinstance(d.get("construction_status"), str) and d["construction_status"].strip():
             estado = {"es": d["construction_status"].strip()}
@@ -348,12 +468,51 @@ def armar_desarrollos(tokko, todas, sitio, wa_general, avisos):
                 "unidades": len(uni), "lotes": sum(u["tipo"] == "terreno" for u in uni),
                 "desde_venta": min(ventas) if ventas else None, "destacado": bool(c.get("destacado")),
                 "orden": c.get("orden", 100)}
+        # plano del KMZ (Google Earth): lotes, perímetro, áreas comunes y amenities
+        plano = None
+        r_kmz = archivo_dev(c, slug, "kmz", [".kmz", ".kml"])
+        if r_kmz:
+            try:
+                plano = leer_kmz(r_kmz)
+                print(f"    plano: {len(plano['lotes'])} lotes, {len(plano['areas'])} áreas, {len(plano['puntos'])} puntos")
+            except Exception as e:
+                avisos.append(f"Desarrollo {info['nombre']}: no pude leer el KMZ ({e})")
+        # lotes en venta de Tokko → polígono del plano (por número de lote o porque el pin cae adentro)
+        for u in uni:
+            if plano:
+                lt = next((l for l in plano["lotes"] if u.get("lote") and str(l["n"]).lower() == str(u["lote"]).lower()), None) \
+                     or next((l for l in plano["lotes"] if dentro(u["lat"], u["lng"], l["c"])), None)
+                if lt:
+                    lt["ref"] = u["ref"]
+                    u["lote_plano"] = lt["n"]
+        brochure = c.get("brochure") or ""
+        r_pdf = archivo_dev(c, slug, "brochure_pdf", [".pdf"])
+        if not brochure and r_pdf:
+            brochure = r_pdf if r_pdf.startswith("http") else "../" + os.path.basename(r_pdf)
+        for f in d.get("files") or []:  # archivos adjuntos del emprendimiento en Tokko
+            u_f = f.get("file") or f.get("url") if isinstance(f, dict) else None
+            if not brochure and u_f and ".pdf" in u_f.lower():
+                brochure = u_f
+        kmz_url = ("../" + os.path.basename(r_kmz)) if r_kmz and not r_kmz.startswith("http") else (r_kmz or "")
+        m2s = [u["m2_terreno"] for u in uni if u.get("m2_terreno")]
         datos = {"modo": "desarrollo", "slug": slug, "nombre": info["nombre"], "zona": zona, "raiz": "../../",
-                 "bajada": bajada, "datos": c.get("datos") or [], "puntos": c.get("puntos") or [],
-                 "propiedades": uni, "sitio": sitio, "desarrollo": {**info, "wa": c.get("whatsapp") or wa_general}}
+                 "bajada": bajada, "amenities": c.get("amenities") or c.get("datos") or [],
+                 "ventajas": c.get("ventajas") or [], "cifras": c.get("cifras") or [],
+                 "puntos": c.get("puntos") or [], "cerca": cercanias(lat, lng),
+                 "lotes": [{k: u.get(k) for k in ("ref", "url", "lote", "lote_plano", "m2_terreno", "m2_cubiertos",
+                                                   "dormitorios", "tipo", "lat", "lng", "titulo", "agente")}
+                           | {"precio": u["ops"][0]["precio"], "op": u["ops"][0]["tipo"], "moneda": u["ops"][0]["moneda"],
+                              "foto": (u["fotos"] or [None])[0]} for u in uni],
+                 "plano": plano, "brochure": brochure, "kmz": kmz_url, "planos": planos, "video": c.get("video") or "",
+                 "m2_rango": [min(m2s), max(m2s)] if m2s else None,
+                 "sitio": sitio, "desarrollo": {**info, "wa": c.get("whatsapp") or wa_general}}
+        if plano and plano.get("ha"):
+            info["ha"] = plano["ha"]
+        if plano and plano["lotes"]:
+            info["lotes_plano"] = len(plano["lotes"])
         desc = f"{info['nombre']}: {'edificio' if clase == 'edificio' else 'barrio en desarrollo'} de Coldwell Banker Zetaté en {zona}."
         escribir(os.path.join(AQUI, "desarrollos", slug, "index.html"),
-                 pagina("barrio.html", f"{info['nombre']} · Desarrollos · Coldwell Banker Zetaté", datos, desc))
+                 pagina("desarrollo.html", f"{info['nombre']} · Desarrollos · Coldwell Banker Zetaté", datos, desc))
         resumen.append({k: v for k, v in info.items() if k != "planos"} | {"foto": fotos[0] if fotos else None, "fotos": fotos[:6]})
         print(f"  ok desarrollo {info['nombre']} ({clase}): {len(uni)} unidades")
     resumen.sort(key=lambda b: (not b["destacado"], b["orden"], -b["unidades"], b["nombre"]))
