@@ -239,13 +239,8 @@ const ICONO_EDIF = '<svg viewBox="0 0 24 24" width="16" height="16" aria-hidden=
 const ICONO_LOTES = '<svg viewBox="0 0 24 24" width="16" height="16" aria-hidden="true"><path fill="none" stroke="currentColor" stroke-width="1.7" stroke-linejoin="round" d="M3.5 6.5 12 3l8.5 3.5v11L12 21l-8.5-3.5zM12 3v18M3.5 12l8.5 3.5 8.5-3.5"/></svg>';
 const iconoDev = d => d.clase === "edificio" ? ICONO_EDIF : ICONO_LOTES;
 const claseDev = d => d.clase === "edificio" ? t("edificio") : t("barrio_dev");
-function resumenDev(d) {
-  if (d.cifras && d.cifras.length) return d.cifras.slice(0, 2).map(x => `${tl(x.valor) || x.valor} ${tl(x.nombre).split(" ")[0]}`).join(" · ");
-  const s = [];
-  if (d.clase === "barrio" && d.lotes) s.push(`${d.lotes} ${d.lotes === 1 ? t("lote_m") : t("lotes_m")}`);
-  else if (d.unidades) s.push(`${d.unidades} ${d.unidades === 1 ? t("unidad") : t("unidades_m")}`);
-  if (d.desde_venta) s.push(`${t("desde")} U$S ${corto(d.desde_venta)}`);
-  return s.join(" · ");
+function resumenDev(d) { /* cifras del proyecto cargadas por nosotros (ej. "104 hectáreas · ≈240 lotes") */
+  return (d.cifras || []).slice(0, 2).map(x => `${tl(x.valor) || x.valor} ${tl(x.nombre).split(" ")[0]}`).join(" · ");
 }
 const waDev = d => `https://wa.me/${d.wa || (DATOS.sitio || {}).whatsapp_general}?text=${encodeURIComponent(TXT[LANG].msg_dev(d))}`;
 

@@ -1,11 +1,8 @@
 {
   "slug": "playa-brava",
-  "tokko_id": 176526,
-  "nombre": "Playa brava",
-  "clase": "",
-  "estado": {},
-  "entrega": "",
-  "bajada": {},
-  "datos": [],
-  "puntos": []
+  "nombre": "Playa Brava",
+  "clase": "barrio",
+  "zona": "José Ignacio",
+  "ocultar": true,
+  "nota": "Oculto hasta tener brochure/datos. Falta lat/lng, textos y fotos."
 }
