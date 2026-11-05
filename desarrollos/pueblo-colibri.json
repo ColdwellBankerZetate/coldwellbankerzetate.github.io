@@ -1,0 +1,153 @@
+{
+  "nombre": "Pueblo Colibrí",
+  "clase": "barrio",
+  "zona": "La Barra",
+  "lat": null,
+  "lng": null,
+  "estado": {
+    "es": "En venta",
+    "en": "For sale",
+    "pt": "À venda"
+  },
+  "entrega": "05/2027",
+  "bajada": {
+    "es": "Una vida entre el bosque y el mar. El bosque marca el ritmo y la arquitectura lo acompaña: en Pueblo Colibrí, 36 casas de Martín Gómez Arquitectos comparten una forma más consciente de habitar La Barra, cerca del mar, de los otros y de lo esencial. Seis tipologías, de 120 a 250 m² interiores, con espacios que se abren al exterior. Cada lote tiene asignada una tipología de casa.",
+    "en": "A life between the forest and the sea. The forest sets the pace and the architecture follows it: at Pueblo Colibrí, 36 homes by Martín Gómez Arquitectos share a more conscious way of living in La Barra, close to the sea, to each other and to what matters. Six house types, from 120 to 250 m² of interior space, with rooms that open to the outdoors. Each lot is assigned a house type.",
+    "pt": "Uma vida entre a floresta e o mar. A floresta dita o ritmo e a arquitetura acompanha: no Pueblo Colibrí, 36 casas de Martín Gómez Arquitectos compartilham uma forma mais consciente de viver em La Barra, perto do mar, dos outros e do essencial. Seis tipologias, de 120 a 250 m² internos, com espaços que se abrem para o exterior. Cada lote tem uma tipologia de casa atribuída."
+  },
+  "cifras": [
+    {
+      "valor": "36",
+      "nombre": {
+        "es": "Casas",
+        "en": "Homes",
+        "pt": "Casas"
+      }
+    },
+    {
+      "valor": "6",
+      "nombre": {
+        "es": "Tipologías",
+        "en": "House types",
+        "pt": "Tipologias"
+      }
+    },
+    {
+      "valor": "120–250",
+      "nombre": {
+        "es": "m² interiores",
+        "en": "m² interior",
+        "pt": "m² internos"
+      }
+    },
+    {
+      "valor": "05/27",
+      "nombre": {
+        "es": "Posesión",
+        "en": "Possession",
+        "pt": "Posse"
+      }
+    }
+  ],
+  "ventajas": [
+    {
+      "es": "Arquitectura de Martín Gómez Arquitectos: casa y proyecto incluidos, con IVA y aportes al BPS.",
+      "en": "Architecture by Martín Gómez Arquitectos: house and design included, with VAT and BPS contributions.",
+      "pt": "Arquitetura de Martín Gómez Arquitectos: casa e projeto incluídos, com IVA e contribuições ao BPS."
+    },
+    {
+      "es": "Reservás el lote con el 25% y escriturás dentro de los 90 días.",
+      "en": "Reserve your lot with 25% and sign the deed within 90 days.",
+      "pt": "Reserve o lote com 25% e escriture em até 90 dias."
+    },
+    {
+      "es": "Tres formas de pagar el saldo: contado, crédito del Banco Itaú (partner del proyecto) o financiación propia en 24 cuotas.",
+      "en": "Three ways to pay the balance: cash, Banco Itaú loan (project partner) or developer financing in 24 installments.",
+      "pt": "Três formas de pagar o saldo: à vista, crédito do Banco Itaú (parceiro do projeto) ou financiamento próprio em 24 parcelas."
+    },
+    {
+      "es": "Posesión prevista para mayo de 2027, al terminar la infraestructura.",
+      "en": "Possession expected in May 2027, on completion of the infrastructure.",
+      "pt": "Posse prevista para maio de 2027, ao concluir a infraestrutura."
+    }
+  ],
+  "amenities": [
+    {
+      "es": "Club house: gastronomía, relax y coworking",
+      "en": "Club house: dining, relaxation and coworking",
+      "pt": "Club house: gastronomia, relax e coworking"
+    },
+    {
+      "es": "Guest house para tus invitados",
+      "en": "Guest house for your guests",
+      "pt": "Guest house para seus convidados"
+    },
+    {
+      "es": "Circuito peatonal entre los árboles",
+      "en": "Walking circuit among the trees",
+      "pt": "Circuito de caminhada entre as árvores"
+    },
+    {
+      "es": "Parque de olivos",
+      "en": "Olive grove",
+      "pt": "Parque de oliveiras"
+    },
+    {
+      "es": "Cancha de pádel",
+      "en": "Padel court",
+      "pt": "Quadra de padel"
+    },
+    {
+      "es": "Tajamar",
+      "en": "Pond",
+      "pt": "Lago"
+    }
+  ],
+  "lotes_estado": {
+    "D1": "reservado",
+    "D2": "reservado",
+    "E2": "reservado",
+    "E6": "reservado",
+    "F4": "reservado"
+  },
+  "drive": "https://drive.google.com/drive/folders/1fnz2i_3DwwGRUMMUoRByLeU05I0BnDb6",
+  "destacado": true,
+  "lotes_m2": {
+    "A1": 1160,
+    "A2": 1166,
+    "A3": 1166,
+    "A4": 1165,
+    "B1": 1128,
+    "B2": 1121,
+    "B3": 1113,
+    "B4": 1231,
+    "B5": 1229,
+    "B6": 1127,
+    "C1": 1075,
+    "C2": 1169,
+    "C3": 1112,
+    "C4": 1532,
+    "C5": 1571,
+    "C6": 1219,
+    "C7": 1182,
+    "D1": 1143,
+    "D2": 1004,
+    "D3": 1028,
+    "D4": 1004,
+    "E1": 1043,
+    "E2": 1005,
+    "E3": 1195,
+    "E4": 1360,
+    "E5": 1111,
+    "E6": 1121,
+    "E7": 1042,
+    "E8": 1001,
+    "E9": 1001,
+    "E10": 1004,
+    "E11": 1004,
+    "F1": 1189,
+    "F2": 1016,
+    "F3": 1011,
+    "F4": 1014
+  }
+}

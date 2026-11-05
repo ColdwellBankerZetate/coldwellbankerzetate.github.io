@@ -12,10 +12,13 @@ Pasos:
   2. Escribir desarrollos/<slug>-calco.json:
        {"control": [{"px": [x, y], "lat": .., "lng": ..}, ...],   # 3 o más (esquinas del predio, cruces de caminos)
         "umbral": 170,           # opcional: gris por debajo del cual es línea (0-255)
+        "limpiar": 1, "engrosar": 1,      # opcional: sacar textura del plano / engordar líneas para cerrar huecos
         "min_m2": 300, "max_m2": 20000,   # opcional: tamaño de lote aceptado
         "excluir": [ids], "numeros": {"<id>": "<n° de lote>"},   # después de mirar el paso 3
         "areas": {"<id>": "Área verde"},    # regiones que no son lotes, con nombre
         "perimetro": [[x, y], ...],         # opcional, en píxeles del plano
+        "cortes": [[x1, y1, x2, y2], ...],  # opcional: líneas entre lotes que en el plano son muy finas
+        "etiquetas": {"C5": [x, y], ...},   # opcional: un punto dentro de cada lote -> su número (lo demás se descarta)
         "lotes": [{"n": "12", "px": [[x, y], ...]}]}   # opcional: lotes dibujados a mano (píxeles)
   3. python3 calcar.py <slug>
        -> desarrollos/<slug>.kml
@@ -27,7 +30,7 @@ El masterplan se busca como desarrollos/<slug>-masterplan.(jpg|png|webp); un PDF
 """
 import json, math, os, sys
 import numpy as np
-from PIL import Image, ImageDraw, ImageFont
+from PIL import Image, ImageDraw, ImageFilter, ImageFont
 
 AQUI = os.path.dirname(os.path.abspath(__file__))
 DEV = os.path.join(AQUI, "desarrollos")
@@ -53,7 +56,7 @@ def masterplan(slug):
 # ---------- georreferencia: píxel del plano -> lat/lng (afín por mínimos cuadrados) ----------
 def ajustar(control):
     if len(control) < 3:
-        sys.exit("Hacen falta 3 o más puntos de control")
+        sys.exit("Hacen falta 3 o más puntos de control en \"control\" (píxel del plano -> lat/lng)")
     lat0 = sum(c["lat"] for c in control) / len(control)
     lng0 = sum(c["lng"] for c in control) / len(control)
     kx, ky = 111320 * math.cos(math.radians(lat0)), 110540
@@ -71,11 +74,16 @@ def ajustar(control):
 
 
 # ---------- detección de lotes: regiones claras encerradas por líneas ----------
-def regiones(img, umbral, escala_px_m2, min_m2, max_m2):
+def regiones(img, umbral, escala_px_m2, min_m2, max_m2, limpiar=0, engrosar=0):
     """Devuelve [(id, [(x,y) contorno convexo en píxeles del original], m2)] ordenadas de arriba-izquierda a abajo-derecha."""
     f = min(1.0, ANCHO_TRABAJO / max(img.size))
     chico = img.resize((round(img.width * f), round(img.height * f))) if f < 1 else img
-    gris = np.asarray(chico.convert("L"))
+    g = chico.convert("L")
+    if limpiar:  # saca la textura/manchas del plano
+        g = g.filter(ImageFilter.MedianFilter(2 * limpiar + 1))
+    if engrosar:  # engorda las líneas oscuras para cerrar huecos
+        g = g.filter(ImageFilter.MinFilter(2 * engrosar + 1))
+    gris = np.asarray(g)
     marca = np.where(gris < umbral, -1, 0).astype(np.int32)
     lab = Image.fromarray(marca, mode="I")
     out, k = [], 0
@@ -103,6 +111,14 @@ def regiones(img, umbral, escala_px_m2, min_m2, max_m2):
     out = [([(x / f, y / f) for x, y in c], m2, cen) for c, m2, cen in out]
     out.sort(key=lambda r: (round(r[2][1] / 60), r[2][0]))
     return [(str(n + 1), c, m2, cen) for n, (c, m2, cen) in enumerate(out)]
+
+
+def dentro(p, anillo):
+    x, y, ok = p[0], p[1], False
+    for (x1, y1), (x2, y2) in zip(anillo, anillo[1:] + anillo[:1]):
+        if (y1 > y) != (y2 > y) and x < (x2 - x1) * (y - y1) / (y2 - y1) + x1:
+            ok = not ok
+    return ok
 
 
 def envolvente(pts):
@@ -188,9 +204,38 @@ def main():
         print("  ¡ojo! algún punto de control queda a más de 8 m: revisarlo")
 
     excluir = {str(x) for x in cfg.get("excluir", [])}
+    etiquetas = cfg.get("etiquetas") or {}
     numeros = {str(k): str(v) for k, v in cfg.get("numeros", {}).items()}
     areas_cfg = {str(k): v for k, v in cfg.get("areas", {}).items()}
-    regs = [] if cfg.get("solo_manual") else regiones(img, cfg.get("umbral", 170), escala * escala, cfg.get("min_m2", 300), cfg.get("max_m2", 20000))
+    if cfg.get("cortes"):  # líneas divisorias que en el plano son muy finas: se dibujan gruesas antes de detectar
+        img = img.copy()
+        dc = ImageDraw.Draw(img)
+        for x1, y1, x2, y2 in cfg["cortes"]:
+            dc.line([(x1, y1), (x2, y2)], fill=(0, 0, 0), width=cfg.get("ancho_corte", 5))
+    regs = [] if cfg.get("solo_manual") else regiones(img, cfg.get("umbral", 170), escala * escala, cfg.get("min_m2", 300), cfg.get("max_m2", 20000),
+                                                         cfg.get("limpiar", 0), cfg.get("engrosar", 0))
+
+    if etiquetas:  # {"C5": [x, y]}: la región que contiene el punto es ese lote; las regiones sin etiqueta no son lotes
+        # un lote partido (ej. por la casita dibujada) se marca con varios puntos: [[x, y], [x, y]] y se juntan
+        numeros = {}
+        for nom, pts in etiquetas.items():
+            pts = [pts] if isinstance(pts[0], (int, float)) else pts
+            hits = []
+            for ex, ey in pts:
+                r = next((r for r in regs if dentro((ex, ey), r[1])), None)
+                if r is None:
+                    print(f"  ¡ojo! la etiqueta {nom} {ex},{ey} no cae en ninguna región")
+                elif r[0] in numeros:
+                    print(f"  ¡ojo! {nom} y {numeros[r[0]]} caen en la misma región (falta un corte)")
+                elif r not in hits:
+                    hits.append(r)
+            if len(hits) > 1:
+                junto = (hits[0][0], envolvente([p for h in hits for p in h[1]]), sum(h[2] for h in hits), hits[0][3])
+                regs = [r for r in regs if r not in hits] + [junto]
+                hits = [junto]
+            if hits:
+                numeros[hits[0][0]] = nom
+        excluir |= {r[0] for r in regs if r[0] not in numeros and r[0] not in areas_cfg}
 
     # vista de control con los ids detectados
     v = img.copy()

@@ -396,6 +396,11 @@ def armar_desarrollos(sitio, wa_general, avisos):
             except Exception as e:
                 avisos.append(f"Desarrollo {nombre}: no pude leer el KMZ ({e})")
         brochures = brochures_dev(c, slug)
+        if plano and c.get("lotes_m2"):  # m² reales del lote (el plano calcado de un brochure no siempre está a escala)
+            m2 = {str(k).strip().lower(): v for k, v in c["lotes_m2"].items()}
+            for lt in plano["lotes"]:
+                if str(lt["n"]).lower() in m2:
+                    lt["m2"] = m2[str(lt["n"]).lower()]
         if plano and c.get("lotes_estado"):
             est = {str(k).strip().lower(): str(v).strip().lower() for k, v in c["lotes_estado"].items()}
             for lt in plano["lotes"]:
