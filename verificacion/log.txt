@@ -1,0 +1,10 @@
+escala 0.258 m/px · error en los puntos de control: 7.5 m, 16.5 m, 17.6 m, 8.6 m
+  ¡ojo! algún punto de control queda a más de 8 m: revisarlo
+  … 200 regiones
+  … 400 regiones
+  … 600 regiones
+listo: desarrollos/pueblo-colibri.kml · 36 lotes, 0 áreas · revisar verificacion/pueblo-colibri-lotes.jpg
+listo: /home/runner/work/coldwellbankerzetate.github.io/coldwellbankerzetate.github.io/verificacion/pueblo-colibri-calco.jpg
+pueblo-colibri: 5 tramos 'Hidalgo', 1 tramos 'Flamencos'
+  cruce: {'lat': -34.9092316, 'lng': -54.8618584, 'separacion_m': 0.0, 'calles': ['Bartolomé Hidalgo', 'Camino de los Flamencos']}
+  recorte: verificacion/pueblo-colibri-sat.jpg (817x817, 800 m de lado)
