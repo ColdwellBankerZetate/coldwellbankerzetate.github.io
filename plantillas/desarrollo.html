@@ -104,6 +104,7 @@ h1{font-family:var(--f-display);font-style:italic;font-weight:500;font-size:50px
 #mp .leaflet-control-attribution{display:none}
 .ayuda-mp{position:absolute;z-index:600;left:50%;transform:translateX(-50%);bottom:18px;background:var(--glass);backdrop-filter:blur(10px);-webkit-backdrop-filter:blur(10px);border:1px solid var(--line);color:var(--fg);font-size:10.5px;font-weight:600;letter-spacing:.12em;text-transform:uppercase;padding:8px 14px;border-radius:999px;white-space:nowrap;pointer-events:none;transition:opacity .4s}
 .ayuda-mp.fuera{opacity:0}
+.en-mp::after{display:none}
 .vista{position:absolute;z-index:600;top:16px;right:16px;display:flex;gap:2px;background:var(--glass);backdrop-filter:blur(10px);-webkit-backdrop-filter:blur(10px);border:1px solid var(--line-2);border-radius:999px;padding:3px}
 .vista button{background:none;border:0;border-radius:999px;padding:7px 14px;font-size:10.5px;font-weight:700;letter-spacing:.16em;text-transform:uppercase;color:var(--muted);cursor:pointer}
 .vista button[aria-pressed="true"]{background:var(--fg);color:var(--ink)}
@@ -149,7 +150,7 @@ h1{font-family:var(--f-display);font-style:italic;font-weight:500;font-size:50px
   .top h2{font-family:var(--f-display);font-style:italic;font-weight:500;font-size:32px;line-height:1;margin:4px 0 0;color:#fff;text-align:center;text-wrap:balance;max-width:86%}
   .top .raya{display:block;width:72px;height:1px;margin:12px 0 0;background:var(--champ)}
   .vista{top:auto;right:auto;left:50%;transform:translateX(-50%);bottom:calc(var(--hoja-min) + 14px + env(safe-area-inset-bottom,0px))}
-  :root{--hoja-min:112px}
+  :root{--hoja-min:64px}
   .leaflet-bottom{bottom:calc(var(--hoja-min) + env(safe-area-inset-bottom,0px))}
   .ayuda-mp{bottom:auto;top:calc(138px + env(safe-area-inset-top,0px))}
   .hoja{display:block;position:absolute;z-index:700;left:0;right:0;bottom:0;height:calc(100% - 50px - env(safe-area-inset-top,0px));background:rgba(12,12,12,.97);backdrop-filter:blur(14px);-webkit-backdrop-filter:blur(14px);border-top:1px solid var(--line-2);border-radius:18px 18px 0 0;box-shadow:0 -20px 50px rgba(0,0,0,.55);transform:translateY(calc(100% - var(--hoja-min) - env(safe-area-inset-bottom,0px)));transition:transform .35s cubic-bezier(.2,.8,.2,1);display:flex;flex-direction:column}
@@ -162,14 +163,14 @@ h1{font-family:var(--f-display);font-style:italic;font-weight:500;font-size:50px
   .hoja .acciones{margin:0}
   .hoja .cuerpo{overflow:auto;flex:1;padding:0 16px calc(24px + env(safe-area-inset-bottom,0px));overscroll-behavior:contain}
   .hoja .pad{padding-inline:0}
-  .hoja .barra-inf{display:none;flex:none;gap:8px;padding:10px 12px calc(12px + env(safe-area-inset-bottom,0px));border-top:1px solid var(--line);background:rgba(12,12,12,.98)}
-  .hoja.con-visor.abierta .barra-inf{display:grid}
-  .hoja.con-visor.abierta .asa .acciones{display:none}
-  .hoja.con-visor .asa{padding-bottom:12px}
-  .hoja.con-visor.abierta .asa{padding-bottom:6px}
+  .hoja.con-visor .asa{padding-bottom:6px}
   .hoja.con-visor .cuerpo{padding:0 6px 8px}
   .hoja.con-visor .visor{padding-block:2px 0}
-  .barra-inf .visor-bar{justify-content:center}
+  .visor .fin{padding:14px 6px calc(18px + env(safe-area-inset-bottom,0px))}
+  .en-mp .top .kicker,.en-mp .top h2,.en-mp .top .raya{display:none}
+  .en-mp .hoja{display:none}
+  .en-mp .vista{bottom:calc(14px + env(safe-area-inset-bottom,0px))}
+  .en-mp .ayuda-mp{top:calc(54px + env(safe-area-inset-top,0px))}
   .hoja h1{display:none}
   .hoja .portada{padding-top:4px}
   .amen{grid-template-columns:1fr}
@@ -193,7 +194,6 @@ h1{font-family:var(--f-display);font-style:italic;font-weight:500;font-size:50px
     <section class="hoja" id="hoja" aria-label="El proyecto">
       <div class="asa" id="asa"></div>
       <div class="cuerpo" id="cuerpo-m"></div>
-      <div class="barra-inf" id="barra-inf"></div>
     </section>
   </main>
 </div>
@@ -273,11 +273,16 @@ const ICONO_DOC = '<svg viewBox="0 0 24 24" width="15" height="15" aria-hidden="
 const pdfCache = {};
 const VERBO = { es: "Cargando brochure…", en: "Loading brochure…", pt: "Carregando brochure…" };
 function htmlVisor(movil) {
-  return `<section class="visor pad">${movil ? "" : `<div class="visor-bar"><h2>${t("brochure_b")}</h2></div>`}<div class="paginas"><div class="visor-msg">${VERBO[LANG] || VERBO.es}</div></div></section>`;
+  return `<section class="visor pad"${movil ? " data-movil" : ""}>${movil ? "" : `<div class="visor-bar"><h2>${t("brochure_b")}</h2></div>`}<div class="paginas"><div class="visor-msg">${VERBO[LANG] || VERBO.es}</div></div></section>`;
 }
 async function armarVisor(v) {
   const bl = brochureLang(), url = BR[bl], cont = v.querySelector(".paginas"), tok = v._tok = {};
-  const falla = () => { if (v._tok === tok) cont.innerHTML = `<div class="visor-msg"><a href="${esc(url)}" target="_blank" rel="noopener">${t("brochure_b")} ↗</a></div>`; };
+  const fin = () => {
+    if (!("movil" in v.dataset)) return;
+    const d = document.createElement("div"); d.className = "fin"; d.innerHTML = htmlAcciones(true, true); cont.appendChild(d);
+    d.querySelectorAll("[data-ev]").forEach(a => a.addEventListener("click", () => track(a.dataset.ev + "/" + DEV.slug)));
+  };
+  const falla = () => { if (v._tok === tok) { cont.innerHTML = `<div class="visor-msg"><a href="${esc(url)}" target="_blank" rel="noopener">${t("brochure_b")} ↗</a></div>`; fin(); } };
   if (!window.pdfjsLib) return falla();
   try {
     pdfjsLib.GlobalWorkerOptions.workerSrc = "https://cdnjs.cloudflare.com/ajax/libs/pdf.js/3.11.174/pdf.worker.min.js";
@@ -295,6 +300,7 @@ async function armarVisor(v) {
     for (let n = 1; n <= pdf.numPages; n++) {
       const d = document.createElement("div"); d.className = "pag"; d.dataset.n = n; d.style.aspectRatio = vp.width + " / " + vp.height; cont.appendChild(d); io.observe(d);
     }
+    fin();
   } catch (err) { falla(); }
 }
 function enganchar(raiz) {
@@ -324,11 +330,10 @@ function pintar() {
   const res = (DATOS.cifras || []).slice(0, 2).map(c => `${tl(c.valor) || c.valor} ${tl(c.nombre).split(" ")[0]}`).join(" · ");
   const conV = !!brochureLang();
   $("hoja").classList.toggle("con-visor", conV);
-  $("barra-inf").innerHTML = conV ? htmlAcciones(true, true) : "";
-  $("asa").innerHTML = conV ? htmlAcciones(true, true) : `<div class="resumen"><b>${t("el_proyecto")}</b><span>${esc(res)}</span></div>${htmlAcciones(true)}`;
+  $("asa").innerHTML = conV ? "" : `<div class="resumen"><b>${t("el_proyecto")}</b><span>${esc(res)}</span></div>${htmlAcciones(true)}`;
   $("cuerpo-m").innerHTML = htmlCuerpo(false);
   armarIdiomas($("idiomas-p"), todo);
-  enganchar($("panel")); enganchar($("cuerpo-m")); enganchar($("asa")); enganchar($("barra-inf"));
+  enganchar($("panel")); enganchar($("cuerpo-m")); enganchar($("asa"));
   $("vista").innerHTML = [...(MP ? [["mp", t("masterplan")]] : []), ["plano", t(MP ? "satelite" : "plano")], ["zona", t("ubicacion")]].map(([k, x]) => `<button type="button" data-k="${k}" aria-pressed="${VISTA === k}">${x}</button>`).join("");
   $("vista").querySelectorAll("button").forEach(b => b.onclick = () => ponerVista(b.dataset.k));
 }
@@ -372,6 +377,7 @@ function ponerVista(k, sinMover) {
   VISTA = k;
   $("vista").querySelectorAll("button").forEach(b => b.setAttribute("aria-pressed", String(b.dataset.k === k)));
   $("mp").hidden = k !== "mp"; $("ayuda-mp").hidden = k !== "mp";
+  document.querySelector(".mapa-wrap").classList.toggle("en-mp", k === "mp");
   if (k === "mp") { armarMasterplan(); track("vista/mp"); return; }
   mapa.invalidateSize();
   if (k === "zona") { capaLugares.addTo(mapa); if (!sinMover) mapa.flyToBounds(encuadrePlano().extend(L.latLngBounds(DATOS.cerca.map(l => [l.lat, l.lng]))), { ...pad(), duration: 1 }); }
@@ -393,18 +399,30 @@ $("asa").addEventListener("touchend", e => {
 
 /* ---------- masterplan (imagen del plano, con zoom) ---------- */
 let mpMapa = null;
+let mpB = null, mpIni = false;
+/* la imagen cubre toda la pantalla (sin bordes negros): zoom mínimo = el que llena el alto y el ancho; se recorre con el dedo */
+function mpCubrir() {
+  if (!mpMapa || !mpB) return;
+  mpMapa.invalidateSize();
+  const sz = mpMapa.getSize(), ih = mpB[1][0], iw = mpB[1][1];
+  if (!sz.x || !sz.y) return;
+  const z = Math.log2(Math.max(sz.x / iw, sz.y / ih));
+  mpMapa.setMinZoom(z); mpMapa.setMaxZoom(Math.max(z + 2.5, 1));
+  if (!mpIni) { mpIni = true; mpMapa.setView([ih / 2, iw / 2], z, { animate: false }); }
+  else if (mpMapa.getZoom() < z) mpMapa.setZoom(z, { animate: false });
+  mpMapa.panInsideBounds(L.latLngBounds(mpB), { animate: false });
+}
 function armarMasterplan() {
-  if (mpMapa) { mpMapa.invalidateSize(); return; }
-  mpMapa = L.map("mp", { crs: L.CRS.Simple, zoomControl: !movil(), attributionControl: false, zoomSnap: 0.1, minZoom: -5, maxZoom: 1, bounceAtZoomLimits: false });
+  if (mpMapa) { mpCubrir(); return; }
+  mpMapa = L.map("mp", { crs: L.CRS.Simple, zoomControl: !movil(), attributionControl: false, zoomSnap: 0, zoomDelta: .5, minZoom: -5, maxZoom: 3, bounceAtZoomLimits: false, maxBoundsViscosity: 1 });
   if (mpMapa.zoomControl) mpMapa.zoomControl.setPosition("bottomright");
   const img = new Image();
   img.onload = () => {
     const b = [[0, 0], [img.naturalHeight, img.naturalWidth]];
     L.imageOverlay(MP, b).addTo(mpMapa);
-    const encuadre = () => mpMapa.fitBounds(b, { padding: movil() ? [8, 8] : [30, 30], paddingTopLeft: movil() ? [8, 150] : [30, 80], paddingBottomRight: movil() ? [8, 280] : [30, 30] });
-    encuadre();
-    mpMapa.setMinZoom(mpMapa.getZoom() - .5);
-    mpMapa.setMaxBounds(L.latLngBounds(b).pad(.25));
+    mpB = b;
+    mpMapa.setMaxBounds(b);
+    mpCubrir();
     mpMapa.once("zoomstart dragstart", () => $("ayuda-mp").classList.add("fuera"));
   };
   img.src = MP;
@@ -415,5 +433,5 @@ armarIdiomas($("idiomas-m"), todo);
 todo();
 mapa.fitBounds(encuadrePlano(), { ...pad(), maxZoom: PL ? 17 : 15.5 });
 mapa.getContainer().classList.toggle("sin-num", mapa.getZoom() < 16.5);
-window.addEventListener("resize", () => { mapa.invalidateSize(); mpMapa?.invalidateSize(); });
+window.addEventListener("resize", () => { mapa.invalidateSize(); mpCubrir(); });
 </script>
