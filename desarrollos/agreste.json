@@ -1,0 +1,291 @@
+{
+  "nombre": "Agreste Punta Negra",
+  "clase": "barrio",
+  "zona": "Punta Negra",
+  "lat": -34.8756797,
+  "lng": -55.2273603,
+  "estado": {
+    "es": "En venta · Etapa 1",
+    "en": "For sale · Phase 1",
+    "pt": "À venda · Etapa 1"
+  },
+  "entrega": "",
+  "bajada": {
+    "es": "Club de campo y mar en la ladera del Cerro Las Espinas, Punta Negra. Un proyecto residencial pensado como homenaje al paisaje: 183 lotes de aproximadamente 4.000 m² en 170 hectáreas, con vistas al mar, las lagunas y los cerros, más de 40 hectáreas de monte nativo preservado y masterplan de Gómez Platero Arquitectura & Urbanismo. A una hora de Montevideo y a menos de 30 minutos de Punta del Este.",
+    "en": "A country and sea club on the slope of Cerro Las Espinas, Punta Negra. A residential project conceived as a tribute to the landscape: 183 lots of approximately 4,000 m² across 170 hectares, with views of the sea, lagoons and hills, more than 40 hectares of preserved native woodland and a masterplan by Gómez Platero Arquitectura & Urbanismo. One hour from Montevideo and less than 30 minutes from Punta del Este.",
+    "pt": "Clube de campo e mar na encosta do Cerro Las Espinas, Punta Negra. Um projeto residencial pensado como homenagem à paisagem: 183 lotes de aproximadamente 4.000 m² em 170 hectares, com vistas para o mar, as lagoas e os cerros, mais de 40 hectares de mata nativa preservada e masterplan da Gómez Platero Arquitectura & Urbanismo. A uma hora de Montevidéu e a menos de 30 minutos de Punta del Este."
+  },
+  "cifras": [
+    {
+      "valor": "183",
+      "nombre": {
+        "es": "Lotes",
+        "en": "Lots",
+        "pt": "Lotes"
+      }
+    },
+    {
+      "valor": "4.000",
+      "nombre": {
+        "es": "m² por lote",
+        "en": "m² per lot",
+        "pt": "m² por lote"
+      }
+    },
+    {
+      "valor": "170",
+      "nombre": {
+        "es": "Hectáreas",
+        "en": "Hectares",
+        "pt": "Hectares"
+      }
+    },
+    {
+      "valor": "40+",
+      "nombre": {
+        "es": "ha de monte nativo",
+        "en": "ha of native woodland",
+        "pt": "ha de mata nativa"
+      }
+    }
+  ],
+  "ventajas": [
+    {
+      "es": "Terreno elevado en la ladera del Cerro Las Espinas, con vistas al mar, lagunas y cerros: cada lote tiene características propias por su altura, sus vistas o su cercanía al monte nativo.",
+      "en": "Elevated ground on the slope of Cerro Las Espinas with views of the sea, lagoons and hills: every lot has its own character thanks to its height, views or proximity to the native woodland.",
+      "pt": "Terreno elevado na encosta do Cerro Las Espinas, com vistas para o mar, lagoas e cerros: cada lote tem características próprias pela altura, pelas vistas ou pela proximidade da mata nativa."
+    },
+    {
+      "es": "Masterplan y Club House de Gómez Platero Arquitectura & Urbanismo, con curaduría arquitectónica de cada construcción para proteger el paisaje y las vistas.",
+      "en": "Masterplan and Club House by Gómez Platero Arquitectura & Urbanismo, with an architectural review of every building to protect the landscape and the views.",
+      "pt": "Masterplan e Club House da Gómez Platero Arquitectura & Urbanismo, com curadoria arquitetônica de cada construção para proteger a paisagem e as vistas."
+    },
+    {
+      "es": "Infraestructura completa: calles internas asfaltadas, agua corriente, energía eléctrica subterránea, acceso controlado y seguridad 24 horas.",
+      "en": "Full infrastructure: paved internal roads, running water, underground power lines, controlled access and 24-hour security.",
+      "pt": "Infraestrutura completa: ruas internas asfaltadas, água corrente, energia elétrica subterrânea, acesso controlado e segurança 24 horas."
+    },
+    {
+      "es": "Campo y mar a la vez: servicio de playa en Punta Negra, Restaurante Las Espinas en la cima del cerro y a 18,5 km del aeropuerto de Laguna del Sauce.",
+      "en": "Countryside and sea at once: beach service in Punta Negra, Las Espinas Restaurant atop the hill and 18.5 km from Laguna del Sauce airport.",
+      "pt": "Campo e mar ao mesmo tempo: serviço de praia em Punta Negra, Restaurante Las Espinas no topo do cerro e a 18,5 km do aeroporto de Laguna del Sauce."
+    }
+  ],
+  "amenities": [
+    {
+      "es": "Club House con áreas sociales, parrilla, bar, piscina y fogón",
+      "en": "Club House with social areas, grill, bar, pool and fire pit",
+      "pt": "Club House com áreas sociais, parrilla, bar, piscina e fogão de chão"
+    },
+    {
+      "es": "Gimnasio completo con vestuarios",
+      "en": "Fully equipped gym with locker rooms",
+      "pt": "Academia completa com vestiários"
+    },
+    {
+      "es": "Kids Club interior y área exterior de juegos",
+      "en": "Indoor Kids Club and outdoor play area",
+      "pt": "Kids Club interno e área externa de jogos"
+    },
+    {
+      "es": "2 canchas de tenis",
+      "en": "2 tennis courts",
+      "pt": "2 quadras de tênis"
+    },
+    {
+      "es": "2 canchas de pádel",
+      "en": "2 padel courts",
+      "pt": "2 quadras de pádel"
+    },
+    {
+      "es": "Cancha de beach tennis",
+      "en": "Beach tennis court",
+      "pt": "Quadra de beach tennis"
+    },
+    {
+      "es": "Cancha de fútbol 7",
+      "en": "Seven-a-side football pitch",
+      "pt": "Campo de futebol 7"
+    },
+    {
+      "es": "Caballerizas, picadero y salón con chimenea",
+      "en": "Stables, riding arena and lounge with fireplace",
+      "pt": "Cavalariças, picadeiro e salão com lareira"
+    },
+    {
+      "es": "Huerta orgánica y espacios de producción local",
+      "en": "Organic garden and local production areas",
+      "pt": "Horta orgânica e espaços de produção local"
+    },
+    {
+      "es": "Senderos de trekking y miradores naturales",
+      "en": "Trekking trails and natural lookouts",
+      "pt": "Trilhas para trekking e mirantes naturais"
+    },
+    {
+      "es": "Servicio de playa en Punta Negra",
+      "en": "Beach service in Punta Negra",
+      "pt": "Serviço de praia em Punta Negra"
+    },
+    {
+      "es": "Restaurante Las Espinas en la cima del cerro",
+      "en": "Las Espinas Restaurant atop the hill",
+      "pt": "Restaurante Las Espinas no topo do cerro"
+    },
+    {
+      "es": "Acceso controlado y seguridad 24 horas",
+      "en": "Controlled access and 24-hour security",
+      "pt": "Acesso controlado e segurança 24 horas"
+    }
+  ],
+  "lotes_m2": {
+    "AA1": 4007,
+    "AA2": 4004,
+    "AA3": 4003,
+    "AA4": 4005,
+    "AA5": 4025,
+    "AA6": 4026,
+    "AB1": 4003,
+    "AB2": 4000,
+    "AB3": 4001,
+    "AB4": 4076,
+    "AB5": 4036,
+    "AC1": 4010,
+    "AC2": 4018,
+    "AC3": 4013,
+    "AD1": 4028,
+    "AD2": 4003,
+    "AD3": 4003,
+    "AD4": 4007,
+    "AE1": 4031,
+    "AE2": 4001,
+    "AE3": 4007,
+    "AF1": 4077,
+    "AF2": 4016,
+    "AF3": 4011,
+    "AF4": 4010,
+    "AF5": 4008,
+    "AG1": 4011,
+    "AG2": 4051,
+    "AH1": 4004,
+    "AH2": 4009,
+    "AI1": 4009,
+    "AI2": 4097,
+    "AJ1": 4004,
+    "AJ2": 4011,
+    "AJ3": 4032,
+    "AJ4": 4041,
+    "AO1": 4005,
+    "AO2": 4013,
+    "AO3": 4009,
+    "AO4": 4004,
+    "AO5": 4004,
+    "AO6": 4015,
+    "P1": 4004,
+    "P2": 4020,
+    "P3": 4387,
+    "P4": 4001,
+    "P5": 4014,
+    "Q1": 4001,
+    "Q2": 4000,
+    "Q3": 4003,
+    "Q4": 4009,
+    "Q5": 4005,
+    "R1": 4018,
+    "R2": 4079,
+    "R3": 4020,
+    "R4": 4008,
+    "R5": 4013,
+    "S1": 4037,
+    "S2": 4004,
+    "S3": 4001,
+    "S4": 4005,
+    "T1": 4012,
+    "T2": 4002,
+    "T3": 4000,
+    "T4": 4002,
+    "U1": 4034,
+    "U2": 4011,
+    "U3": 4017,
+    "U4": 4029,
+    "U5": 4168,
+    "V1": 4021,
+    "V2": 4031,
+    "V3": 4004,
+    "V4": 4014,
+    "V5": 4027,
+    "W1": 4005,
+    "W2": 4009,
+    "W3": 4007,
+    "W4": 4009,
+    "W5": 4017,
+    "W6": 4163,
+    "X1": 4069,
+    "X2": 4001,
+    "X3": 4024,
+    "X4": 4003,
+    "X5": 4004,
+    "Y1": 4006,
+    "Y2": 4006,
+    "Y3": 4079,
+    "Y4": 4013,
+    "Z1": 4170,
+    "Z2": 4023,
+    "Z3": 4155,
+    "Z4": 4049,
+    "Z5": 4005
+  },
+  "lotes_estado": {
+    "AA3": "vendido",
+    "AA4": "vendido",
+    "AA5": "vendido",
+    "AA6": "vendido",
+    "AD1": "vendido",
+    "AD2": "vendido",
+    "AD3": "vendido",
+    "AD4": "vendido",
+    "AE2": "vendido",
+    "AF2": "vendido",
+    "AF3": "vendido",
+    "AF5": "vendido",
+    "AG2": "vendido",
+    "AJ4": "vendido",
+    "P5": "vendido",
+    "Q5": "vendido",
+    "R3": "vendido",
+    "S1": "vendido",
+    "S2": "vendido",
+    "S3": "vendido",
+    "S4": "vendido",
+    "T2": "vendido",
+    "T3": "vendido",
+    "T4": "vendido",
+    "U1": "vendido",
+    "U2": "vendido",
+    "U3": "vendido",
+    "U4": "vendido",
+    "U5": "vendido",
+    "V4": "vendido",
+    "V5": "vendido",
+    "W1": "vendido",
+    "W3": "vendido",
+    "W4": "vendido",
+    "W5": "vendido",
+    "W6": "vendido",
+    "X1": "vendido",
+    "X2": "vendido",
+    "X3": "vendido",
+    "X4": "vendido",
+    "X5": "vendido",
+    "Y1": "vendido",
+    "Y2": "vendido",
+    "Y4": "vendido",
+    "Z1": "vendido",
+    "Z2": "vendido",
+    "Z3": "vendido",
+    "Z4": "vendido"
+  },
+  "drive": "https://drive.google.com/drive/folders/1N9KM0gc8R2wuqxHIBJAn86c7r4t39_hn",
+  "destacado": true,
+  "orden": 20
+}
