@@ -346,7 +346,6 @@ function todo() { pintar(); dibujarPlano(); if (VISTA === "zona") capaLugares.ad
 armarIdiomas($("idiomas-m"), todo);
 todo();
 mapa.fitBounds(encuadrePlano(), { ...pad(), maxZoom: PL ? 17 : 15.5 });
-if (MP) ponerVista("mp");
 mapa.getContainer().classList.toggle("sin-num", mapa.getZoom() < 16.5);
 window.addEventListener("resize", () => { mapa.invalidateSize(); mpMapa?.invalidateSize(); });
 </script>
