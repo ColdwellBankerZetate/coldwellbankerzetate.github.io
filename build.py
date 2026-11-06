@@ -410,11 +410,12 @@ def armar_desarrollos(sitio, wa_general, avisos):
         mp = c.get("masterplan") or next((f"../{slug}-masterplan{e}" for e in (".jpg", ".png", ".webp")
                                             if os.path.exists(os.path.join(carpeta, f"{slug}-masterplan{e}"))), "")
         kmz_url = ("../" + os.path.basename(r_kmz)) if r_kmz and not r_kmz.startswith("http") else (r_kmz or "")
+        if c.get("drive"):  # solo para el equipo: va cifrado en interno.dat, no en la página
+            INTERNO.setdefault("desarrollos", {}).setdefault(slug, {})["drive"] = c["drive"]
         datos = {"modo": "desarrollo", "slug": slug, "nombre": nombre, "zona": info["zona"], "raiz": "../../",
                  "bajada": texto_es(c.get("bajada")), "amenities": c.get("amenities") or [],
                  "ventajas": c.get("ventajas") or [], "cifras": info["cifras"],
                  "cerca": cercanias(lat, lng), "plano": plano, "masterplan": mp, "brochures": brochures, "kmz": kmz_url,
-                 "drive": c.get("drive") or "",
                  "sitio": sitio, "desarrollo": {**info, "wa": c.get("whatsapp") or wa_general}}
         desc = f"{nombre}: {'edificio' if clase == 'edificio' else 'barrio en desarrollo'} de Coldwell Banker Zetaté{' en ' + info['zona'] if info['zona'] else ''}."
         escribir(os.path.join(carpeta, slug, "index.html"),
@@ -516,6 +517,50 @@ def leer_disponibilidad(sitio, offline, avisos):
     out = {k: sorted(v) for k, v in out.items() if v is not None}
     print(f"  disponibilidad: {len(filas) - 1} filas en la planilla, {len(out)} casas con fechas")
     return out
+
+
+# ---------------------------------------------------------------- modo interno
+INTERNO = {}  # datos solo para el equipo (ej. carpeta de Drive de cada desarrollo); se publican cifrados
+
+
+def clave_interna():
+    k = os.environ.get("INTERNO_CLAVE", "").strip()
+    ruta = os.path.join(AQUI, ".interno_clave")
+    if not k and os.path.exists(ruta):
+        k = open(ruta, encoding="utf-8").read().strip()
+    return k
+
+
+def escribir_interno(avisos):
+    """interno.dat = INTERNO cifrado con la contraseña del equipo (PBKDF2-SHA256 + AES-GCM). El navegador lo
+    descifra recién cuando alguien ingresa la contraseña; sin ella el archivo no dice nada. Determinístico
+    (mismo contenido y clave = mismo archivo) para que la sincronización horaria no genere commits de más."""
+    ruta = os.path.join(AQUI, "interno.dat")
+    clave = clave_interna()
+    if not INTERNO:
+        if os.path.exists(ruta):
+            os.remove(ruta)
+        return
+    if not clave:
+        avisos.append("Modo interno: falta la contraseña (secreto INTERNO_CLAVE o archivo .interno_clave); "
+                      "no se publica interno.dat y los botones internos no aparecen.")
+        return
+    try:
+        from cryptography.hazmat.primitives.ciphers.aead import AESGCM
+    except ImportError:
+        avisos.append("Modo interno: falta la librería 'cryptography' (pip install cryptography); no se publica interno.dat.")
+        return
+    import base64, hashlib, hmac
+    iteraciones = 200000
+    cuerpo = json.dumps(INTERNO, ensure_ascii=False, sort_keys=True, separators=(",", ":")).encode()
+    kb = clave.encode()
+    sal = hmac.new(kb, b"sal" + cuerpo, hashlib.sha256).digest()[:16]
+    nonce = hmac.new(kb, b"nonce" + cuerpo, hashlib.sha256).digest()[:12]
+    llave = hashlib.pbkdf2_hmac("sha256", kb, sal, iteraciones, 32)
+    b64 = lambda b: base64.b64encode(b).decode()
+    cif = AESGCM(llave).encrypt(nonce, cuerpo, None)
+    escribir(ruta, json.dumps({"v": 1, "it": iteraciones, "s": b64(sal), "n": b64(nonce), "c": b64(cif)}, separators=(",", ":")))
+    print(f"  ok interno.dat ({len(INTERNO.get('desarrollos', {}))} desarrollos con datos internos)")
 
 
 # ---------------------------------------------------------------- armado
@@ -642,6 +687,7 @@ def main():
         print(f"  ok {c['nombre']}: {len(props)} propiedades")
 
     desarrollos = armar_desarrollos(sitio, wa_general, avisos)
+    escribir_interno(avisos)
     # Datos de todo el sitio (los usa la página de selección)
     escribir(os.path.join(AQUI, "datos.json"),
              json.dumps({"propiedades": todo, "barrios": resumen, "desarrollos": desarrollos},

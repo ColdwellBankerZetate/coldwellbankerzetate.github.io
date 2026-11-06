@@ -7,3 +7,4 @@ reel/trabajo/
 reel/*.mp4
 disponibilidad_cache.csv
 planilla_disponibilidad.*
+.interno_clave

@@ -19,7 +19,10 @@ jobs:
       - name: Armar los mapas con los datos de Tokko y la planilla de disponibilidad
         env:
           TOKKO_KEY: ${{ secrets.TOKKO_KEY }}
-        run: python3 build.py
+          INTERNO_CLAVE: ${{ secrets.INTERNO_CLAVE }}
+        run: |
+          pip install cryptography
+          python3 build.py
       - name: Publicar si hubo cambios
         run: |
           git config user.name "Claude"
