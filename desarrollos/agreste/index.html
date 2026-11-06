@@ -133,6 +133,8 @@ h1{font-family:var(--f-display);font-style:italic;font-weight:500;font-size:50px
 .amen-pin span{font-size:10.5px;font-weight:600;letter-spacing:.14em;text-transform:uppercase;color:#fff;text-shadow:0 1px 2px rgba(0,0,0,.95),0 0 10px rgba(0,0,0,.8)}
 .n-lote{font-size:10px;font-weight:700;color:#fff;text-shadow:0 1px 2px rgba(0,0,0,.95);transform:translate(-50%,-50%);position:absolute;white-space:nowrap;pointer-events:none}
 .sin-num .n-lote{display:none}
+.n-mz{font-size:12px;font-weight:700;letter-spacing:.06em;color:#fff;text-shadow:0 1px 3px rgba(0,0,0,1),0 0 6px rgba(0,0,0,.8);transform:translate(-50%,-50%);position:absolute;white-space:nowrap;pointer-events:none;display:none}
+.sin-num .n-mz{display:block}
 .n-lote.vendido{color:rgba(255,255,255,.45);text-decoration:line-through}
 .n-lote.reservado{color:var(--champ)}
 .br-idiomas{display:flex;flex-wrap:wrap;align-items:center;gap:6px;margin-top:2px;font-size:10.5px;letter-spacing:.14em;text-transform:uppercase;color:var(--dim)}
@@ -903,6 +905,12 @@ function dibujarPlano() {
       pol.bindTooltip(`<b>${t("lote")} ${esc(lt.n)}</b><span>${fmt(lt.m2)} m²${est ? " · " + t(est) : ""}</span>`, { className: "tt", sticky: true });
       L.marker(pol.getBounds().getCenter(), { interactive: false, keyboard: false, icon: L.divIcon({ className: "ico", iconSize: [0, 0], html: `<span class="n-lote${est ? " " + est : ""}">${esc(lt.n)}</span>` }) }).addTo(capaPlano);
     });
+    /* alejado: una letra por manzana (lotes "AB3" → manzana "AB"), en el centro de sus lotes */
+    const mz = {};
+    PL.lotes.forEach(lt => { const m = /^([A-Za-z]+)\d+$/.exec(String(lt.n)); if (!m) return;
+      const c = L.polygon(lt.c).getBounds().getCenter(); (mz[m[1]] = mz[m[1]] || []).push(c); });
+    if (Object.keys(mz).length > 1) Object.entries(mz).forEach(([k, cs]) => L.marker([cs.reduce((a, c) => a + c.lat, 0) / cs.length, cs.reduce((a, c) => a + c.lng, 0) / cs.length],
+      { interactive: false, keyboard: false, icon: L.divIcon({ className: "ico", iconSize: [0, 0], html: `<span class="n-mz">${esc(k)}</span>` }) }).addTo(capaPlano));
     PL.puntos.forEach(p => L.marker([p.lat, p.lng], { interactive: false, keyboard: false,
       icon: L.divIcon({ className: "ico", iconSize: [0, 0], html: `<span class="amen-pin"><i></i><span>${esc(p.nombre)}</span></span>` }) }).addTo(capaPlano));
   }
@@ -932,7 +940,11 @@ function ponerVista(k, sinMover) {
   else { mapa.removeLayer(capaLugares); if (!sinMover) mapa.flyToBounds(encuadrePlano(), { ...pad(), maxZoom: 17, duration: 1 }); }
   track("vista/" + k);
 }
-mapa.on("zoomend", () => mapa.getContainer().classList.toggle("sin-num", mapa.getZoom() < 16.5));
+/* números de lote: se muestran cuando el lote mide en pantalla lo suficiente (lotes grandes = desde más arriba) */
+const ladoLote = (() => { const a = (PL && PL.lotes || []).map(l => l.m2).filter(Boolean).sort((x, y) => x - y); return a.length ? Math.sqrt(a[a.length >> 1]) : 30; })();
+const zoomNum = Math.min(16.5, Math.log2(156543 * Math.cos(DEV.lat * Math.PI / 180) * 18 / ladoLote));
+const verNum = () => mapa.getContainer().classList.toggle("sin-num", mapa.getZoom() < zoomNum);
+mapa.on("zoomend", verNum); verNum();
 
 /* ---------- hoja (celular) ---------- */
 const hoja = $("hoja");
