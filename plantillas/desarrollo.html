@@ -255,7 +255,8 @@ function htmlAcciones(sinKmz, sinChips) {
   const b = [], bl = brochureLang();
   if (bl) b.push(`<a class="b-pri" href="${esc(BR[bl])}" target="_blank" rel="noopener" data-ev="brochure-${bl}">${ICONO_DOC}${t("brochure_b")}</a>`);
   b.push(`<a class="b-${bl ? "sec" : "pri"}" href="${esc(waDev(DEV))}" target="_blank" rel="noopener" data-ev="whatsapp-dev">${ICONO_WA}${t("consultar")}</a>`);
-  if (DATOS.drive && !sinKmz) b.push(`<a class="b-sec" href="${esc(DATOS.drive)}" target="_blank" rel="noopener" data-ev="drive" title="${t("interno")}">${ICONO_CANDADO}${t("drive_b")}</a>`);
+  const drive = INTERNO.dev(DEV.slug).drive;
+  if (drive) b.push(`<a class="b-sec" href="${esc(drive)}" target="_blank" rel="noopener" data-ev="drive" title="${t("interno")}">${ICONO_CANDADO}${t("drive_b")}</a>`);
   if (DATOS.kmz && !sinKmz) b.push(`<a class="b-sec ancho" href="${esc(DATOS.kmz)}" download data-ev="kmz">${t("bajar_kmz")}</a>`);
   if (!bl && DEV.url && !/coldwellbankerzetate\.com\/?$/.test(DEV.url)) b.push(`<a class="b-sec" href="${esc(DEV.url)}" target="_blank" rel="noopener">${t("brochure")} ↗</a>`);
   if (b.length % 2 && b.length > 1 && !DATOS.kmz) b[b.length - 1] = b[b.length - 1].replace('class="b-', 'class="ancho b-');
@@ -430,6 +431,7 @@ function armarMasterplan() {
 
 function todo() { pintar(); dibujarPlano(); if (VISTA === "zona") capaLugares.addTo(mapa); else mapa.removeLayer(capaLugares); if (MP) $("ayuda-mp").textContent = t(tactil ? "ayuda_mp_t" : "ayuda_mp"); }
 armarIdiomas($("idiomas-m"), todo);
+document.addEventListener("interno", todo);
 todo();
 mapa.fitBounds(encuadrePlano(), { ...pad(), maxZoom: PL ? 17 : 15.5 });
 mapa.getContainer().classList.toggle("sin-num", mapa.getZoom() < 16.5);

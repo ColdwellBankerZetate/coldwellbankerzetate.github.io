@@ -445,3 +445,90 @@ function htmlPin(p, filtroOp) {
   return `<a class="pin ${o.tipo}${p.tipo === "terreno" ? " es-terreno" : ""}" href="${esc(p.url)}" target="_blank" rel="noopener" aria-label="${esc(precioOp(o))}, ${esc(lineaSecundaria(p))}">
     <span class="dot"></span><span class="tag"><b>${esc(precioCorto(o))}</b><span>${esc(lineaSecundaria(p))}</span></span></a>`;
 }
+
+/* --- modo interno (solo equipo) ---
+   Engranaje discreto en una esquina → contraseña → se habilitan funciones internas (ej. botón a la carpeta de Drive del desarrollo).
+   Los datos internos viajan cifrados en interno.dat (AES-GCM, clave derivada de la contraseña con PBKDF2): sin la contraseña
+   no hay forma de leerlos desde el código de la página. Se descifra en el navegador y queda en INTERNO.datos.
+   Las páginas escuchan el evento "interno" para volver a dibujarse al entrar o salir. */
+const INTERNO = {
+  datos: null,
+  activo() { return !!this.datos; },
+  dev(slug) { return ((this.datos || {}).desarrollos || {})[slug] || {}; },
+};
+(function () {
+  const K = "cbz_interno";
+  const sesion = { get: () => { try { return sessionStorage.getItem(K); } catch (_) { return null; } }, set: v => { try { sessionStorage.setItem(K, v); } catch (_) {} }, del: () => { try { sessionStorage.removeItem(K); } catch (_) {} } };
+  try { INTERNO.datos = JSON.parse(sesion.get() || leer(K) || "null"); } catch (_) { INTERNO.datos = null; }
+  const b64 = s => Uint8Array.from(atob(s), c => c.charCodeAt(0));
+  async function descifrar(clave) {
+    const r = await fetch(raiz() + "interno.dat", { cache: "no-cache" });
+    if (!r.ok) throw new Error("sin-archivo");
+    const j = await r.json();
+    const base = await crypto.subtle.importKey("raw", new TextEncoder().encode(clave), "PBKDF2", false, ["deriveKey"]);
+    const llave = await crypto.subtle.deriveKey({ name: "PBKDF2", salt: b64(j.s), iterations: j.it, hash: "SHA-256" }, base, { name: "AES-GCM", length: 256 }, false, ["decrypt"]);
+    return JSON.parse(new TextDecoder().decode(await crypto.subtle.decrypt({ name: "AES-GCM", iv: b64(j.n) }, llave, b64(j.c))));
+  }
+  const avisar = () => document.dispatchEvent(new CustomEvent("interno"));
+  const css = document.createElement("style");
+  css.textContent = `
+  #cbz-int{position:fixed;left:max(10px,env(safe-area-inset-left,0px));bottom:calc(10px + env(safe-area-inset-bottom,0px));z-index:5000;width:30px;height:30px;border-radius:50%;border:1px solid rgba(255,255,255,.22);background:rgba(10,10,10,.72);color:#fff;opacity:.45;display:grid;place-items:center;padding:0;cursor:pointer;-webkit-backdrop-filter:blur(6px);backdrop-filter:blur(6px);transition:opacity .2s}
+  #cbz-int:hover,#cbz-int:focus-visible{opacity:1}
+  #cbz-int.on{opacity:1;color:#c8b28a;border-color:#c8b28a}
+  #cbz-int-m{position:fixed;inset:0;z-index:5001;background:rgba(0,0,0,.6);display:grid;place-items:center;padding:20px}
+  #cbz-int-m form,#cbz-int-m .c{background:#111;border:1px solid rgba(255,255,255,.14);border-radius:14px;padding:22px 20px 18px;width:min(320px,100%);color:#f3f1ec;font:14px/1.4 "Hanken Grotesk",system-ui,sans-serif;box-sizing:border-box}
+  #cbz-int-m h3{margin:0 0 4px;font:italic 500 22px "Bodoni Moda",Georgia,serif}
+  #cbz-int-m p{margin:0 0 14px;color:#9b978f;font-size:12.5px}
+  #cbz-int-m input[type=password]{width:100%;box-sizing:border-box;background:#000;border:1px solid rgba(255,255,255,.25);border-radius:8px;color:#fff;font:inherit;font-size:16px;padding:10px 12px}
+  #cbz-int-m input[type=password]:focus{outline:none;border-color:#c8b28a}
+  #cbz-int-m label{display:flex;gap:8px;align-items:center;margin:10px 0 0;color:#9b978f;font-size:12.5px}
+  #cbz-int-m .err{color:#ff7b7b;font-size:12.5px;min-height:18px;margin:8px 0 0}
+  #cbz-int-m .fila{display:flex;gap:8px;margin-top:10px}
+  #cbz-int-m button{flex:1;font:600 13px "Hanken Grotesk",system-ui,sans-serif;padding:10px;border-radius:8px;border:1px solid rgba(255,255,255,.25);background:transparent;color:#fff;cursor:pointer}
+  #cbz-int-m button.pri{background:#c8b28a;border-color:#c8b28a;color:#111}`;
+  document.head.appendChild(css);
+  const eng = document.createElement("button");
+  eng.id = "cbz-int"; eng.type = "button";
+  eng.innerHTML = '<svg viewBox="0 0 24 24" width="16" height="16" aria-hidden="true"><path fill="none" stroke="currentColor" stroke-width="1.6" stroke-linejoin="round" d="M12 8.5a3.5 3.5 0 1 0 0 7 3.5 3.5 0 0 0 0-7ZM10.3 3h3.4l.5 2.4 1.7.7 2.1-1.3 2.4 2.4-1.3 2.1.7 1.7 2.4.5v3.4l-2.4.5-.7 1.7 1.3 2.1-2.4 2.4-2.1-1.3-1.7.7-.5 2.4h-3.4l-.5-2.4-1.7-.7-2.1 1.3-2.4-2.4 1.3-2.1-.7-1.7L3 13.7v-3.4l2.4-.5.7-1.7-1.3-2.1 2.4-2.4 2.1 1.3 1.7-.7z"/></svg>';
+  const estado = () => { eng.classList.toggle("on", INTERNO.activo()); eng.setAttribute("aria-label", INTERNO.activo() ? "Modo interno activo" : "Acceso interno"); eng.title = eng.getAttribute("aria-label"); };
+  estado();
+  document.body.appendChild(eng);
+  function cerrar() { const m = document.getElementById("cbz-int-m"); if (m) m.remove(); eng.focus(); }
+  function modal(html) {
+    cerrar();
+    const m = document.createElement("div");
+    m.id = "cbz-int-m"; m.innerHTML = html;
+    m.addEventListener("click", e => { if (e.target === m) cerrar(); });
+    m.addEventListener("keydown", e => { if (e.key === "Escape") cerrar(); });
+    document.body.appendChild(m);
+    return m;
+  }
+  eng.addEventListener("click", () => {
+    if (INTERNO.activo()) {
+      const m = modal('<div class="c" role="dialog" aria-modal="true"><h3>Modo interno</h3><p>Activo: ves las funciones solo para el equipo.</p><div class="fila"><button type="button" data-x>Cerrar</button><button type="button" class="pri" data-salir>Salir del modo interno</button></div></div>');
+      m.querySelector("[data-x]").onclick = cerrar;
+      m.querySelector("[data-salir]").onclick = () => { INTERNO.datos = null; sesion.del(); try { localStorage.removeItem(K); } catch (_) {} estado(); cerrar(); avisar(); };
+      return;
+    }
+    const m = modal('<form role="dialog" aria-modal="true" autocomplete="off"><h3>Acceso interno</h3><p>Solo para el equipo de Coldwell Banker Zetaté.</p><input type="password" name="clave" placeholder="Contraseña" autocomplete="current-password" required><label><input type="checkbox" name="recordar"> Recordar en este equipo</label><div class="err" role="alert"></div><div class="fila"><button type="button" data-x>Cancelar</button><button type="submit" class="pri">Entrar</button></div></form>');
+    const f = m.querySelector("form"), err = f.querySelector(".err"), inp = f.clave;
+    inp.focus();
+    m.querySelector("[data-x]").onclick = cerrar;
+    f.addEventListener("submit", async e => {
+      e.preventDefault();
+      const ok = f.querySelector(".pri"); ok.disabled = true; err.textContent = "";
+      try {
+        if (!(window.crypto && crypto.subtle)) throw new Error("sin-crypto");
+        const datos = await descifrar(inp.value);
+        INTERNO.datos = datos;
+        const s = JSON.stringify(datos);
+        sesion.set(s); if (f.recordar.checked) guardarLS(K, s);
+        estado(); cerrar(); avisar();
+      } catch (x) {
+        err.textContent = x.message === "sin-archivo" ? "Todavía no hay datos internos publicados."
+          : x.message === "sin-crypto" ? "Este navegador no permite el acceso (hace falta https)." : "Contraseña incorrecta.";
+        ok.disabled = false; inp.select();
+      }
+    });
+  });
+})();
