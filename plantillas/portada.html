@@ -67,6 +67,14 @@ i.venta{background:var(--venta)}i.temporada{background:var(--temporada)}i.alquil
 .bm.grupo.izq{transform:translate(calc(20px - 100%),-20px)}
 .bm:hover .c,.bm.on .c{transform:scale(1.15)}
 @media (hover:hover){.bm:hover .l{opacity:1}}
+.bm.barrio{transform:translate(-50%,-50%);gap:0}
+.bm.barrio::before{content:"";position:absolute;inset:-14px;border-radius:50%}
+.bm.barrio .c{width:11px;height:11px;font-size:0;box-shadow:0 0 0 1.5px rgba(255,255,255,.92),0 2px 6px rgba(0,0,0,.6);transition:transform .35s cubic-bezier(.2,.8,.2,1),box-shadow .35s}
+.bm.barrio .l{position:absolute;left:100%;top:50%;margin:-12px 0 0 12px;opacity:0;pointer-events:none}
+.bm.barrio:hover .c,.bm.barrio.on .c{transform:scale(2.1)}
+.bm.barrio.on .c{animation:latido-b 2s ease-out infinite}
+@media (hover:hover){.bm.barrio.on .l,.bm.barrio:hover .l{opacity:1}}
+@keyframes latido-b{0%{box-shadow:0 0 0 1.5px #fff,0 0 0 3px rgba(227,20,30,.6),0 2px 6px rgba(0,0,0,.6)}100%{box-shadow:0 0 0 1.5px #fff,0 0 0 11px rgba(227,20,30,0),0 2px 6px rgba(0,0,0,.6)}}
 /* Secciones: título que se desliza (Propiedades ↔ Desarrollos) */
 .secciones{display:grid;gap:10px;min-width:0}
 .pista-t{display:flex;overflow-x:auto;scroll-snap-type:x mandatory;scrollbar-width:none;overscroll-behavior-x:contain;-webkit-overflow-scrolling:touch}
@@ -144,13 +152,17 @@ i.venta{background:var(--venta)}i.temporada{background:var(--temporada)}i.alquil
   .tira .dc .k{font-size:9.5px;font-weight:600;letter-spacing:.18em;text-transform:uppercase;color:var(--champ)}
   .tira .pron{background:rgba(10,10,10,.9);backdrop-filter:blur(12px);-webkit-backdrop-filter:blur(12px);padding:16px;gap:10px}
   .tira .pron b{font-size:24px}.tira .pron p{font-size:13px}
-  .tira li.ancho{flex-basis:calc(100% - 4px);max-width:420px}
-  .bm{flex-direction:column;gap:5px;transform:translate(-50%,-17px)}
+  .tira li.ancho{flex-basis:min(92vw,420px);max-width:420px}
+  .bm:not(.barrio){flex-direction:column;gap:5px;transform:translate(-50%,-17px)}
   .bm.grupo{transform:translate(-50%,-20px)}
   .bm .l{font-size:15px}
-  .tira{display:flex;gap:10px;position:absolute;z-index:620;left:0;right:0;bottom:calc(18px + env(safe-area-inset-bottom,0px));overflow-x:auto;scroll-snap-type:x mandatory;padding-inline:max(16px,env(safe-area-inset-left,0px)) max(16px,env(safe-area-inset-right,0px));scrollbar-width:none;margin:0;list-style:none}
+  .bm.barrio .l{display:none}
+  .tira{display:flex;gap:10px;position:absolute;z-index:620;left:0;right:0;bottom:calc(18px + env(safe-area-inset-bottom,0px));overflow-x:auto;scroll-snap-type:x mandatory;padding-inline:calc(50vw - min(62vw,230px)/2);scrollbar-width:none;margin:0;list-style:none;align-items:flex-end}
+  .tira:has(.ancho){padding-inline:16px}
   .tira::-webkit-scrollbar{display:none}
-  .tira li{flex:0 0 auto;width:min(62%,230px);scroll-snap-align:center}
+  .tira li{flex:0 0 auto;width:min(62vw,230px);scroll-snap-align:center;scroll-snap-stop:always;transform:scale(.84);opacity:.55;transform-origin:50% 100%;transition:transform .3s cubic-bezier(.2,.8,.2,1),opacity .3s}
+  .tira li.activa{transform:scale(1.04);opacity:1}
+  .tira li.ancho{width:auto;transform:none;opacity:1}
   .tira .bc{margin:0;background:rgba(10,10,10,.88);backdrop-filter:blur(12px);-webkit-backdrop-filter:blur(12px);border:1px solid var(--line-2);border-radius:14px;padding:6px;grid-template-columns:64px 1fr;gap:10px;align-items:center;box-shadow:0 14px 40px rgba(0,0,0,.5)}
   .tira .bc img{width:64px;height:52px;border-radius:8px}
   .tira .bc .n{font-size:19px}
@@ -190,9 +202,10 @@ const DATOS = /*__DATOS__*/null;
 const B = DATOS.barrios, D = DATOS.desarrollos || [];
 cargarEstadisticas(DATOS.sitio);
 const $ = id => document.getElementById(id);
+const tira = $("tira");
 const mapa = mapaBase("mapa");
 const capa = L.layerGroup().addTo(mapa);
-let items = [];
+let items = [], activa = 0, ultimoVuelo = 0;
 /* Dos secciones: 0 = propiedades por barrio, 1 = desarrollos (edificios y barrios que se venden por lotes) */
 let SECCION = location.hash === "#desarrollos" ? 1 : 0;
 let FCLASE = null; /* filtro de desarrollos: null | "edificio" | "barrio" */
@@ -255,7 +268,7 @@ function pintar() {
     a.addEventListener("mouseleave", () => g()?.classList.remove("on"));
     a.addEventListener("click", () => track((SECCION ? "desarrollo/" : "barrio/") + a.dataset.slug));
   });
-  $("tira").scrollLeft = 0;
+  $("tira").scrollLeft = 0; activa = ultimoVuelo = 0;
   agrupar();
 }
 /* Barrios (o desarrollos) que en pantalla quedan pegados se juntan en un solo círculo;
@@ -269,7 +282,7 @@ function agrupar() {
   const usados = new Set();
   for (const a of pts) {
     if (usados.has(a)) continue;
-    const miembros = pts.filter(o => !usados.has(o) && a.p.distanceTo(o.p) < (movil() ? 64 : 46));
+    const miembros = !dev ? [a] : pts.filter(o => !usados.has(o) && a.p.distanceTo(o.p) < (movil() ? 64 : 46));
     miembros.forEach(o => usados.add(o));
     const bs = miembros.map(o => o.b), total = dev ? bs.length : bs.reduce((s, b) => s + b.total, 0);
     const solo = bs.length === 1;
@@ -277,7 +290,7 @@ function agrupar() {
     const href = solo ? (dev ? "desarrollos/" : "") + a.b.slug + "/" : "#";
     const centro = dev && solo ? `<span>${iconoDev(a.b)}</span>` : `<span>${total}</span>`;
     const m = L.marker([a.b.lat, a.b.lng], { keyboard: false, icon: L.divIcon({ className: "bm-icon", iconSize: [0, 0],
-      html: `<a class="bm${solo ? "" : " grupo"}${dev ? " dev" : ""}" href="${href}" aria-label="${esc(nombre)}"><span class="c">${centro}</span><span class="l tag">${esc(nombre)}</span></a>` }) }).addTo(capa);
+      html: `<a class="bm${dev ? "" : " barrio"}${solo ? "" : " grupo"}${dev ? " dev" : ""}" href="${href}" aria-label="${esc(nombre)}"><span class="c">${centro}</span><span class="l tag">${esc(nombre)}</span></a>` }) }).addTo(capa);
     if (!solo) m.on("click", e => {
       e.originalEvent?.preventDefault();
       mapa.flyToBounds(L.latLngBounds(bs.map(b => [b.lat, b.lng])), { ...pad, maxZoom: 17, duration: .8 });
@@ -290,6 +303,7 @@ function agrupar() {
 }
 /* Etiquetas: si se salen por la derecha van a la izquierda del círculo; se esconden si tapan otra etiqueta u otro círculo. */
 function acomodar() {
+  if (!SECCION) return; /* barrios: puntitos sin títulos, nada que acomodar */
   const vis = items.filter(it => it.pinEl()), W = mapa.getContainer().clientWidth, pad = 3;
   const choca = (r, q) => !(r.right + pad < q.left || r.left - pad > q.right || r.bottom + pad < q.top || r.top - pad > q.bottom);
   vis.forEach(it => it.pinEl().classList.remove("sin-tag", "izq"));
@@ -344,14 +358,36 @@ for (const id of ["idiomas-p", "idiomas-m"]) armarIdiomas($(id), pintar);
 pintar();
 encuadrar(false);
 requestAnimationFrame(() => document.querySelectorAll(".pista-t").forEach(pt => pt.scrollLeft = SECCION * pt.clientWidth));
-/* celular: al deslizar la tira, el mapa resalta ese barrio o desarrollo */
-const tira = $("tira");
+/* celular: la tarjeta del centro es la protagonista; al llegar a un barrio el mapa viaja hasta ahí y lo resalta */
+let timerVuelo = null;
+function centrada() {
+  const mid = tira.scrollLeft + tira.clientWidth / 2;
+  let mejor = 0, dmin = 1e9;
+  [...tira.children].forEach((li, k) => { const d = Math.abs(li.offsetLeft + li.offsetWidth / 2 - mid); if (d < dmin) { dmin = d; mejor = k; } });
+  return mejor;
+}
 function marcarTira() {
   if (!movil()) return;
-  const t0 = $("tira"), k = Math.round(t0.scrollLeft / (t0.firstElementChild?.offsetWidth + 10 || 1));
-  const on = grupoDe[lista()[k]?.slug];
+  activa = centrada();
+  [...tira.children].forEach((li, k) => li.classList.toggle("activa", k === activa));
+  const on = grupoDe[lista()[activa]?.slug];
   items.forEach(it => it.pinEl()?.classList.toggle("on", it === on));
 }
-tira.addEventListener("scroll", () => { marcarTira(); requestAnimationFrame(acomodar); }, { passive: true });
+function volarA(k) {
+  const b = lista()[k]; if (!b || SECCION) return;
+  const z = Math.max(14, Math.min(mapa.getZoom(), 16)), dy = (pad.paddingTopLeft[1] - pad.paddingBottomRight[1]) / 2;
+  const c = mapa.unproject(mapa.project([b.lat, b.lng], z).subtract([0, dy]), z);
+  mapa.flyTo(c, z, { duration: .8 });
+}
+tira.addEventListener("scroll", () => {
+  marcarTira();
+  clearTimeout(timerVuelo);
+  timerVuelo = setTimeout(() => { if (activa !== ultimoVuelo) { ultimoVuelo = activa; volarA(activa); } }, 160);
+}, { passive: true });
+/* tocar una tarjeta que no está al centro la trae al centro; la del centro abre el barrio */
+tira.addEventListener("click", e => {
+  const li = e.target.closest("li"); if (!li || !movil() || li.classList.contains("ancho")) return;
+  if (!li.classList.contains("activa")) { e.preventDefault(); li.scrollIntoView({ behavior: "smooth", inline: "center", block: "nearest" }); }
+});
 window.addEventListener("resize", () => { mapa.invalidateSize(); document.querySelectorAll(".pista-t").forEach(pt => pt.scrollLeft = SECCION * pt.clientWidth); });
 </script>
