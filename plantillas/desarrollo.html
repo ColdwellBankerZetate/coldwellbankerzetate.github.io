@@ -149,10 +149,10 @@ h1{font-family:var(--f-display);font-style:italic;font-weight:500;font-size:50px
   .top h2{font-family:var(--f-display);font-style:italic;font-weight:500;font-size:32px;line-height:1;margin:4px 0 0;color:#fff;text-align:center;text-wrap:balance;max-width:86%}
   .top .raya{display:block;width:72px;height:1px;margin:12px 0 0;background:var(--champ)}
   .vista{top:auto;right:auto;left:50%;transform:translateX(-50%);bottom:calc(var(--hoja-min) + 14px + env(safe-area-inset-bottom,0px))}
-  :root{--hoja-min:150px}
+  :root{--hoja-min:112px}
   .leaflet-bottom{bottom:calc(var(--hoja-min) + env(safe-area-inset-bottom,0px))}
   .ayuda-mp{bottom:auto;top:calc(138px + env(safe-area-inset-top,0px))}
-  .hoja{display:block;position:absolute;z-index:700;left:0;right:0;bottom:0;height:calc(100% - 150px - env(safe-area-inset-top,0px));background:rgba(12,12,12,.97);backdrop-filter:blur(14px);-webkit-backdrop-filter:blur(14px);border-top:1px solid var(--line-2);border-radius:18px 18px 0 0;box-shadow:0 -20px 50px rgba(0,0,0,.55);transform:translateY(calc(100% - var(--hoja-min) - env(safe-area-inset-bottom,0px)));transition:transform .35s cubic-bezier(.2,.8,.2,1);display:flex;flex-direction:column}
+  .hoja{display:block;position:absolute;z-index:700;left:0;right:0;bottom:0;height:calc(100% - 50px - env(safe-area-inset-top,0px));background:rgba(12,12,12,.97);backdrop-filter:blur(14px);-webkit-backdrop-filter:blur(14px);border-top:1px solid var(--line-2);border-radius:18px 18px 0 0;box-shadow:0 -20px 50px rgba(0,0,0,.55);transform:translateY(calc(100% - var(--hoja-min) - env(safe-area-inset-bottom,0px)));transition:transform .35s cubic-bezier(.2,.8,.2,1);display:flex;flex-direction:column}
   .hoja.abierta{transform:none}
   .hoja .asa{flex:none;display:grid;gap:10px;padding:10px 16px 14px;cursor:pointer;touch-action:none}
   .hoja .asa::before{content:"";justify-self:center;width:40px;height:4px;border-radius:2px;background:rgba(255,255,255,.3)}
@@ -162,6 +162,14 @@ h1{font-family:var(--f-display);font-style:italic;font-weight:500;font-size:50px
   .hoja .acciones{margin:0}
   .hoja .cuerpo{overflow:auto;flex:1;padding:0 16px calc(24px + env(safe-area-inset-bottom,0px));overscroll-behavior:contain}
   .hoja .pad{padding-inline:0}
+  .hoja .barra-inf{display:none;flex:none;gap:8px;padding:10px 12px calc(12px + env(safe-area-inset-bottom,0px));border-top:1px solid var(--line);background:rgba(12,12,12,.98)}
+  .hoja.con-visor.abierta .barra-inf{display:grid}
+  .hoja.con-visor.abierta .asa .acciones{display:none}
+  .hoja.con-visor .asa{padding-bottom:12px}
+  .hoja.con-visor.abierta .asa{padding-bottom:6px}
+  .hoja.con-visor .cuerpo{padding:0 6px 8px}
+  .hoja.con-visor .visor{padding-block:2px 0}
+  .barra-inf .visor-bar{justify-content:center}
   .hoja h1{display:none}
   .hoja .portada{padding-top:4px}
   .amen{grid-template-columns:1fr}
@@ -185,6 +193,7 @@ h1{font-family:var(--f-display);font-style:italic;font-weight:500;font-size:50px
     <section class="hoja" id="hoja" aria-label="El proyecto">
       <div class="asa" id="asa"></div>
       <div class="cuerpo" id="cuerpo-m"></div>
+      <div class="barra-inf" id="barra-inf"></div>
     </section>
   </main>
 </div>
@@ -214,13 +223,13 @@ function htmlCuerpo(conTitulo) {
   const amen = (DATOS.amenities || []).map(tl).filter(Boolean);
   const vent = (DATOS.ventajas || []).map(tl).filter(Boolean);
   const texto = tl(DATOS.bajada);
+  if (brochureLang() && !conTitulo) return htmlVisor(true);
   if (brochureLang()) return `<div class="portada pad">
       ${conTitulo ? `<span class="kicker">${iconoDev(DEV)}${esc(claseDev(DEV))}${DATOS.zona ? " · " + esc(DATOS.zona) : ""}</span><h1>${esc(DEV.nombre)}</h1>` : ""}
       ${est ? `<span class="estado">${esc(est)}</span>` : ""}
       ${conTitulo ? htmlAcciones(false, true) : ""}
     </div>
     ${htmlVisor()}
-    ${!conTitulo ? `<section class="sec pad">${htmlAcciones(false, true)}</section>` : ""}
     <div class="pie pad">${t("pie")}</div>`;
   return `<div class="portada pad">
       ${conTitulo ? `<span class="kicker">${iconoDev(DEV)}${esc(claseDev(DEV))}${DATOS.zona ? " · " + esc(DATOS.zona) : ""}</span><h1>${esc(DEV.nombre)}</h1>` : ""}
@@ -263,14 +272,16 @@ const ICONO_DOC = '<svg viewBox="0 0 24 24" width="15" height="15" aria-hidden="
 /* ---------- brochure en el panel: páginas una abajo de la otra (pdf.js), se dibujan al acercarse ---------- */
 let VBL = null; const pdfCache = {};
 const VERBO = { es: "Cargando brochure…", en: "Loading brochure…", pt: "Carregando brochure…" };
-function htmlVisor() {
+function htmlChips() {
   const bl = VBL && BR[VBL] ? VBL : brochureLang(), ks = Object.keys(BR);
-  return `<section class="visor pad"><div class="visor-bar"><h2>${t("brochure_b")}</h2>${ks.length > 1 ? `<div class="chips">${ks.map(k =>
-    `<button type="button" data-bl="${k}" aria-pressed="${k === bl}">${k.toUpperCase()}</button>`).join("")}</div>` : ""}</div><div class="paginas"><div class="visor-msg">${VERBO[LANG] || VERBO.es}</div></div></section>`;
+  return ks.length > 1 ? `<div class="chips">${ks.map(k => `<button type="button" data-bl="${k}" aria-pressed="${k === bl}">${k.toUpperCase()}</button>`).join("")}</div>` : "";
+}
+function htmlVisor(movil) {
+  return `<section class="visor pad">${movil ? "" : `<div class="visor-bar"><h2>${t("brochure_b")}</h2>${htmlChips()}</div>`}<div class="paginas"><div class="visor-msg">${VERBO[LANG] || VERBO.es}</div></div></section>`;
 }
 async function armarVisor(v) {
   const bl = VBL && BR[VBL] ? VBL : brochureLang(), url = BR[bl], cont = v.querySelector(".paginas"), tok = v._tok = {};
-  v.querySelectorAll("[data-bl]").forEach(b => { b.setAttribute("aria-pressed", String(b.dataset.bl === bl)); b.onclick = () => { VBL = b.dataset.bl; document.querySelectorAll(".visor").forEach(armarVisor); track("brochure-ver-" + VBL + "/" + DEV.slug); }; });
+  document.querySelectorAll("[data-bl]").forEach(b => { b.setAttribute("aria-pressed", String(b.dataset.bl === bl)); b.onclick = () => { VBL = b.dataset.bl; document.querySelectorAll(".visor").forEach(armarVisor); track("brochure-ver-" + VBL + "/" + DEV.slug); }; });
   const falla = () => { if (v._tok === tok) cont.innerHTML = `<div class="visor-msg"><a href="${esc(url)}" target="_blank" rel="noopener">${t("brochure_b")} ↗</a></div>`; };
   if (!window.pdfjsLib) return falla();
   try {
@@ -316,10 +327,13 @@ function pintar() {
   $("kicker-m").textContent = claseDev(DEV);
   $("nombre-m").textContent = DEV.nombre;
   const res = (DATOS.cifras || []).slice(0, 2).map(c => `${tl(c.valor) || c.valor} ${tl(c.nombre).split(" ")[0]}`).join(" · ");
-  $("asa").innerHTML = `<div class="resumen"><b>${t("el_proyecto")}</b><span>${esc(res)}</span></div>${htmlAcciones(true)}`;
+  const conV = !!brochureLang();
+  $("hoja").classList.toggle("con-visor", conV);
+  $("barra-inf").innerHTML = conV ? `<div class="visor-bar">${htmlChips()}</div>${htmlAcciones(true, true)}` : "";
+  $("asa").innerHTML = conV ? htmlAcciones(true, true) : `<div class="resumen"><b>${t("el_proyecto")}</b><span>${esc(res)}</span></div>${htmlAcciones(true)}`;
   $("cuerpo-m").innerHTML = htmlCuerpo(false);
   armarIdiomas($("idiomas-p"), todo);
-  enganchar($("panel")); enganchar($("cuerpo-m")); enganchar($("asa"));
+  enganchar($("panel")); enganchar($("cuerpo-m")); enganchar($("asa")); enganchar($("barra-inf"));
   $("vista").innerHTML = [...(MP ? [["mp", t("masterplan")]] : []), ["plano", t(MP ? "satelite" : "plano")], ["zona", t("ubicacion")]].map(([k, x]) => `<button type="button" data-k="${k}" aria-pressed="${VISTA === k}">${x}</button>`).join("");
   $("vista").querySelectorAll("button").forEach(b => b.onclick = () => ponerVista(b.dataset.k));
 }
