@@ -270,18 +270,13 @@ const ICONO_CANDADO = '<svg viewBox="0 0 24 24" width="12" height="12" aria-hidd
 const ICONO_DOC = '<svg viewBox="0 0 24 24" width="15" height="15" aria-hidden="true"><path fill="none" stroke="currentColor" stroke-width="1.8" stroke-linejoin="round" d="M6 3h8l4 4v14H6zM14 3v4h4M9 12h6M9 16h6"/></svg>';
 
 /* ---------- brochure en el panel: páginas una abajo de la otra (pdf.js), se dibujan al acercarse ---------- */
-let VBL = null; const pdfCache = {};
+const pdfCache = {};
 const VERBO = { es: "Cargando brochure…", en: "Loading brochure…", pt: "Carregando brochure…" };
-function htmlChips() {
-  const bl = VBL && BR[VBL] ? VBL : brochureLang(), ks = Object.keys(BR);
-  return ks.length > 1 ? `<div class="chips">${ks.map(k => `<button type="button" data-bl="${k}" aria-pressed="${k === bl}">${k.toUpperCase()}</button>`).join("")}</div>` : "";
-}
 function htmlVisor(movil) {
-  return `<section class="visor pad">${movil ? "" : `<div class="visor-bar"><h2>${t("brochure_b")}</h2>${htmlChips()}</div>`}<div class="paginas"><div class="visor-msg">${VERBO[LANG] || VERBO.es}</div></div></section>`;
+  return `<section class="visor pad">${movil ? "" : `<div class="visor-bar"><h2>${t("brochure_b")}</h2></div>`}<div class="paginas"><div class="visor-msg">${VERBO[LANG] || VERBO.es}</div></div></section>`;
 }
 async function armarVisor(v) {
-  const bl = VBL && BR[VBL] ? VBL : brochureLang(), url = BR[bl], cont = v.querySelector(".paginas"), tok = v._tok = {};
-  document.querySelectorAll("[data-bl]").forEach(b => { b.setAttribute("aria-pressed", String(b.dataset.bl === bl)); b.onclick = () => { VBL = b.dataset.bl; document.querySelectorAll(".visor").forEach(armarVisor); track("brochure-ver-" + VBL + "/" + DEV.slug); }; });
+  const bl = brochureLang(), url = BR[bl], cont = v.querySelector(".paginas"), tok = v._tok = {};
   const falla = () => { if (v._tok === tok) cont.innerHTML = `<div class="visor-msg"><a href="${esc(url)}" target="_blank" rel="noopener">${t("brochure_b")} ↗</a></div>`; };
   if (!window.pdfjsLib) return falla();
   try {
@@ -329,7 +324,7 @@ function pintar() {
   const res = (DATOS.cifras || []).slice(0, 2).map(c => `${tl(c.valor) || c.valor} ${tl(c.nombre).split(" ")[0]}`).join(" · ");
   const conV = !!brochureLang();
   $("hoja").classList.toggle("con-visor", conV);
-  $("barra-inf").innerHTML = conV ? `<div class="visor-bar">${htmlChips()}</div>${htmlAcciones(true, true)}` : "";
+  $("barra-inf").innerHTML = conV ? htmlAcciones(true, true) : "";
   $("asa").innerHTML = conV ? htmlAcciones(true, true) : `<div class="resumen"><b>${t("el_proyecto")}</b><span>${esc(res)}</span></div>${htmlAcciones(true)}`;
   $("cuerpo-m").innerHTML = htmlCuerpo(false);
   armarIdiomas($("idiomas-p"), todo);
