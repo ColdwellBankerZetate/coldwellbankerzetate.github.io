@@ -269,7 +269,7 @@ function pintar() {
 function dibujarPlano() {
   capaPlano.clearLayers();
   if (PL) {
-    if (PL.perimetro) L.polygon(PL.perimetro, { color: "#c8b28a", weight: 2.5, fill: false, interactive: false }).addTo(capaPlano);
+    if (PL.perimetro) L.polygon(PL.perimetro, { color: "#2f8bff", weight: 2.5, fill: false, interactive: false }).addTo(capaPlano);
     PL.areas.forEach(a => L.polygon(a.c, { color: "rgba(170,210,170,.85)", weight: 1, fillColor: "#6fa56f", fillOpacity: .28 })
       .bindTooltip(`<b>${esc(a.nombre)}</b>${a.m2 > 5000 ? `<span>${fmt(a.m2 / 10000)} ha</span>` : ""}`, { className: "tt", sticky: true }).addTo(capaPlano));
     PL.lineas.forEach(l => L.polyline(l.c, { color: "rgba(255,255,255,.55)", weight: 1.5, interactive: false }).addTo(capaPlano));
