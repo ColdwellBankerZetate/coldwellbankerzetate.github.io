@@ -1,7 +1,8 @@
 /**
  * Planilla "Agenda" — mapas Coldwell Banker Zetaté
  *
- * Una fila por casa o apartamento (sin terrenos), una columna por período de temporada. La lista sale sola de Tokko
+ * Una fila por casa o apartamento (sin terrenos), agrupadas bajo una franja por barrio (CLUB DE MAR…) y en orden natural
+ * (Club del Mar 5 antes que Club del Mar 56); una columna por período de temporada. La lista sale sola de Tokko
  * (cada hora): al cargar una casa en Tokko aparece acá con la fila vacía, resaltada en amarillo ("falta cargar agenda").
  * Lo que se escribe en los períodos NUNCA lo pisa Tokko ni este script.
  *
@@ -111,16 +112,22 @@ function actualizar() {
     }
 
     // 3) Filas: casas de Tokko + (abajo, en gris) las que salieron de Tokko pero tenían períodos cargados
-    casas.sort((a, b) => a.barrio.localeCompare(b.barrio, "es") || a.casa.localeCompare(b.casa, "es", { numeric: true }));
+    casas.sort((a, b) => a.barrio.localeCompare(b.barrio, "es") || a.casa.localeCompare(b.casa, "es", { numeric: true, sensitivity: "base" }) || a.cod.localeCompare(b.cod, "es", { numeric: true }));
     const activas = new Set(casas.map(c => c.cod));
     const viejas = Object.keys(previo).filter(c => !activas.has(c) && previo[c].per.some(x => x))
       .map(c => ({ cod: c, barrio: "Ya no está en Tokko", casa: previo[c].casa, url: "" }));
-    const filas = casas.concat(viejas);
     const motivo = c => {
       if (!mapa.ok || c.barrio === "Ya no está en Tokko") return "";
       if (mapa.enMapa[c.cod]) return "";
       return mapa.fuera[c.cod] || "esperando sincronización";
     };
+    // Una franja horizontal por barrio (ej. CLUB DE MAR) y adentro las casas en orden natural (Club del Mar 5 antes que 56)
+    const filas = [];
+    let ant = null;
+    for (const c of casas.concat(viejas)) {
+      if (c.barrio !== ant) { filas.push({ banda: true, barrio: c.barrio }); ant = c.barrio; }
+      filas.push(c);
+    }
 
     // 4) Escribir la hoja prolija
     hoja.clear(); hoja.clearConditionalFormatRules();
@@ -129,21 +136,28 @@ function actualizar() {
     hoja.getRange(1, 1, 1, 2).setHorizontalAlignment("left");
     const n = filas.length;
     hoja.getRange(2, C_PER, n, PERIODOS.length).setNumberFormat("@"); // texto: que Google no convierta "8500" ni fechas
-    hoja.getRange(2, 1, n, CAB.length).setValues(filas.map(f =>
-      [f.barrio, f.casa].concat((previo[f.cod] ? previo[f.cod].per : PERIODOS.map(() => "")), [motivo(f), f.cod])));
-    hoja.getRange(2, 2, n, 1).setRichTextValues(filas.map(f => [f.url && f.casa
+    hoja.getRange(2, 1, n, CAB.length).setValues(filas.map(f => f.banda
+      ? [f.barrio.toUpperCase()].concat(Array(CAB.length - 1).fill(""))
+      : [f.barrio, f.casa].concat((previo[f.cod] ? previo[f.cod].per : PERIODOS.map(() => "")), [motivo(f), f.cod])));
+    hoja.getRange(2, 2, n, 1).setRichTextValues(filas.map(f => [!f.banda && f.url && f.casa
       ? SpreadsheetApp.newRichTextValue().setText(f.casa).setLinkUrl(f.url).build()
-      : SpreadsheetApp.newRichTextValue().setText(f.casa).build()]));
-    // franjas por barrio, fáciles de leer
-    let tono = false, ant = null;
-    const fondos = filas.map(f => { if (f.barrio !== ant) { tono = !tono; ant = f.barrio; } return Array(CAB.length).fill(tono ? "#ffffff" : "#f4f2ee"); });
-    hoja.getRange(2, 1, n, CAB.length).setBackgrounds(fondos).setVerticalAlignment("middle");
+      : SpreadsheetApp.newRichTextValue().setText(f.banda ? "" : f.casa).build()]));
+    hoja.getRange(2, 1, n, CAB.length).setBackground("#ffffff").setVerticalAlignment("middle");
     hoja.getRange(2, C_PER, n, PERIODOS.length).setHorizontalAlignment("center");
     hoja.getRange(2, 2, n, 1).setFontWeight("bold");
-    hoja.getRange(2, 1, n, 1).setFontColor("#888888");
+    hoja.getRange(2, 1, n, 1).setFontColor("#bbbbbb").setFontSize(8); // columna Barrio: chica, la franja ya lo dice
     hoja.getRange(2, C_MAPA, n, 1).setFontColor("#c0392b").setFontSize(9);
     hoja.getRange(2, C_COD, n, 1).setFontColor("#aaaaaa").setFontSize(8);
-    if (viejas.length) hoja.getRange(casas.length + 2, 1, viejas.length, CAB.length).setFontColor("#999999");
+    filas.forEach((f, i) => {
+      const r = i + 2;
+      if (f.banda) {
+        hoja.getRange(r, 1, 1, CAB.length).merge().setBackground("#e9e2d0").setFontColor("#4a3d1a")
+          .setFontWeight("bold").setFontSize(11).setHorizontalAlignment("left").setValue(f.barrio.toUpperCase());
+        hoja.setRowHeight(r, 28);
+      } else if (f.barrio === "Ya no está en Tokko") {
+        hoja.getRange(r, 1, 1, CAB.length).setFontColor("#999999");
+      }
+    });
 
     // 5) Colores por estado (se ven de un vistazo) y aviso de casas sin cargar
     const per = hoja.getRange(2, C_PER, Math.max(n, 1), PERIODOS.length);
