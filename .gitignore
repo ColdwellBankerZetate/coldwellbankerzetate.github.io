@@ -8,3 +8,4 @@ reel/*.mp4
 disponibilidad_cache.csv
 planilla_disponibilidad.*
 .interno_clave
+agenda_cache.csv

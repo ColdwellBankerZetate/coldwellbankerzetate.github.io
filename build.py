@@ -12,7 +12,8 @@ Fuentes de propiedades:
     "precio", "dormitorios". El script baja coordenadas, lote, fotos, baños y m².
   - Cualquier otra web: en "propiedades" con "lat" y "lng" a mano.
 
-Disponibilidad (agenda de temporada): planilla de Google con una fila por casa (la arma planilla.py)
+Agenda de temporada (hoja "Agenda": casa × período, ver leer_agenda) y, para casas sin nada cargado ahí, la vieja
+Disponibilidad: planilla de Google con una fila por casa (la arma planilla.py)
 y columna Ocupado con las fechas tomadas, ej. "26/12-10/1, 15/1 al 27/1" (inclusive; sin año = la
 temporada que viene). Vacío = esa casa no muestra agenda; "libre" = todo libre. Se configura en sitio.json,
 "disponibilidad": id de la planilla (compartida "cualquiera con el link puede ver") o URL de un CSV.
@@ -519,6 +520,98 @@ def leer_disponibilidad(sitio, offline, avisos):
     return out
 
 
+# ---------------------------------------------------------------- agenda propia (hoja "Agenda")
+# Una fila por casa, una columna por período de alta. Cada celda: "8500" = disponible, "A 8500" = alquilada
+# (a ese precio), "R 8500" = reservada, y opcional "libre 16/1-19/1" (días que se liberan). Vacía = no se ofrece.
+# Los períodos y precios son de la planilla; Tokko ya no los pisa. Casa sin ninguna celda = agenda vieja (Tokko).
+PERIODOS_AGENDA = {  # encabezado (slugify) → nombre canónico (el que entiende comun.js: rangoPeriodo / PERIODOS)
+    "1ra-dic": "1ra quincena de diciembre", "2da-dic": "2da quincena de diciembre", "fin-de-ano": "Fin de año",
+    "1ra-ene": "1ra quincena de enero", "2da-ene": "2da quincena de enero",
+    "1ra-feb": "1ra quincena de febrero", "2da-feb": "2da quincena de febrero",
+    "1ra-mar": "1ra quincena de marzo", "2da-mar": "2da quincena de marzo", "semana-santa": "Semana santa",
+}
+
+
+def celda_agenda(texto, hoy):
+    """'A 8500 libre 16/1-19/1' → {"estado","precio","libre"}; None si la celda está vacía. ValueError si no se entiende."""
+    t = (texto or "").strip()
+    if not t:
+        return None
+    libre = []
+    m = re.search(r"(?i)\blibres?\b[:\s]*(.*)$", t)
+    if m:
+        for x in re.split(r"[,;]+|\s+y\s+", m[1]):
+            if x.strip():
+                a, b = (re.split(r"\s*(?:-|–|al|a|hasta)\s+|\s*[-–]\s*", x.strip(), maxsplit=1) + [""])[:2]
+                d1 = fecha(a, hoy)
+                d2 = fecha(b, hoy) if b else d1
+                libre.append([min(d1, d2).isoformat(), max(d1, d2).isoformat()])
+        t = t[:m.start()]
+    t = t.strip(" ·|;,-()")
+    estado = "disponible"
+    m = re.match(r"(?i)^(alq\w*|res\w*|a|r)(?=[\s:.\-\d]|$)[\s:.\-]*(.*)$", t)
+    if m:
+        estado = "reservada" if m[1][0].lower() == "r" else "alquilada"
+        t = m[2]
+    t = re.sub(r"(?i)usd|u\$s|\$", "", t).strip()
+    t = re.sub(r"[.,\s](?=\d{3}(?!\d))", "", t)
+    if t and not re.fullmatch(r"\d+", t):
+        raise ValueError(f"no entiendo {texto!r}")
+    if not t and estado == "disponible":
+        raise ValueError(f"no entiendo {texto!r}")
+    return {"estado": estado, "precio": int(t) if t else None, "libre": libre}
+
+
+def leer_agenda(sitio, offline, avisos):
+    """{referencia: [{"periodo","precio","moneda","estado","libre"}, ...]} desde la hoja "Agenda"."""
+    fuente = (sitio.get("disponibilidad") or "").strip()
+    cache = os.path.join(AQUI, "agenda_cache.csv")
+    texto = None
+    if fuente and not offline:
+        url = fuente if fuente.startswith("http") else \
+            f"https://docs.google.com/spreadsheets/d/{fuente}/gviz/tq?tqx=out:csv&sheet=Agenda"
+        try:
+            with urllib.request.urlopen(urllib.request.Request(url, headers=UA), timeout=60) as r:
+                texto = r.read().decode("utf-8-sig")
+            if texto.lstrip().startswith("<"):
+                raise ValueError("la planilla no está compartida con 'cualquiera con el link'")
+            open(cache, "w", encoding="utf-8").write(texto)
+        except Exception as e:
+            avisos.append(f"Agenda: no pude leer la hoja 'Agenda' ({e}); uso la última copia")
+            texto = None
+    if texto is None and os.path.exists(cache):
+        texto = open(cache, encoding="utf-8").read()
+    if not texto:
+        return {}
+    hoy = datetime.date.today()
+    filas = list(csv.reader(io.StringIO(texto)))
+    cab = [slugify(c) for c in filas[0]] if filas else []
+    if "codigo" not in cab:
+        avisos.append("Agenda: la hoja 'Agenda' no tiene la columna Código (la arma el script de la planilla)")
+        return {}
+    ic = cab.index("codigo")
+    cols = [(i, PERIODOS_AGENDA[c]) for i, c in enumerate(cab) if c in PERIODOS_AGENDA]
+    out = {}
+    for n, f in enumerate(filas[1:], start=2):
+        f += [""] * (len(cab) - len(f))
+        ref = f[ic].strip().upper()
+        if not ref:
+            continue
+        lista = []
+        for i, nombre in cols:
+            try:
+                c = celda_agenda(f[i], hoy)
+            except ValueError as e:  # solo se saltea esa celda, no toda la casa
+                avisos.append(f"Agenda, fila {n} ({ref}), {filas[0][i]}: {e} — se ignora esa celda")
+                continue
+            if c:
+                lista.append({"periodo": nombre, "moneda": "USD", **c})
+        if lista:
+            out[ref] = lista
+    print(f"  agenda: {len(filas) - 1} filas en la hoja, {len(out)} casas con períodos cargados")
+    return out
+
+
 # ---------------------------------------------------------------- modo interno
 INTERNO = {}  # datos solo para el equipo (ej. carpeta de Drive de cada desarrollo); se publican cifrados
 
@@ -604,8 +697,18 @@ def main():
 
     tokko = tokko_todo(offline)
     por_loc = {}
+    fuera = []  # casas que están en Tokko pero no llegan al mapa: {"ref","casa","barrio","motivo"}
+
+    def fuera_de_mapa(p, motivo):
+        fuera.append({"ref": p.get("reference_code") or "", "casa": (p.get("real_address") or p.get("address") or "").strip(),
+                      "barrio": ((p.get("location") or {}).get("name") or "").strip(), "motivo": motivo})
+
     for p in tokko:
-        por_loc.setdefault(p["location"]["name"].strip(), []).append(p)
+        nombre_loc = ((p.get("location") or {}).get("name") or "").strip()
+        if not nombre_loc:
+            fuera_de_mapa(p, "sin localidad en Tokko")
+            continue
+        por_loc.setdefault(nombre_loc, []).append(p)
 
     # Barrio nuevo en Tokko sin config → se crea solo
     configs = {}
@@ -627,9 +730,36 @@ def main():
 
     todo, resumen, avisos = [], [], []
     disp = leer_disponibilidad(sitio, offline, avisos)
+    agenda = leer_agenda(sitio, offline, avisos)
     sitio = {k: v for k, v in sitio.items() if k != "disponibilidad"}
     for slug, c in sorted(configs.items()):
-        props = [tokko_a_prop(p, wa_general) for p in por_loc.get(c.get("tokko_location"), [])]
+        props = []
+        for tp in por_loc.get(c.get("tokko_location"), []):
+            try:  # una ficha mala no tiene que tirar el build ni hacer desaparecer a las demás
+                p = tokko_a_prop(tp, wa_general)
+            except Exception as e:
+                fuera_de_mapa(tp, "sin coordenadas en Tokko" if isinstance(e, (KeyError, TypeError, ValueError))
+                              else f"error al armar la ficha ({type(e).__name__})")
+                continue
+            ag = agenda.get(p["ref"].upper())
+            if ag and p["tipo"] != "terreno":
+                p["agenda"] = ag
+                # el precio del pin sale de la agenda: el más bajo de lo que sigue disponible (o de todo si no queda nada)
+                precios = [x["precio"] for x in ag if x["precio"]]
+                libres = [x["precio"] for x in ag if x["precio"] and x["estado"] == "disponible"]
+                base = min(libres or precios) if (libres or precios) else None
+                temp = next((o for o in p["ops"] if o["tipo"] == "temporada"), None)
+                if temp is None:
+                    temp = {"tipo": "temporada", "precio": base, "moneda": "USD", "unidad": "quincena" if base else None,
+                            "periodos": [], "consultar": not base}
+                    p["ops"].append(temp)
+                    p["ops"].sort(key=lambda o: {"venta": 0, "temporada": 1, "alquiler": 2}[o["tipo"]])
+                elif base:
+                    temp.update({"precio": base, "moneda": "USD", "unidad": "quincena"})
+            if not p["ops"]:
+                fuera_de_mapa(tp, "sin precio cargado en Tokko (venta, alquiler ni temporada)")
+                continue
+            props.append(p)
         props += [manual_a_prop(p, wa_general) for p in c.get("propiedades", [])]
         if not props:
             print(f"  - {c['nombre']}: sin propiedades, no se publica")
@@ -690,7 +820,7 @@ def main():
     escribir_interno(avisos)
     # Datos de todo el sitio (los usa la página de selección)
     escribir(os.path.join(AQUI, "datos.json"),
-             json.dumps({"propiedades": todo, "barrios": resumen, "desarrollos": desarrollos},
+             json.dumps({"propiedades": todo, "barrios": resumen, "desarrollos": desarrollos, "fuera_del_mapa": fuera},
                         ensure_ascii=False, separators=(",", ":")))
     # Portada
     resumen.sort(key=lambda b: -b["total"])
@@ -706,6 +836,7 @@ def main():
                     "Selección de propiedades de Coldwell Banker Zetaté."))
     refs = {p["ref"].upper() for p in todo}
     avisos += [f"Disponibilidad: el código {r} de la planilla no está en ningún mapa" for r in disp if r not in refs]
+    avisos += [f"Fuera del mapa: {x['ref']} ({x['casa'] or x['barrio'] or 's/d'}) — {x['motivo']}" for x in fuera]
     escribir(os.path.join(AQUI, "avisos.txt"), "\n".join(avisos) + "\n")
     print(f"listo: {len(resumen)} barrios, {len(todo)} propiedades, {len(avisos)} pines aproximados (ver avisos.txt)")
 
