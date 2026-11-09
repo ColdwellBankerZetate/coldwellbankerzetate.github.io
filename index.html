@@ -220,7 +220,7 @@ const TXT = {
     ver_desarrollos: "Desarrollos", todos_desarrollos: "Todos los desarrollos", unidades_pronto: "Unidades disponibles a consultar.",
     ver_mas: "Ver más", ver_menos: "Ver menos", brochure: "Más información", deslizar: "Deslizá para ver desarrollos", msg_devs: "Hola, quiero recibir información de los nuevos desarrollos de Coldwell Banker Zetaté.",
     msg_dev: d => `Hola, me interesa el desarrollo ${d.nombre} (${d.zona}). ¿Me pasan información? ${location.origin}${raiz()}desarrollos/${d.slug}/`,
-    consultar_precio: "Consultar precio", ver_disp: "Ver disponibilidad", ocultar_disp: "Ocultar disponibilidad", agenda: "Agenda", disponible: "Disponible", sin_tarifa: "Sin tarifa", libre_dias: "Libre", libre: "Libre", ocupado: "Ocupado",
+    consultar_precio: "Consultar precio", ver_disp: "Ver disponibilidad", ocultar_disp: "Ocultar disponibilidad", agenda: "Agenda", disponible: "Disponible", sin_tarifa: "Sin tarifa", libre_dias: "Libre", libre: "Libre", ocupado: "Ocupado", alquilada: "Alquilada", reservada: "Reservada", se_libera: "Se libera",
     libres_mes: "Libre", sin_libres: "Sin días libres este mes", todo_libre: "Todo el mes libre", dias_sem: "LMMJVSD",
     todas: "Todas", venta: "Venta", temporada: "Temporada", alquiler: "Alquiler", terrenos: "Terrenos",
     casa: "Casa", depto: "Departamento", terreno: "Terreno",
@@ -252,7 +252,7 @@ const TXT = {
     ver_desarrollos: "Developments", todos_desarrollos: "All developments", unidades_pronto: "Units available on request.",
     ver_mas: "Read more", ver_menos: "Show less", brochure: "More information", deslizar: "Swipe to see developments", msg_devs: "Hi, I would like information about Coldwell Banker Zetaté's new developments.",
     msg_dev: d => `Hi, I'm interested in the ${d.nombre} development (${d.zona}). Could you send me information? ${location.origin}${raiz()}desarrollos/${d.slug}/`,
-    consultar_precio: "Price on request", ver_disp: "See availability", ocultar_disp: "Hide availability", agenda: "Availability", disponible: "Available", sin_tarifa: "No rate", libre_dias: "Free", libre: "Available", ocupado: "Booked",
+    consultar_precio: "Price on request", ver_disp: "See availability", ocultar_disp: "Hide availability", agenda: "Availability", disponible: "Available", sin_tarifa: "No rate", libre_dias: "Free", libre: "Available", ocupado: "Booked", alquilada: "Rented", reservada: "Reserved", se_libera: "Opens up",
     libres_mes: "Available", sin_libres: "Fully booked this month", todo_libre: "Available all month", dias_sem: "MTWTFSS",
     todas: "All", venta: "For sale", temporada: "Seasonal rent", alquiler: "Rent", terrenos: "Land",
     casa: "House", depto: "Apartment", terreno: "Land",
@@ -284,7 +284,7 @@ const TXT = {
     ver_desarrollos: "Empreendimentos", todos_desarrollos: "Todos os empreendimentos", unidades_pronto: "Unidades disponíveis sob consulta.",
     ver_mas: "Ver mais", ver_menos: "Ver menos", brochure: "Mais informações", deslizar: "Deslize para ver empreendimentos", msg_devs: "Olá, quero receber informações sobre os novos empreendimentos da Coldwell Banker Zetaté.",
     msg_dev: d => `Olá, tenho interesse no empreendimento ${d.nombre} (${d.zona}). Podem me enviar informações? ${location.origin}${raiz()}desarrollos/${d.slug}/`,
-    consultar_precio: "Consultar preço", ver_disp: "Ver disponibilidade", ocultar_disp: "Ocultar disponibilidade", agenda: "Agenda", disponible: "Disponível", sin_tarifa: "Sem tarifa", libre_dias: "Livre", libre: "Livre", ocupado: "Ocupado",
+    consultar_precio: "Consultar preço", ver_disp: "Ver disponibilidade", ocultar_disp: "Ocultar disponibilidade", agenda: "Agenda", disponible: "Disponível", sin_tarifa: "Sem tarifa", libre_dias: "Livre", libre: "Livre", ocupado: "Ocupado", alquilada: "Alugada", reservada: "Reservada", se_libera: "Libera",
     libres_mes: "Livre", sin_libres: "Sem dias livres este mês", todo_libre: "Mês todo livre", dias_sem: "STQQSSD",
     todas: "Todas", venta: "Venda", temporada: "Temporada", alquiler: "Aluguel", terrenos: "Terrenos",
     casa: "Casa", depto: "Apartamento", terreno: "Terreno",
@@ -577,7 +577,9 @@ function diasOcupados(p) {
 function datosAgenda(p) {
   if (p._ag) return p._ag;
   const temp = p.ops.find(o => o.tipo === "temporada");
-  const per = ((temp && temp.periodos) || [{ periodo: "", precio: temp.precio, moneda: temp.moneda }]).map(x => ({ ...x, r: rangoPeriodo(x.periodo || "") }));
+  /* agenda propia (hoja "Agenda"): períodos, precios y estado salen de ahí; si la casa no tiene, Tokko + "Ocupado" */
+  const fuente = p.agenda && p.agenda.length ? p.agenda : ((temp && temp.periodos) || [{ periodo: "", precio: temp.precio, moneda: temp.moneda }]);
+  const per = fuente.map(x => ({ ...x, r: rangoPeriodo(x.periodo || "") }));
   const precioDia = new Map(); /* iso → período (gana el más específico: Fin de año > quincena > mes) */
   for (const x of per) {
     if (!x.r) continue;
@@ -587,6 +589,15 @@ function datosAgenda(p) {
     }
   }
   const occ = diasOcupados(p), hoy = new Date(); hoy.setHours(0, 0, 0, 0);
+  for (const x of per) { /* alquilada / reservada = días ocupados, salvo los que la planilla marca como "libre" */
+    if (!x.r || !x.estado || x.estado === "disponible") continue;
+    for (const d = new Date(x.r[0]); d <= x.r[1]; d.setDate(d.getDate() + 1)) occ.add(iso(d));
+  }
+  for (const x of per) for (const [a, b] of x.libre || []) { /* solo dentro de su propio período */
+    if (!x.r) continue;
+    for (const d = new Date(a + "T12:00"), fin = new Date(b + "T12:00"); d <= fin; d.setDate(d.getDate() + 1))
+      if (d >= x.r[0] && d <= x.r[1]) occ.delete(iso(d));
+  }
   const conFechas = per.filter(x => x.r);
   /* meses a mostrar: de dic a mar de la temporada (o lo que cubran las tarifas / ocupados) */
   const Y = anioTemporada();
@@ -609,16 +620,21 @@ function rangosFechas(keys) { /* ["2027-01-01",…] → "1/1–8/1, 20/1–31/1"
 }
 function armarAgenda(caja, p) {
   const A = datosAgenda(p);
-  const filas = A.per.filter(x => !x.r || iso(x.r[1]) >= A.hoy).map(x => {
+  const tomada = x => x.estado === "alquilada" || x.estado === "reservada";
+  /* períodos ya pasados se ocultan, salvo los alquilados de la agenda propia: se ve a cuánto se alquiló */
+  const filas = A.per.filter(x => !x.r || iso(x.r[1]) >= A.hoy || tomada(x)).map(x => {
     let estado = "", cls = "";
     if (x.r) {
+      const pasado = iso(x.r[1]) < A.hoy;
       const dias = []; for (const d = new Date(x.r[0]); d <= x.r[1]; d.setDate(d.getDate() + 1)) { const k = iso(d); if (k >= A.hoy) dias.push(k); }
       const libres = dias.filter(k => !A.occ.has(k));
-      if (libres.length === dias.length) { estado = t("disponible"); cls = "li"; }
-      else if (!libres.length) { estado = t("ocupado"); cls = "oc"; }
-      else { estado = `${t("libre_dias")} ${rangosFechas(libres)}`; cls = "pa"; }
+      if (pasado) { estado = t(x.estado); cls = "oc pas"; }
+      else if (libres.length === dias.length) { estado = t("disponible"); cls = "li"; }
+      else if (!libres.length) { estado = tomada(x) ? t(x.estado) : t("ocupado"); cls = "oc"; }
+      else { estado = `${t(tomada(x) ? "se_libera" : "libre_dias")} ${rangosFechas(libres)}`; cls = "pa"; }
     }
-    return x.periodo ? `<tr class="${cls}"><td>${esc(periodo(x.periodo))}</td><td>${mon(x.moneda)} ${fmt(x.precio)}</td><td>${esc(estado)}</td></tr>` : "";
+    const precio = x.precio ? `${mon(x.moneda)} ${fmt(x.precio)}` : "";
+    return x.periodo ? `<tr class="${cls}"><td>${esc(periodo(x.periodo))}</td><td>${precio}</td><td>${esc(estado)}</td></tr>` : "";
   }).join("");
   caja.querySelector(".per").innerHTML = filas ? `<table class="tabla-disp">${filas}</table>` : "";
   const cal = caja.querySelector(".cal");
@@ -635,7 +651,7 @@ function armarCalendario(el, p) {
     const k = iso(new Date(y, m, d)), pasado = k < A.hoy, oc = A.occ.has(k), x = A.precioDia.get(k);
     const conTarifa = A.sinTarifas || !!x; if (x) hayTarifa = true;
     const cls = oc ? "oc" : conTarifa ? "li" : "st";
-    const tit = x ? `${periodo(x.periodo)} · ${mon(x.moneda)} ${fmt(x.precio)}` : "";
+    const tit = x ? `${periodo(x.periodo)}${x.precio ? ` · ${mon(x.moneda)} ${fmt(x.precio)}` : ""}` : "";
     celdas += `<span class="d ${cls}${pasado ? " pas" : ""}${k === A.hoy ? " hoy" : ""}"${tit ? ` title="${esc(tit)}"` : ""}>${d}</span>`;
   }
   const nombre = new Intl.DateTimeFormat(LANG === "en" ? "en-US" : LANG, { month: "long", year: "numeric" }).format(d0).replace(/^./, c => c.toUpperCase());
