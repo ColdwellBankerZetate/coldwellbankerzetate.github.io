@@ -1,0 +1,5 @@
+{
+ "_nota": "Dunas (José Ignacio): ladera norte de la loma, entre Laguna Escondida, Pinar del Faro y Playa Brava. Primer paso: recorte del satélite para ubicarlo.",
+ "centro": [-34.8365, -54.6400],
+ "recorte": {"metros": 2400, "paso": 100}
+}
