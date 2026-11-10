@@ -1,0 +1,220 @@
+{
+  "nombre": "Playa Brava",
+  "clase": "barrio",
+  "zona": "José Ignacio",
+  "lat": -34.825335,
+  "lng": -54.640753,
+  "estado": {
+    "es": "En venta · últimos lotes",
+    "en": "For sale · last lots",
+    "pt": "À venda · últimos lotes"
+  },
+  "entrega": "",
+  "bajada": {
+    "es": "Un barrio privado nuevo en José Ignacio, en Médanos y Pinos, una zona de monte sobre el pueblo. Se entra pasando la rotonda, a unos 400 metros, por un bulevar de palmeras butiá que une el barrio con el centro del pueblo: a la playa, al faro o a la plaza se va caminando o en bici. Una comunidad chica, a propósito: 94 lotes de 1.000 a 2.000 m² con vistas al campo y, más allá, al mar.",
+    "en": "A new gated community in José Ignacio, in Médanos y Pinos, a wooded area above the village. The entrance is just past the roundabout, about 400 metres in, along a boulevard of butiá palms that links the neighbourhood with the village centre: the beach, the lighthouse and the square are within walking or cycling distance. A small community on purpose: 94 lots of 1,000 to 2,000 m² with views of the countryside and, beyond, the sea.",
+    "pt": "Um bairro privado novo em José Ignacio, em Médanos y Pinos, uma área de mata acima do povoado. A entrada fica logo depois da rotatória, a uns 400 metros, por um bulevar de palmeiras butiá que liga o bairro ao centro do povoado: à praia, ao farol ou à praça se vai a pé ou de bicicleta. Uma comunidade pequena, de propósito: 94 lotes de 1.000 a 2.000 m² com vista para o campo e, mais além, para o mar."
+  },
+  "cifras": [
+    {
+      "valor": "94",
+      "nombre": {
+        "es": "Lotes",
+        "en": "Lots",
+        "pt": "Lotes"
+      }
+    },
+    {
+      "valor": "1.000–2.000",
+      "nombre": {
+        "es": "m² por lote",
+        "en": "m² per lot",
+        "pt": "m² por lote"
+      }
+    },
+    {
+      "valor": "400 m",
+      "nombre": {
+        "es": "de la rotonda",
+        "en": "from the roundabout",
+        "pt": "da rotatória"
+      }
+    }
+  ],
+  "ventajas": [
+    {
+      "es": "José Ignacio a pie: un bulevar une la entrada del barrio con el centro del pueblo; a la playa, al faro o a la plaza se va caminando o en bici.",
+      "en": "José Ignacio on foot: a boulevard links the entrance with the village centre; the beach, the lighthouse and the square are a walk or a bike ride away.",
+      "pt": "José Ignacio a pé: um bulevar liga a entrada do bairro ao centro do povoado; à praia, ao farol ou à praça se vai a pé ou de bicicleta."
+    },
+    {
+      "es": "Una comunidad chica, a propósito: 94 lotes con vistas al campo y al mar, entre pinos altos, médanos y palmeras.",
+      "en": "A small community on purpose: 94 lots with views of the countryside and the sea, among tall pines, dunes and palms.",
+      "pt": "Uma comunidade pequena, de propósito: 94 lotes com vista para o campo e o mar, entre pinheiros altos, dunas e palmeiras."
+    },
+    {
+      "es": "Arquitectura y paisaje con firma: acceso, Club House y cowork de Estudio Pacífica; paisaje integral de Estudio Stewart Murray.",
+      "en": "Signature architecture and landscape: entrance, Club House and cowork by Estudio Pacífica; full landscape design by Estudio Stewart Murray.",
+      "pt": "Arquitetura e paisagem assinadas: acesso, Club House e cowork do Estudio Pacífica; paisagismo integral do Estudio Stewart Murray."
+    },
+    {
+      "es": "Lo que no se ve: instalación eléctrica subterránea, fibra óptica y garita de seguridad en la entrada.",
+      "en": "What you don't see: underground power, fibre optics and a security booth at the entrance.",
+      "pt": "O que não se vê: instalação elétrica subterrânea, fibra ótica e guarita de segurança na entrada."
+    },
+    {
+      "es": "Financiación: Banco Itaú tiene una línea hipotecaria para el terreno (hasta 70 % del valor) y un préstamo para construir.",
+      "en": "Financing: Banco Itaú offers a mortgage line for the land (up to 70% of its value) and a construction loan.",
+      "pt": "Financiamento: o Banco Itaú tem uma linha hipotecária para o terreno (até 70% do valor) e um empréstimo para construir."
+    }
+  ],
+  "amenities": [
+    {
+      "es": "Club House",
+      "en": "Club House",
+      "pt": "Club House"
+    },
+    {
+      "es": "Cancha de tenis",
+      "en": "Tennis court",
+      "pt": "Quadra de tênis"
+    },
+    {
+      "es": "Cancha de pádel",
+      "en": "Padel court",
+      "pt": "Quadra de pádel"
+    },
+    {
+      "es": "Gimnasio",
+      "en": "Gym",
+      "pt": "Academia"
+    },
+    {
+      "es": "SUM",
+      "en": "Multipurpose room",
+      "pt": "Salão de festas"
+    },
+    {
+      "es": "Cowork",
+      "en": "Cowork",
+      "pt": "Cowork"
+    },
+    {
+      "es": "Garita de seguridad en la entrada",
+      "en": "Security booth at the entrance",
+      "pt": "Guarita de segurança na entrada"
+    },
+    {
+      "es": "Instalación eléctrica subterránea",
+      "en": "Underground power lines",
+      "pt": "Instalação elétrica subterrânea"
+    },
+    {
+      "es": "Fibra óptica",
+      "en": "Fibre optics",
+      "pt": "Fibra ótica"
+    }
+  ],
+  "lotes_m2": {
+    "101": 1122,
+    "102": 1001,
+    "140": 1226,
+    "143": 1000,
+    "149": 1002,
+    "154": 1083,
+    "161": 1286,
+    "163": 1000,
+    "175": 1168,
+    "176": 1163,
+    "178": 1001,
+    "182": 1000,
+    "183": 1041,
+    "190": 1042,
+    "192": 1006
+  },
+  "lotes_estado": {
+    "103": "vendido",
+    "104": "vendido",
+    "105": "vendido",
+    "106": "vendido",
+    "107": "vendido",
+    "108": "vendido",
+    "109": "vendido",
+    "110": "vendido",
+    "111": "vendido",
+    "112": "vendido",
+    "113": "vendido",
+    "114": "vendido",
+    "115": "vendido",
+    "116": "vendido",
+    "117": "vendido",
+    "118": "vendido",
+    "119": "vendido",
+    "120": "vendido",
+    "121": "vendido",
+    "122": "vendido",
+    "123": "vendido",
+    "124": "vendido",
+    "125": "vendido",
+    "126": "vendido",
+    "127": "vendido",
+    "128": "vendido",
+    "129": "vendido",
+    "130": "vendido",
+    "131": "vendido",
+    "132": "vendido",
+    "133": "vendido",
+    "134": "vendido",
+    "135": "vendido",
+    "136": "vendido",
+    "137": "vendido",
+    "138": "vendido",
+    "139": "vendido",
+    "141": "vendido",
+    "142": "vendido",
+    "144": "vendido",
+    "145": "vendido",
+    "146": "vendido",
+    "147": "vendido",
+    "148": "vendido",
+    "150": "vendido",
+    "151": "vendido",
+    "152": "vendido",
+    "153": "vendido",
+    "155": "vendido",
+    "156": "vendido",
+    "157": "vendido",
+    "158": "vendido",
+    "159": "vendido",
+    "160": "vendido",
+    "162": "vendido",
+    "164": "vendido",
+    "165": "vendido",
+    "166": "vendido",
+    "167": "vendido",
+    "168": "vendido",
+    "169": "vendido",
+    "170": "vendido",
+    "171": "vendido",
+    "172": "vendido",
+    "173": "vendido",
+    "174": "vendido",
+    "177": "vendido",
+    "179": "vendido",
+    "180": "vendido",
+    "181": "vendido",
+    "184": "vendido",
+    "185": "vendido",
+    "186": "vendido",
+    "187": "vendido",
+    "188": "vendido",
+    "189": "vendido",
+    "191": "vendido",
+    "193": "vendido",
+    "194": "vendido"
+  },
+  "drive": "https://drive.google.com/drive/folders/1iCL_JIjEbWMH6vwCDabbyZ4suRbOenGG",
+  "destacado": true,
+  "orden": 50,
+  "m2_solo_lista": true
+}

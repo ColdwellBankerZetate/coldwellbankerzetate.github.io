@@ -355,7 +355,7 @@ function dibujarPlano() {
         : est === "reservado" ? { color: "#c8b28a", weight: 1.2, fillColor: "#c8b28a", fillOpacity: .18 }
         : { color: "rgba(255,255,255,.8)", weight: 1, fillColor: "#fff", fillOpacity: .07 };
       const pol = L.polygon(lt.c, estilo).addTo(capaPlano);
-      pol.bindTooltip(`<b>${t("lote")} ${esc(lt.n)}</b><span>${fmt(lt.m2)} m²${est ? " · " + t(est) : ""}</span>`, { className: "tt", sticky: true });
+      pol.bindTooltip(`<b>${t("lote")} ${esc(lt.n)}</b><span>${lt.m2 ? fmt(lt.m2) + " m²" : ""}${lt.m2 && est ? " · " : ""}${est ? t(est) : ""}</span>`, { className: "tt", sticky: true });
       L.marker(pol.getBounds().getCenter(), { interactive: false, keyboard: false, icon: L.divIcon({ className: "ico", iconSize: [0, 0], html: `<span class="n-lote${est ? " " + est : ""}">${esc(lt.n)}</span>` }) }).addTo(capaPlano);
     });
     /* alejado: una letra por manzana (lotes "AB3" → manzana "AB"), en el centro de sus lotes */

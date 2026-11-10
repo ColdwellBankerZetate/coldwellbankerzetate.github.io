@@ -1,0 +1,189 @@
+{
+  "nombre": "Dunas José Ignacio",
+  "clase": "barrio",
+  "zona": "José Ignacio",
+  "lat": -34.822322,
+  "lng": -54.636585,
+  "estado": {
+    "es": "En venta · en desarrollo",
+    "en": "For sale · under development",
+    "pt": "À venda · em desenvolvimento"
+  },
+  "entrega": "",
+  "bajada": {
+    "es": "Una urbanización de 48 lotes en 7 hectáreas sobre la ladera norte de la loma de José Ignacio, a 600 metros del mar y del corazón del pueblo. Sol todo el año, un extenso bosque de pinos que la protege de los vientos del sur y del este y orientación noroeste con vistas al campo. La rodean Laguna Escondida, Pinar del Faro y Playa Brava. Un nuevo desarrollo de los creadores de Pinar del Faro y de Wave Arquitectura.",
+    "en": "A 48-lot community on 7 hectares on the north slope of the José Ignacio hill, 600 metres from the sea and from the heart of the village. Sun all year round, a large pine forest that shelters it from the south and east winds, and a northwest orientation with views over the countryside. It is surrounded by Laguna Escondida, Pinar del Faro and Playa Brava. A new development by the creators of Pinar del Faro and Wave Arquitectura.",
+    "pt": "Um loteamento de 48 lotes em 7 hectares na encosta norte do morro de José Ignacio, a 600 metros do mar e do coração do povoado. Sol o ano todo, um extenso bosque de pinheiros que o protege dos ventos do sul e do leste e orientação noroeste com vista para o campo. Ao redor estão Laguna Escondida, Pinar del Faro e Playa Brava. Um novo empreendimento dos criadores de Pinar del Faro e da Wave Arquitectura."
+  },
+  "cifras": [
+    {
+      "valor": "48",
+      "nombre": {
+        "es": "Lotes",
+        "en": "Lots",
+        "pt": "Lotes"
+      }
+    },
+    {
+      "valor": "7",
+      "nombre": {
+        "es": "Hectáreas",
+        "en": "Hectares",
+        "pt": "Hectares"
+      }
+    },
+    {
+      "valor": "600 m",
+      "nombre": {
+        "es": "del mar",
+        "en": "from the sea",
+        "pt": "do mar"
+      }
+    },
+    {
+      "valor": "600 m",
+      "nombre": {
+        "es": "del pueblo",
+        "en": "from the village",
+        "pt": "do povoado"
+      }
+    }
+  ],
+  "ventajas": [
+    {
+      "es": "A 600 metros del mar y del pueblo de José Ignacio: tranquilidad y naturaleza, a pasos de la vida del pueblo.",
+      "en": "600 metres from the sea and from José Ignacio village: peace and nature, steps away from village life.",
+      "pt": "A 600 metros do mar e do povoado de José Ignacio: tranquilidade e natureza, a poucos passos da vida do povoado."
+    },
+    {
+      "es": "Ladera norte con sol todo el año y orientación noroeste: vistas al campo y luz en todos los lotes.",
+      "en": "North-facing slope with sun all year round and northwest orientation: countryside views and light on every lot.",
+      "pt": "Encosta norte com sol o ano todo e orientação noroeste: vista para o campo e luz em todos os lotes."
+    },
+    {
+      "es": "Un extenso bosque de pinos protege de los vientos del sur y del este.",
+      "en": "A large pine forest shelters it from the south and east winds.",
+      "pt": "Um extenso bosque de pinheiros protege dos ventos do sul e do leste."
+    },
+    {
+      "es": "De los creadores de Pinar del Faro y de Wave Arquitectura, la constructora más importante de casas unifamiliares de la zona. Masterplan del Arq. Diego Pondal; desarrolla Nordelcor.",
+      "en": "By the creators of Pinar del Faro and Wave Arquitectura, the leading builder of single-family homes in the area. Masterplan by architect Diego Pondal; developed by Nordelcor.",
+      "pt": "Dos criadores de Pinar del Faro e da Wave Arquitectura, a construtora mais importante de casas unifamiliares da região. Masterplan do arquiteto Diego Pondal; incorporação da Nordelcor."
+    }
+  ],
+  "amenities": [
+    {
+      "es": "Acceso con portería",
+      "en": "Gated entrance",
+      "pt": "Acesso com portaria"
+    },
+    {
+      "es": "Área de deportes",
+      "en": "Sports area",
+      "pt": "Área de esportes"
+    },
+    {
+      "es": "Cancha de pádel",
+      "en": "Padel court",
+      "pt": "Quadra de pádel"
+    },
+    {
+      "es": "Gimnasio",
+      "en": "Gym",
+      "pt": "Academia"
+    },
+    {
+      "es": "Área común",
+      "en": "Common area",
+      "pt": "Área comum"
+    }
+  ],
+  "lotes_m2": {
+    "1": 1022,
+    "2": 1031,
+    "3": 1023,
+    "4": 1025,
+    "5": 1012,
+    "6": 1005,
+    "7": 1323,
+    "8": 1173,
+    "9": 1015,
+    "10": 1002,
+    "11": 1013,
+    "12": 1036,
+    "13": 1187,
+    "14": 1028,
+    "15": 1011,
+    "16": 1127,
+    "17": 1006,
+    "18": 1055,
+    "19": 1049,
+    "20": 1043,
+    "21": 1081,
+    "22": 1101,
+    "23": 1104,
+    "24": 1090,
+    "25": 1214,
+    "26": 1190,
+    "27": 1078,
+    "28": 1045,
+    "29": 1218,
+    "30": 1051,
+    "31": 1051,
+    "32": 1051,
+    "33": 1174,
+    "34": 1208,
+    "35": 1111,
+    "36": 1111,
+    "37": 1111,
+    "38": 1111,
+    "39": 1111,
+    "40": 1072,
+    "41": 1008,
+    "42": 1138,
+    "43": 1005,
+    "44": 1005,
+    "45": 1005,
+    "46": 1005,
+    "47": 1005,
+    "48": 1036
+  },
+  "lotes_estado": {
+    "5": "vendido",
+    "6": "vendido",
+    "8": "vendido",
+    "9": "vendido",
+    "10": "vendido",
+    "11": "vendido",
+    "12": "vendido",
+    "13": "vendido",
+    "14": "vendido",
+    "15": "vendido",
+    "16": "vendido",
+    "17": "vendido",
+    "18": "vendido",
+    "19": "vendido",
+    "20": "vendido",
+    "21": "vendido",
+    "22": "vendido",
+    "25": "vendido",
+    "27": "vendido",
+    "35": "vendido",
+    "36": "vendido",
+    "37": "vendido",
+    "38": "vendido",
+    "39": "vendido",
+    "40": "vendido",
+    "41": "vendido",
+    "42": "vendido",
+    "43": "vendido",
+    "44": "vendido",
+    "45": "vendido",
+    "46": "vendido",
+    "47": "vendido",
+    "48": "vendido"
+  },
+  "drive": "https://drive.google.com/drive/folders/1wcVi3nClKxY9dO-tsf-DSsX_MOhcNJx4",
+  "destacado": true,
+  "orden": 40
+}
