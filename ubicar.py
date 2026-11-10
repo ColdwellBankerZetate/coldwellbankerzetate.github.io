@@ -64,11 +64,34 @@ def cruce(ca, cb):
             "calles": [na, nb]}
 
 
+def grilla(img, px, lat, lng, paso=50):
+    """Grilla amarilla de coordenadas cada `paso` metros."""
+    d = ImageDraw.Draw(img)
+    mlat, mlng = paso / 110540, paso / (111320 * math.cos(math.radians(lat)))
+    for k in range(-60, 61):
+        gx, _ = px(lat, lng + k * mlng)
+        _, gy = px(lat + k * mlat, lng)
+        if 0 <= gx < img.width:
+            d.line([(gx, 0), (gx, img.height)], fill=(255, 255, 0, 120), width=1)
+            d.text((gx + 2, 2 + (k % 2) * 12), f"{lng + k * mlng:.5f}", fill=(255, 255, 0))
+        if 0 <= gy < img.height:
+            d.line([(0, gy), (img.width, gy)], fill=(255, 255, 0, 120), width=1)
+            d.text((2, gy + 2), f"{lat + k * mlat:.5f}", fill=(255, 255, 0))
+
+
 def main():
     os.makedirs(os.path.join(AQUI, "verificacion"), exist_ok=True)
     for f in sorted(glob.glob(os.path.join(AQUI, "desarrollos", "*-calco.json"))):
         slug = os.path.basename(f)[:-len("-calco.json")]
         cfg = json.load(open(f, encoding="utf-8"))
+        if cfg.get("centro") and not cfg.get("cruce"):  # sin cruce: recorte con grilla alrededor de un punto aproximado
+            lat, lng = cfg["centro"]
+            metros = (cfg.get("recorte") or {}).get("metros", 1500)
+            img, px, _ = recorte(lat, lng, metros, 18 if metros <= 600 else 17)
+            img.save(os.path.join(AQUI, "verificacion", f"{slug}-sat-limpio.jpg"), quality=88)
+            grilla(img, px, lat, lng, (cfg.get("recorte") or {}).get("paso", 50))
+            img.save(os.path.join(AQUI, "verificacion", f"{slug}-sat.jpg"), quality=85)
+            print(f"{slug}: recorte alrededor de {lat},{lng} ({metros} m) -> verificacion/{slug}-sat.jpg")
         if cfg.get("cruce"):
             bbox = cfg.get("bbox") or [-34.93, -54.90, -34.85, -54.75]
             ca, cb = calles(cfg["cruce"][0], bbox), calles(cfg["cruce"][1], bbox)
@@ -91,17 +114,7 @@ def main():
                 d.line([px(*p) for p in w["c"]], fill=col, width=2)
             x, y = px(c["lat"], c["lng"])
             d.ellipse([x - 7, y - 7, x + 7, y + 7], outline=(255, 255, 0), width=3)
-            paso = 50
-            mlat, mlng = paso / 110540, paso / (111320 * math.cos(math.radians(lat)))
-            for k in range(-30, 31):
-                gx, _ = px(lat, lng + k * mlng)
-                _, gy = px(lat + k * mlat, lng)
-                if 0 <= gx < img.width:
-                    d.line([(gx, 0), (gx, img.height)], fill=(255, 255, 0, 120), width=1)
-                    d.text((gx + 2, 2 + (k % 2) * 12), f"{lng + k * mlng:.5f}", fill=(255, 255, 0))
-                if 0 <= gy < img.height:
-                    d.line([(0, gy), (img.width, gy)], fill=(255, 255, 0, 120), width=1)
-                    d.text((2, gy + 2), f"{lat + k * mlat:.5f}", fill=(255, 255, 0))
+            grilla(img, px, lat, lng)
             img.save(os.path.join(AQUI, "verificacion", f"{slug}-sat.jpg"), quality=85)
             print(f"  recorte: verificacion/{slug}-sat.jpg ({img.width}x{img.height}, {metros} m de lado)")
         if cfg.get("control"):

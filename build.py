@@ -402,6 +402,11 @@ def armar_desarrollos(sitio, wa_general, avisos):
             for lt in plano["lotes"]:
                 if str(lt["n"]).lower() in m2:
                     lt["m2"] = m2[str(lt["n"]).lower()]
+        if plano and c.get("m2_solo_lista"):  # plano ilustrativo: m² solo de los lotes que figuran en la lista
+            m2 = {str(k).strip().lower() for k in (c.get("lotes_m2") or {})}
+            for lt in plano["lotes"]:
+                if str(lt["n"]).lower() not in m2:
+                    lt["m2"] = None
         if plano and c.get("lotes_estado"):
             est = {str(k).strip().lower(): str(v).strip().lower() for k, v in c["lotes_estado"].items()}
             for lt in plano["lotes"]:

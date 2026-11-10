@@ -19,7 +19,8 @@ Pasos:
         "perimetro": [[x, y], ...],         # opcional, en píxeles del plano
         "cortes": [[x1, y1, x2, y2], ...],  # opcional: líneas entre lotes que en el plano son muy finas
         "etiquetas": {"C5": [x, y], ...},   # opcional: un punto dentro de cada lote -> su número (lo demás se descarta)
-        "lotes": [{"n": "12", "px": [[x, y], ...]}]}   # opcional: lotes dibujados a mano (píxeles)
+        "lotes": [{"n": "12", "px": [[x, y], ...]}],   # opcional: lotes dibujados a mano (píxeles)
+        "plano": "<slug>-plano-sat.jpg"}   # opcional: calcar desde esta imagen en vez del masterplan
   3. python3 calcar.py <slug>
        -> desarrollos/<slug>.kml
        -> verificacion/<slug>-lotes.jpg (masterplan con el id de cada región detectada)
@@ -45,7 +46,9 @@ def fuente(t):
     return ImageFont.load_default()
 
 
-def masterplan(slug):
+def masterplan(slug, plano=None):
+    if plano:  # "plano" en el calco: calcar desde otra imagen (ej. el plano sobre satélite del brochure)
+        return Image.open(os.path.join(DEV, plano)).convert("RGB")
     for e in (".jpg", ".png", ".webp", ".jpeg"):
         r = os.path.join(DEV, f"{slug}-masterplan{e}")
         if os.path.exists(r):
@@ -176,7 +179,8 @@ def main():
         sys.exit(__doc__)
     slug = sys.argv[1]
     os.makedirs(VER, exist_ok=True)
-    img = masterplan(slug)
+    cfg_r = os.path.join(DEV, f"{slug}-calco.json")
+    img = masterplan(slug, (json.load(open(cfg_r, encoding="utf-8")).get("plano") if os.path.exists(cfg_r) else None))
 
     if len(sys.argv) > 2 and sys.argv[2] == "grilla":
         g = img.copy()
