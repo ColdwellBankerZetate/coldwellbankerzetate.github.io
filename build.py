@@ -251,7 +251,7 @@ def area_m2(anillo):
     return abs(sum(x1 * y2 - x2 * y1 for (x1, y1), (x2, y2) in zip(xy, xy[1:] + xy[:1]))) / 2
 
 
-LOTE_RE = re.compile(r"(?i)^\s*(?:lote|lot|l)?\s*[-nº°#.]*\s*(\d+[a-z]?)\s*$")
+LOTE_RE = re.compile(r"(?i)^\s*(?:lote|lot|l)?\s*[-º°#.]*\s*(?:n[º°.]\s*)?(\d+[a-z]?)\s*$")  # "Lote 12", "Nº 12" (no "N12": manzana N)
 
 
 def leer_kmz(ruta):
@@ -312,7 +312,7 @@ def leer_kmz(ruta):
             continue
         m = LOTE_RE.match(p["nombre"])
         if m or re.search(r"(?i)lote|lots?\b|parcela", p["carpeta"]):
-            n = m.group(1) if m else re.sub(r"(?i)^\s*(lote|lot)\s*[-nº°#.]*\s*", "", p["nombre"]) or p["nombre"]
+            n = m.group(1) if m else re.sub(r"(?i)^\s*(lote|lot)\s*(?:n[º°.])?[-º°#.]*\s*", "", p["nombre"]) or p["nombre"]
             lotes.append({"n": n, "c": p["c"], "m2": p["m2"]})
         else:
             areas.append({"nombre": p["nombre"], "c": p["c"], "m2": p["m2"]})
