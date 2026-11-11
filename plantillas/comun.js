@@ -388,12 +388,25 @@ function datosAgenda(p) {
     for (const d = new Date(a + "T12:00"), fin = new Date(b + "T12:00"); d <= fin; d.setDate(d.getDate() + 1))
       if (d >= x.r[0] && d <= x.r[1]) occ.delete(iso(d));
   }
+  /* hoja "Ocupación" (la carga la página interna /agenda/): días exactos; "libre" libera días de un período tomado */
+  const estDia = new Map();
+  for (const z of p.ocupacion || []) for (const d = new Date(z.d + "T12:00"), fin = new Date(z.h + "T12:00"); d <= fin; d.setDate(d.getDate() + 1)) {
+    const k = iso(d);
+    if (z.e === "libre") { occ.delete(k); estDia.delete(k); } else { occ.add(k); estDia.set(k, z.e); }
+  }
+  for (const x of per) { /* período entero tomado día por día = se muestra como alquilado / reservado, con su precio */
+    if (!x.r || (x.estado && x.estado !== "disponible") || !estDia.size) continue;
+    let todo = true, res = false;
+    for (const d = new Date(x.r[0]); d <= x.r[1]; d.setDate(d.getDate() + 1)) { const e = estDia.get(iso(d)); if (!e) { todo = false; break; } if (e === "reservada") res = true; }
+    if (todo) x.estado = res ? "reservada" : "alquilada";
+  }
   const conFechas = per.filter(x => x.r);
   /* meses a mostrar: de dic a mar de la temporada (o lo que cubran las tarifas / ocupados) */
   const Y = anioTemporada();
   let desde = new Date(Y, 11, 1), hasta = new Date(Y + 1, 2, 1);
   for (const x of conFechas) { if (x.r[0] < desde) desde = new Date(x.r[0].getFullYear(), x.r[0].getMonth(), 1); if (x.r[1] > hasta) hasta = new Date(x.r[1].getFullYear(), x.r[1].getMonth(), 1); }
   for (const [, b] of p.ocupado || []) { const f = new Date(b + "T12:00"); if (f > hasta) hasta = new Date(f.getFullYear(), f.getMonth(), 1); }
+  for (const z of p.ocupacion || []) { const f = new Date(z.h + "T12:00"); if (f > hasta && z.e !== "libre") hasta = new Date(f.getFullYear(), f.getMonth(), 1); }
   const primero = new Date(hoy.getFullYear(), hoy.getMonth(), 1);
   if (desde < primero) desde = primero;
   const meses = [];
@@ -471,6 +484,7 @@ const INTERNO = {
   datos: null,
   activo() { return !!this.datos; },
   dev(slug) { return ((this.datos || {}).desarrollos || {})[slug] || {}; },
+  token() { return (this.datos || {})._tk || ""; }, /* llave para la App web de la planilla (página /agenda/) */
 };
 (function () {
   const K = "cbz_interno";
@@ -501,6 +515,7 @@ const INTERNO = {
   #cbz-int-m .err{color:#ff7b7b;font-size:12.5px;min-height:18px;margin:8px 0 0}
   #cbz-int-m .fila{display:flex;gap:8px;margin-top:10px}
   #cbz-int-m button{flex:1;font:600 13px "Hanken Grotesk",system-ui,sans-serif;padding:10px;border-radius:8px;border:1px solid rgba(255,255,255,.25);background:transparent;color:#fff;cursor:pointer}
+  #cbz-int-m a.ag{display:block;text-align:center;margin:0 0 4px;padding:10px;border-radius:8px;border:1px solid #c8b28a;color:#c8b28a;font-weight:600;font-size:13px;text-decoration:none}
   #cbz-int-m button.pri{background:#c8b28a;border-color:#c8b28a;color:#111}`;
   document.head.appendChild(css);
   const eng = document.createElement("button");
@@ -521,7 +536,7 @@ const INTERNO = {
   }
   eng.addEventListener("click", () => {
     if (INTERNO.activo()) {
-      const m = modal('<div class="c" role="dialog" aria-modal="true"><h3>Modo interno</h3><p>Activo: ves las funciones solo para el equipo.</p><div class="fila"><button type="button" data-x>Cerrar</button><button type="button" class="pri" data-salir>Salir del modo interno</button></div></div>');
+      const m = modal('<div class="c" role="dialog" aria-modal="true"><h3>Modo interno</h3><p>Activo: ves las funciones solo para el equipo.</p><a class="ag" href="' + raiz() + 'agenda/">Agenda de temporada →</a><div class="fila"><button type="button" data-x>Cerrar</button><button type="button" class="pri" data-salir>Salir del modo interno</button></div></div>');
       m.querySelector("[data-x]").onclick = cerrar;
       m.querySelector("[data-salir]").onclick = () => { INTERNO.datos = null; sesion.del(); try { localStorage.removeItem(K); } catch (_) {} estado(); cerrar(); avisar(); };
       return;
@@ -536,6 +551,8 @@ const INTERNO = {
       try {
         if (!(window.crypto && crypto.subtle)) throw new Error("sin-crypto");
         const datos = await descifrar(inp.value);
+        const h = await crypto.subtle.digest("SHA-256", new TextEncoder().encode("cbz-agenda:" + inp.value));
+        datos._tk = [...new Uint8Array(h)].map(x => x.toString(16).padStart(2, "0")).join("");
         INTERNO.datos = datos;
         const s = JSON.stringify(datos);
         sesion.set(s); if (f.recordar.checked) guardarLS(K, s);

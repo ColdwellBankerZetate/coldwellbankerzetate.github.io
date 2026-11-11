@@ -617,6 +617,57 @@ def leer_agenda(sitio, offline, avisos):
     return out
 
 
+def leer_ocupacion(sitio, offline, avisos):
+    """{referencia: [{"d","h","e"}, ...]} desde la hoja "Ocupación" (la carga la página interna /agenda/):
+    tramos de días alquilados / reservados / libres (libre = se liberan dentro de un período tomado)."""
+    fuente = (sitio.get("disponibilidad") or "").strip()
+    cache = os.path.join(AQUI, "ocupacion_cache.csv")
+    texto = None
+    if fuente and not offline and not fuente.startswith("http"):
+        url = (f"https://docs.google.com/spreadsheets/d/{fuente}/gviz/tq?tqx=out:csv&sheet="
+               + urllib.parse.quote("Ocupación"))
+        try:
+            with urllib.request.urlopen(urllib.request.Request(url, headers=UA), timeout=60) as r:
+                texto = r.read().decode("utf-8-sig")
+            if texto.lstrip().startswith("<"):
+                raise ValueError("la planilla no está compartida con 'cualquiera con el link'")
+            open(cache, "w", encoding="utf-8").write(texto)
+        except Exception as e:
+            print(f"  ! no pude leer la hoja 'Ocupación' ({e}); uso la última copia")
+            texto = None
+    if texto is None and os.path.exists(cache):
+        texto = open(cache, encoding="utf-8").read()
+    if not texto:
+        return {}
+    hoy = datetime.date.today()
+    filas = list(csv.reader(io.StringIO(texto)))
+    cab = [slugify(c) for c in filas[0]] if filas else []
+    if not {"codigo", "desde", "estado"} <= set(cab):
+        return {}  # la hoja todavía no existe (gviz devuelve la primera hoja) o no tiene el formato
+    ic, idd, ie = cab.index("codigo"), cab.index("desde"), cab.index("estado")
+    ih = cab.index("hasta") if "hasta" in cab else idd
+    out = {}
+    for n, f in enumerate(filas[1:], start=2):
+        f += [""] * (len(cab) - len(f))
+        ref, est = f[ic].strip().upper(), f[ie].strip().lower()
+        if not ref or not f[idd].strip():
+            continue
+        if est not in ("alquilada", "reservada", "libre"):
+            avisos.append(f"Ocupación, fila {n} ({ref}): estado {f[ie]!r} (va alquilada, reservada o libre) — se ignora")
+            continue
+        try:
+            a = fecha(f[idd], hoy)
+            b = fecha(f[ih], hoy) if f[ih].strip() else a
+        except ValueError as e:
+            avisos.append(f"Ocupación, fila {n} ({ref}): {e} — se ignora")
+            continue
+        a, b = min(a, b), max(a, b)
+        if b >= hoy - datetime.timedelta(days=120):  # lo viejo no hace falta en el sitio
+            out.setdefault(ref, []).append({"d": a.isoformat(), "h": b.isoformat(), "e": est})
+    print(f"  ocupación: {sum(len(v) for v in out.values())} tramos en {len(out)} casas")
+    return {k: sorted(v, key=lambda x: x["d"]) for k, v in out.items()}
+
+
 # ---------------------------------------------------------------- modo interno
 INTERNO = {}  # datos solo para el equipo (ej. carpeta de Drive de cada desarrollo); se publican cifrados
 
@@ -736,6 +787,7 @@ def main():
     todo, resumen, avisos = [], [], []
     disp = leer_disponibilidad(sitio, offline, avisos)
     agenda = leer_agenda(sitio, offline, avisos)
+    ocupacion = leer_ocupacion(sitio, offline, avisos)
     sitio = {k: v for k, v in sitio.items() if k != "disponibilidad"}
     for slug, c in sorted(configs.items()):
         props = []
@@ -761,6 +813,13 @@ def main():
                     p["ops"].sort(key=lambda o: {"venta": 0, "temporada": 1, "alquiler": 2}[o["tipo"]])
                 elif base:
                     temp.update({"precio": base, "moneda": "USD", "unidad": "quincena"})
+            oc = ocupacion.get(p["ref"].upper())
+            if oc and p["tipo"] != "terreno":
+                p["ocupacion"] = oc
+                if not any(o["tipo"] == "temporada" for o in p["ops"]):
+                    p["ops"].append({"tipo": "temporada", "precio": None, "moneda": "USD", "unidad": None,
+                                     "periodos": [], "consultar": True})
+                    p["ops"].sort(key=lambda o: {"venta": 0, "temporada": 1, "alquiler": 2}[o["tipo"]])
             if not p["ops"]:
                 fuera_de_mapa(tp, "sin precio cargado en Tokko (venta, alquiler ni temporada)")
                 continue
@@ -839,6 +898,14 @@ def main():
                     {"modo": "seleccion", "nombre": "", "zona": "", "bajada": {}, "datos": [], "puntos": [], "raiz": "../",
                      "propiedades": [], "sitio": sitio},
                     "Selección de propiedades de Coldwell Banker Zetaté."))
+    # Agenda interna (/agenda/): calendario por casa que guarda en la planilla (App web del script). Acá solo van
+    # foto, ficha y barrio de cada casa; los nombres internos y los días los trae la página de la planilla.
+    escribir(os.path.join(AQUI, "agenda", "index.html"),
+             pagina("agenda.html", "Agenda · Coldwell Banker Zetaté",
+                    {"modo": "agenda", "raiz": "../", "sitio": sitio,
+                     "casas": {p["ref"]: {"url": p["url"], "foto": (p.get("fotos") or [""])[0], "mapa": p["barrio"] + "/"}
+                               for p in todo if p["tipo"] != "terreno" and p.get("fuente") == "tokko"}},
+                    "Agenda interna de temporada."))
     refs = {p["ref"].upper() for p in todo}
     avisos += [f"Disponibilidad: el código {r} de la planilla no está en ningún mapa" for r in disp if r not in refs]
     avisos += [f"Fuera del mapa: {x['ref']} ({x['casa'] or x['barrio'] or 's/d'}) — {x['motivo']}" for x in fuera]

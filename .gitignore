@@ -9,3 +9,4 @@ disponibilidad_cache.csv
 planilla_disponibilidad.*
 .interno_clave
 agenda_cache.csv
+ocupacion_cache.csv
