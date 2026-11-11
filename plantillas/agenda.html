@@ -1,0 +1,330 @@
+<title>__TITULO__</title>
+<meta name="robots" content="noindex, nofollow">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Bodoni+Moda:ital,opsz,wght@0,6..96,500;1,6..96,500&family=Hanken+Grotesk:wght@400;500;600;700&display=swap">
+<style>
+/* Agenda interna: lista de casas → tocás una → calendario por día (alquilada / reservada / libre) + precios por período.
+   Guarda en la planilla (hojas "Ocupación" y "Agenda") a través de la App web del script de la planilla. */
+:root{
+  --ink:#0a0a0a; --panel:#101010; --raise:#181818;
+  --line:rgba(255,255,255,.09); --line-2:rgba(255,255,255,.18);
+  --fg:#f3f1ec; --muted:#9b978f; --dim:#6d6a64; --champ:#c8b28a; --venta:#e3141e; --ok:#7fc79a;
+  --f-display:"Bodoni Moda","Didot","Bodoni 72",Georgia,serif;
+  --f-body:"Hanken Grotesk",system-ui,-apple-system,"Segoe UI",sans-serif;
+  color-scheme:dark;
+}
+html,body{height:100%}
+body{background:var(--ink);color:var(--fg);font-family:var(--f-body);font-size:15px;line-height:1.45;-webkit-font-smoothing:antialiased}
+button,input{font:inherit;color:inherit}
+a{color:inherit}
+.app{display:grid;grid-template-columns:minmax(320px,400px) 1fr;height:100%}
+.lista{background:var(--panel);border-right:1px solid var(--line);display:flex;flex-direction:column;min-height:0}
+.cab{padding:16px 20px 14px;border-bottom:1px solid var(--line);display:grid;gap:10px}
+.sup{display:flex;justify-content:space-between;align-items:center;font-size:11px;letter-spacing:.14em;text-transform:uppercase}
+.sup a{color:var(--muted);text-decoration:none;font-weight:600}
+.sup a:hover{color:var(--fg)}
+.sup img{height:30px;width:auto;display:block}
+h1{margin:0;font:italic 500 38px/1 var(--f-display)}
+.buscar{width:100%;box-sizing:border-box;background:#000;border:1px solid var(--line-2);border-radius:8px;padding:10px 12px;font-size:16px}
+.buscar:focus{outline:none;border-color:var(--champ)}
+.casas{overflow:auto;flex:1;scrollbar-width:thin;scrollbar-color:var(--line-2) transparent}
+.grupo{padding:14px 20px 6px;font-size:10.5px;font-weight:600;letter-spacing:.2em;text-transform:uppercase;color:var(--champ)}
+.casa{display:grid;grid-template-columns:48px 1fr;gap:12px;align-items:center;width:100%;text-align:left;background:none;border:0;border-top:1px solid var(--line);padding:10px 20px;cursor:pointer}
+.casa:hover{background:var(--raise)}
+.casa[aria-current="true"]{background:var(--raise);box-shadow:inset 3px 0 0 var(--champ)}
+.casa img,.casa .sinfoto{width:48px;height:48px;border-radius:6px;object-fit:cover;background:var(--raise);display:block}
+.casa b{display:block;font-weight:600;font-size:14px}
+.casa small{display:block;color:var(--dim);font-size:12px;margin-top:2px}
+.casa small i{font-style:normal;color:var(--champ)}
+.msg{padding:28px 20px;color:var(--muted);display:grid;gap:12px}
+.msg b{color:var(--fg)}
+
+.detalle{overflow:auto;min-height:0;padding:22px 28px 120px;scrollbar-width:thin;scrollbar-color:var(--line-2) transparent}
+.vacio{height:100%;display:grid;place-items:center;color:var(--dim);text-align:center;padding:20px}
+.dcab{display:flex;gap:14px;align-items:flex-start;justify-content:space-between;flex-wrap:wrap}
+.dcab h2{margin:0;font:italic 500 30px/1.1 var(--f-display)}
+.dcab p{margin:4px 0 0;color:var(--muted);font-size:13px}
+.dcab p a{color:var(--champ)}
+.volver-m{display:none;background:none;border:0;color:var(--muted);font-size:11px;font-weight:600;letter-spacing:.14em;text-transform:uppercase;padding:0 0 12px;cursor:pointer}
+.ayuda{margin:14px 0 0;color:var(--dim);font-size:12.5px}
+.ley{display:flex;gap:14px;flex-wrap:wrap;margin:10px 0 0;font-size:12px;color:var(--muted)}
+.ley i{display:inline-block;width:12px;height:12px;border-radius:3px;vertical-align:-2px;margin-right:5px}
+.meses{display:grid;grid-template-columns:repeat(auto-fill,minmax(270px,1fr));gap:22px;margin-top:18px}
+.mes h3{margin:0 0 8px;font-size:12px;font-weight:600;letter-spacing:.16em;text-transform:uppercase;color:var(--fg)}
+.grid{display:grid;grid-template-columns:repeat(7,1fr);gap:3px;font-variant-numeric:tabular-nums}
+.grid b{font-size:10px;color:var(--dim);text-align:center;font-weight:600;padding-bottom:2px}
+.d{aspect-ratio:1;border:0;border-radius:6px;background:#1c2a20;color:#cfe9d6;font-size:13px;font-weight:600;cursor:pointer;padding:0;position:relative;touch-action:manipulation}
+.d.st{background:#151515;color:var(--dim)}
+.d.alquilada{background:#2a2a2a;color:#777;text-decoration:line-through}
+.d.reservada{background:#4a3d22;color:#f1dfb6}
+.d.pas{opacity:.35}
+.d.hoy{box-shadow:inset 0 0 0 1px var(--fg)}
+.d.sel{outline:2px solid var(--champ);outline-offset:-2px;z-index:1}
+.d.ini{background:var(--champ);color:var(--ink)}
+.i-li{background:#1c2a20}.i-st{background:#151515;border:1px solid var(--line-2)}.i-al{background:#2a2a2a}.i-re{background:#4a3d22}
+
+.precios{margin-top:30px;border-top:1px solid var(--line);padding-top:18px}
+.precios h3{margin:0 0 4px;font-size:11px;font-weight:600;letter-spacing:.22em;text-transform:uppercase;color:var(--champ)}
+.precios p{margin:0 0 12px;color:var(--dim);font-size:12.5px}
+.pgrid{display:grid;grid-template-columns:repeat(auto-fill,minmax(150px,1fr));gap:8px}
+.pgrid label{display:grid;gap:4px;font-size:11.5px;color:var(--muted)}
+.pgrid input{background:#000;border:1px solid var(--line-2);border-radius:8px;padding:9px 10px;font-size:16px;width:100%;box-sizing:border-box;font-variant-numeric:tabular-nums}
+.pgrid input:focus{outline:none;border-color:var(--champ)}
+
+.barra{position:fixed;left:400px;right:0;bottom:0;z-index:20;background:rgba(16,16,16,.96);border-top:1px solid var(--line-2);padding:12px 28px calc(12px + env(safe-area-inset-bottom,0px));display:flex;gap:10px;align-items:center;flex-wrap:wrap;-webkit-backdrop-filter:blur(8px);backdrop-filter:blur(8px)}
+.barra[hidden]{display:none}
+.barra .txt{flex:1 1 180px;font-size:13.5px;color:var(--muted)}
+.barra .txt b{color:var(--fg)}
+.btn{border-radius:999px;padding:10px 16px;font-size:11.5px;font-weight:700;letter-spacing:.12em;text-transform:uppercase;cursor:pointer;border:1px solid var(--line-2);background:transparent;white-space:nowrap}
+.btn:hover{border-color:var(--fg)}
+.btn.al{background:#3a3a3a;border-color:#3a3a3a}
+.btn.re{background:#6b5524;border-color:#6b5524}
+.btn.li{background:#24412d;border-color:#24412d}
+.btn.pri{background:var(--champ);border-color:var(--champ);color:var(--ink)}
+.btn:disabled{opacity:.4;cursor:default}
+.estado-g{font-size:12.5px;color:var(--muted)}
+.estado-g.ok{color:var(--ok)}.estado-g.err{color:#ff7b7b}
+
+@media (max-width:820px){
+  .app{grid-template-columns:1fr}
+  .app.abierta .lista{display:none}
+  .app:not(.abierta) .detalle{display:none}
+  .detalle{padding:16px 16px 140px}
+  .volver-m{display:block}
+  .barra{left:0;padding-inline:52px 16px;display:grid;grid-template-columns:repeat(3,1fr) auto;gap:8px}
+  .barra .txt{grid-column:1/-1}
+  .barra .btn{padding-inline:8px}
+  .barra .btn.pri{grid-column:1/-2}
+  .cab{padding-inline:16px}.casa{padding-inline:16px}.grupo{padding-inline:16px}
+  .meses{grid-template-columns:1fr}
+  .d{font-size:14px}
+}
+</style>
+<!--CUERPO-->
+<div class="app" id="app">
+  <aside class="lista">
+    <div class="cab">
+      <div class="sup"><a href="__RAIZ__">← Mapas</a><img src="__RAIZ__assets/logo-horizontal.png" alt="Coldwell Banker Zetaté"></div>
+      <h1>Agenda</h1>
+      <input class="buscar" id="buscar" type="search" placeholder="Buscar casa, barrio o código" autocomplete="off" hidden>
+    </div>
+    <div class="casas" id="casas"></div>
+  </aside>
+  <main class="detalle" id="detalle"><div class="vacio">Elegí una casa de la lista.</div></main>
+</div>
+<div class="barra" id="barra" hidden></div>
+<script>
+/*__COMUN__*/
+</script>
+<script>
+const DATOS = /*__DATOS__*/null;
+const $ = id => document.getElementById(id);
+const APP = (DATOS.sitio || {}).agenda_app || "";
+/* encabezados de la hoja Agenda → nombre que entiende rangoPeriodo (comun.js) */
+const CANON = { "1ra Dic": "1ra quincena de diciembre", "2da Dic": "2da quincena de diciembre", "Fin de año": "Fin de año",
+  "1ra Ene": "1ra quincena de enero", "2da Ene": "2da quincena de enero", "1ra Feb": "1ra quincena de febrero",
+  "2da Feb": "2da quincena de febrero", "1ra Mar": "1ra quincena de marzo", "2da Mar": "2da quincena de marzo", "Semana santa": "Semana santa" };
+let PERS = Object.keys(CANON), CASAS = [], actual = null, dias = new Map(), precios = {}, sucio = false, ini = null, sel = null;
+
+async function api(cuerpo) {
+  const r = await fetch(APP, { method: "POST", headers: { "Content-Type": "text/plain;charset=utf-8" },
+    body: JSON.stringify({ ...cuerpo, tk: INTERNO.token() }) });
+  const j = await r.json();
+  if (j.error) throw new Error(j.error === "clave" ? "La planilla no reconoce la contraseña (revisá CLAVE en Propiedades del script)." : j.error);
+  return j;
+}
+
+/* ---------- lista ---------- */
+function mensaje(html) { $("buscar").hidden = true; $("casas").innerHTML = `<div class="msg">${html}</div>`; $("detalle").innerHTML = '<div class="vacio"></div>'; }
+async function iniciar() {
+  cerrarBarra();
+  if (!INTERNO.activo()) return mensaje("<b>Solo para el equipo.</b><span>Entrá con el engranaje de abajo a la izquierda.</span>");
+  if (!INTERNO.token()) return mensaje("<b>Volvé a entrar.</b><span>Tocá el engranaje → Salir, y entrá de nuevo con la contraseña.</span>");
+  if (!APP) return mensaje("<b>Falta conectar la planilla.</b><span>Hay que publicar el script de la planilla como App web y poner su URL en sitio.json (agenda_app).</span>");
+  mensaje("Cargando casas…");
+  try {
+    const j = await api({ accion: "casas" });
+    PERS = j.periodos || PERS;
+    CASAS = j.casas;
+    $("buscar").hidden = false;
+    pintarLista();
+    const q = new URLSearchParams(location.search).get("casa");
+    if (q && CASAS.find(c => c.cod === q)) abrir(q);
+  } catch (e) { mensaje(`<b>No pude leer la planilla.</b><span>${esc(e.message)}</span>`); }
+}
+const norm = s => String(s || "").toLowerCase().normalize("NFD").replace(/[̀-ͯ]/g, "");
+function resumen(c) {
+  let n = 0;
+  for (const z of c.dias) if (z.e !== "libre") n += (new Date(z.h) - new Date(z.d)) / 864e5 + 1;
+  const conPrecio = PERS.filter(p => /\d/.test(c.per[p] || "")).length;
+  return [n ? `<i>${n} días tomados</i>` : "", conPrecio ? `${conPrecio} períodos con precio` : "sin precios"].filter(Boolean).join(" · ");
+}
+function pintarLista() {
+  const q = norm($("buscar").value);
+  const ver = CASAS.filter(c => !q || norm(`${c.casa} ${c.barrio} ${c.cod}`).includes(q));
+  let html = "", ant = null;
+  for (const c of ver) {
+    if (c.barrio !== ant) { html += `<div class="grupo">${esc(c.barrio || "Sin barrio")}</div>`; ant = c.barrio; }
+    const s = (DATOS.casas || {})[c.cod] || {};
+    html += `<button class="casa" type="button" data-cod="${esc(c.cod)}" aria-current="${actual && actual.cod === c.cod}">
+      ${s.foto ? `<img src="${esc(s.foto)}" alt="" loading="lazy">` : '<span class="sinfoto"></span>'}
+      <span><b>${esc(c.casa || c.cod)}</b><small>${esc(c.cod)} · ${resumen(c)}</small></span></button>`;
+  }
+  $("casas").innerHTML = html || '<div class="msg">No hay casas con ese nombre.</div>';
+  $("casas").querySelectorAll(".casa").forEach(b => b.addEventListener("click", () => abrir(b.dataset.cod)));
+}
+$("buscar").addEventListener("input", pintarLista);
+
+/* ---------- detalle ---------- */
+const Y = anioTemporada();
+function fechaCelda(s) { /* "16/1" o "16/1/2027" → iso, año de la temporada si falta */
+  const m = String(s).trim().match(/^(\d{1,2})[\/.-](\d{1,2})(?:[\/.-](\d{2,4}))?$/);
+  if (!m) return null;
+  const mes = +m[2] - 1, a = m[3] ? (m[3].length === 2 ? 2000 + +m[3] : +m[3]) : (mes >= 6 ? Y : Y + 1);
+  return iso(new Date(a, mes, +m[1], 12));
+}
+function recorrer(a, b, fn) { for (const d = new Date(a + "T12:00"), f = new Date(b + "T12:00"); d <= f; d.setDate(d.getDate() + 1)) fn(iso(d)); }
+function abrir(cod) {
+  if (sucio && !confirm("Hay cambios sin guardar en esta casa. ¿Descartarlos?")) return;
+  const c = CASAS.find(x => x.cod === cod);
+  if (!c) return;
+  actual = c; sucio = false; ini = sel = null;
+  /* estado por día: períodos marcados "A"/"R" en la hoja (formato viejo) + tramos de "Ocupación" */
+  dias = new Map(); precios = {};
+  for (const p of PERS) {
+    const txt = String(c.per[p] || "").trim(), r = rangoPeriodo(CANON[p] || p);
+    const m = txt.match(/^(alq\w*|res\w*|a|r)(?=[\s:.\-\d]|$)/i);
+    const num = (txt.replace(/libres?\b.*$/i, "").match(/\d[\d.,\s]*/) || [""])[0].replace(/[.,\s]/g, "");
+    precios[p] = num;
+    if (m && r) {
+      const e = m[1][0].toLowerCase() === "r" ? "reservada" : "alquilada";
+      recorrer(iso(r[0]), iso(r[1]), k => dias.set(k, e));
+      const lib = txt.match(/libres?\b[:\s]*(.*)$/i);
+      if (lib) for (const x of lib[1].split(/[,;]|\s+y\s+/)) {
+        const [a, b] = x.trim().split(/\s*(?:-|–|al|hasta)\s*/);
+        const fa = fechaCelda(a), fb = fechaCelda(b || a);
+        if (fa && fb) recorrer(fa < fb ? fa : fb, fa < fb ? fb : fa, k => dias.delete(k));
+      }
+    }
+  }
+  for (const z of c.dias) recorrer(z.d, z.h, k => z.e === "libre" ? dias.delete(k) : dias.set(k, z.e));
+  $("app").classList.add("abierta");
+  history.replaceState(null, "", "?casa=" + encodeURIComponent(cod));
+  pintarLista(); pintarDetalle(); cerrarBarra();
+  $("detalle").scrollTop = 0;
+}
+function precioDia() { /* iso → período con precio (gana el más específico) */
+  const m = new Map();
+  for (const p of PERS) {
+    const r = rangoPeriodo(CANON[p] || p);
+    if (!r || !precios[p]) continue;
+    recorrer(iso(r[0]), iso(r[1]), k => { const y = m.get(k); if (!y || y.pri < r[2]) m.set(k, { p, pri: r[2] }); });
+  }
+  return m;
+}
+function pintarDetalle() {
+  const c = actual, s = (DATOS.casas || {})[c.cod] || {}, pd = precioDia(), hoy = iso(new Date());
+  const desde = new Date(new Date().getFullYear(), new Date().getMonth(), 1);
+  const hasta = new Date(Y + 1, 3, 1); /* hasta abril de la temporada (Semana santa) */
+  const meses = [];
+  for (const d = new Date(desde); d <= hasta || meses.length < 3; d.setMonth(d.getMonth() + 1)) meses.push(new Date(d));
+  const fmtMes = new Intl.DateTimeFormat("es", { month: "long", year: "numeric" });
+  const htmlMes = d0 => {
+    const y = d0.getFullYear(), m = d0.getMonth(), n = new Date(y, m + 1, 0).getDate(), hueco = (new Date(y, m, 1).getDay() + 6) % 7;
+    let h = "LMMJVSD".split("").map(x => `<b>${x}</b>`).join("") + "<span></span>".repeat(hueco);
+    for (let d = 1; d <= n; d++) {
+      const k = iso(new Date(y, m, d)), e = dias.get(k), x = pd.get(k);
+      const cls = e || (x ? "" : "st");
+      const tit = [e ? e[0].toUpperCase() + e.slice(1) : "Libre", x ? `${x.p} · U$S ${fmt(+precios[x.p])}` : "sin precio"].join(" · ");
+      const enSel = sel && k >= sel[0] && k <= sel[1];
+      h += `<button type="button" class="d ${cls}${k < hoy ? " pas" : ""}${k === hoy ? " hoy" : ""}${enSel ? " sel" : ""}${ini === k ? " ini" : ""}" data-k="${k}" title="${esc(tit)}">${d}</button>`;
+    }
+    return `<div class="mes"><h3>${esc(fmtMes.format(d0))}</h3><div class="grid">${h}</div></div>`;
+  };
+  $("detalle").innerHTML = `
+    <button class="volver-m" type="button" id="volver">← Todas las casas</button>
+    <div class="dcab"><div><h2>${esc(c.casa || c.cod)}</h2>
+      <p>${esc(c.barrio)} · ${esc(c.cod)}${s.url ? ` · <a href="${esc(s.url)}" target="_blank" rel="noopener">Ver ficha</a>` : ""}${s.mapa ? ` · <a href="${esc(raiz() + s.mapa)}">Ver en el mapa</a>` : ""}</p></div>
+      <div><button class="btn pri" type="button" id="guardar" ${sucio ? "" : "disabled"}>Guardar</button> <span class="estado-g" id="estado-g"></span></div></div>
+    <p class="ayuda">Tocá el primer día y después el último: elegís si queda alquilada, reservada o libre. Un solo día: tocalo dos veces.</p>
+    <div class="ley"><span><i class="i-li"></i>Libre (con precio)</span><span><i class="i-st"></i>Libre, sin precio cargado</span><span><i class="i-al"></i>Alquilada</span><span><i class="i-re"></i>Reservada</span></div>
+    <div class="meses">${meses.map(htmlMes).join("")}</div>
+    <section class="precios"><h3>Precios por período (U$S)</h3>
+      <p>Vacío = ese período no se ofrece. El precio del pin es el más bajo de lo que sigue libre.</p>
+      <div class="pgrid">${PERS.map(p => `<label>${esc(p)}<input inputmode="numeric" pattern="[0-9]*" data-p="${esc(p)}" value="${esc(precios[p] || "")}" placeholder="—"></label>`).join("")}</div>
+    </section>`;
+  $("volver").onclick = () => { if (sucio && !confirm("Hay cambios sin guardar. ¿Descartarlos?")) return; sucio = false; actual = null; $("app").classList.remove("abierta"); history.replaceState(null, "", location.pathname); cerrarBarra(); pintarLista(); };
+  $("guardar").onclick = guardar;
+  $("detalle").querySelectorAll(".d").forEach(b => b.addEventListener("click", () => tocar(b.dataset.k)));
+  $("detalle").querySelectorAll(".pgrid input").forEach(i => i.addEventListener("input", () => {
+    i.value = i.value.replace(/\D/g, ""); precios[i.dataset.p] = i.value; marcar();
+  }));
+}
+function marcar() {
+  sucio = true; const g = $("guardar"); if (g) g.disabled = false; const s = $("estado-g"); if (s) { s.textContent = "Cambios sin guardar"; s.className = "estado-g"; }
+  if ($("barra").hidden) cerrarBarra();
+}
+
+/* ---------- elegir días ---------- */
+function tocar(k) {
+  if (!ini || sel) { ini = k; sel = null; pintarDetalleKeep(); barra(`Desde <b>${dm(k)}</b> · tocá el último día`); return; }
+  sel = ini <= k ? [ini, k] : [k, ini]; ini = null;
+  pintarDetalleKeep();
+  let n = 0; recorrer(sel[0], sel[1], () => n++);
+  barra(`<b>${sel[0] === sel[1] ? dm(sel[0]) : `${dm(sel[0])} – ${dm(sel[1])}`}</b> · ${n} ${n === 1 ? "día" : "días"}`, true);
+}
+function pintarDetalleKeep() { const y = $("detalle").scrollTop; pintarDetalle(); $("detalle").scrollTop = y; }
+function barra(txt, acciones, conGuardar) {
+  const b = $("barra");
+  b.innerHTML = `<span class="txt">${txt}</span>` + (acciones ? `
+    <button class="btn al" type="button" data-e="alquilada">Alquilada</button>
+    <button class="btn re" type="button" data-e="reservada">Reservada</button>
+    <button class="btn li" type="button" data-e="libre">Libre</button>` : "") +
+    (conGuardar ? `<button class="btn pri" type="button" data-g>Guardar</button>` : `<button class="btn" type="button" data-x>✕</button>`);
+  b.hidden = false;
+  b.querySelectorAll("[data-e]").forEach(x => x.onclick = () => aplicar(x.dataset.e));
+  const x = b.querySelector("[data-x]");
+  if (x) x.onclick = () => { ini = sel = null; cerrarBarra(); pintarDetalleKeep(); };
+  const g = b.querySelector("[data-g]");
+  if (g) g.onclick = guardar;
+}
+function cerrarBarra() { /* con cambios pendientes queda la barra con "Guardar" a mano (en el celular el de arriba no se ve) */
+  if (sucio && actual) barra('<b>Cambios sin guardar</b>', false, true); else $("barra").hidden = true;
+}
+function aplicar(e) {
+  recorrer(sel[0], sel[1], k => e === "libre" ? dias.delete(k) : dias.set(k, e));
+  sel = ini = null; sucio = true; pintarDetalleKeep(); marcar(); cerrarBarra();
+}
+
+/* ---------- guardar ---------- */
+function tramos() { /* Map día → estado  →  [{d,h,e}] consecutivos */
+  const out = [];
+  for (const k of [...dias.keys()].sort()) {
+    const e = dias.get(k), u = out[out.length - 1];
+    if (u && u.e === e) { const sig = new Date(u.h + "T12:00"); sig.setDate(sig.getDate() + 1); if (iso(sig) === k) { u.h = k; continue; } }
+    out.push({ d: k, h: k, e });
+  }
+  return out;
+}
+async function guardar() {
+  const g = $("guardar"), s = $("estado-g");
+  g.disabled = true; s.className = "estado-g"; s.textContent = "Guardando…";
+  barra("Guardando…");
+  try {
+    const dt = tramos();
+    await api({ accion: "guardar", cod: actual.cod, dias: dt, per: precios });
+    actual.dias = dt;
+    for (const p of PERS) actual.per[p] = precios[p] || "";
+    sucio = false;
+    s.className = "estado-g ok"; s.textContent = "Guardado ✓ · el mapa se actualiza solo en menos de una hora";
+    barra('<b>Guardado ✓</b> · el mapa se actualiza solo en menos de una hora');
+    pintarLista();
+  } catch (e) {
+    g.disabled = false; s.className = "estado-g err"; s.textContent = "No se guardó: " + e.message;
+    barra(`<b>No se guardó:</b> ${esc(e.message)}`, false, true);
+  }
+}
+window.addEventListener("beforeunload", e => { if (sucio) { e.preventDefault(); e.returnValue = ""; } });
+document.addEventListener("interno", iniciar);
+iniciar();
+</script>
