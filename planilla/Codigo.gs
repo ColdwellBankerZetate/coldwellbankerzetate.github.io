@@ -42,10 +42,12 @@ function instalar() {
 
 const norm = s => String(s).trim().toLowerCase().normalize("NFD").replace(/[̀-ͯ]/g, "");
 
+let ERROR_TOKKO = "";
+
 /** Casas y apartamentos de Tokko: [{cod, barrio, casa, url}]. Vacío si Tokko no responde. */
 function casasTokko() {
   const key = PropertiesService.getScriptProperties().getProperty("TOKKO_KEY") || TOKKO_KEY;
-  if (!key) return [];
+  if (!key) { ERROR_TOKKO = "falta TOKKO_KEY en Propiedades del script"; return []; }
   const out = [];
   try {
     for (let off = 0; ; off += 100) {
@@ -60,6 +62,7 @@ function casasTokko() {
     }
   } catch (e) {
     console.warn("No pude leer Tokko: " + e);
+    ERROR_TOKKO = String(e).split(key).join("…").slice(0, 120);
     return [];
   }
   return out;
@@ -88,7 +91,7 @@ function actualizar() {
     const mapa = estadoMapa();
     if (!casas.length && mapa.datos) { // sin Tokko: al menos las casas que ya están en el sitio
       casas = mapa.datos.propiedades.filter(p => p.tipo !== "terreno" && p.fuente === "tokko")
-        .map(p => ({ cod: p.ref, barrio: p.barrio_nombre, casa: p.titulo || "", url: p.url }))
+        .map(p => ({ cod: p.ref, barrio: p.barrio_nombre, casa: "", url: p.url }))
         .concat((mapa.datos.fuera_del_mapa || []).filter(x => x.ref && x.tipo !== "terreno")
           .map(x => ({ cod: x.ref, barrio: x.barrio || "", casa: x.casa || "", url: "" })));
     }
@@ -112,7 +115,7 @@ function actualizar() {
       }
     }
 
-    // Nombre vacío (Tokko sin dirección o sin respuesta): conservar el que ya estaba en la hoja
+    // Nombre vacío (Tokko sin dirección o sin respuesta): conservar el nombre interno que ya estaba en la hoja
     for (const c of casas) if (!c.casa && previo[c.cod] && previo[c.cod].casa) c.casa = String(previo[c.cod].casa).trim();
 
     // 3) Filas: casas de Tokko + (abajo, en gris) las que salieron de Tokko pero tenían períodos cargados
@@ -181,7 +184,8 @@ function actualizar() {
 
     const sinCargarN = casas.filter(c => !(previo[c.cod] && previo[c.cod].per.some(x => x))).length;
     const fueraN = casas.filter(c => motivo(c) && motivo(c) !== "esperando sincronización").length;
-    libro.toast(`${casas.length} casas` + (sinCargarN ? ` · ${sinCargarN} sin agenda` : "") + (fueraN ? ` · ${fueraN} fuera del mapa` : ""), "Mapas", 6);
+    if (ERROR_TOKKO) libro.toast("No pude leer Tokko (" + ERROR_TOKKO + "): los nombres internos no se actualizaron.", "Mapas", 15);
+    else libro.toast(`${casas.length} casas` + (sinCargarN ? ` · ${sinCargarN} sin agenda` : "") + (fueraN ? ` · ${fueraN} fuera del mapa` : ""), "Mapas", 6);
   } finally {
     lock.releaseLock();
   }
