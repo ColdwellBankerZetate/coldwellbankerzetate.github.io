@@ -54,7 +54,7 @@ function casasTokko() {
       for (const p of d.objects) {
         if (!p.reference_code || (p.type && p.type.name === "Terreno")) continue;
         out.push({ cod: p.reference_code, barrio: String((p.location && p.location.name) || "").trim(),
-                   casa: String(p.real_address || p.address || p.publication_title || "").trim(), url: p.public_url || "" });
+                   casa: String(p.real_address || p.address || p.publication_title || p.reference_code).trim(), url: p.public_url || "" });
       }
       if (!d.meta.next) break;
     }
@@ -88,7 +88,9 @@ function actualizar() {
     const mapa = estadoMapa();
     if (!casas.length && mapa.datos) { // sin Tokko: al menos las casas que ya están en el sitio
       casas = mapa.datos.propiedades.filter(p => p.tipo !== "terreno" && p.fuente === "tokko")
-        .map(p => ({ cod: p.ref, barrio: p.barrio_nombre, casa: "", url: p.url }));
+        .map(p => ({ cod: p.ref, barrio: p.barrio_nombre, casa: p.titulo || "", url: p.url }))
+        .concat((mapa.datos.fuera_del_mapa || []).filter(x => x.ref && x.tipo !== "terreno")
+          .map(x => ({ cod: x.ref, barrio: x.barrio || "", casa: x.casa || "", url: "" })));
     }
     if (!casas.length) return; // sin datos no tocamos la hoja
 
@@ -109,6 +111,9 @@ function actualizar() {
                         casa: iCasa >= 0 ? f[iCasa] : "", barrio: iBarrio >= 0 ? f[iBarrio] : "" };
       }
     }
+
+    // Nombre vacío (Tokko sin dirección o sin respuesta): conservar el que ya estaba en la hoja
+    for (const c of casas) if (!c.casa && previo[c.cod] && previo[c.cod].casa) c.casa = String(previo[c.cod].casa).trim();
 
     // 3) Filas: casas de Tokko + (abajo, en gris) las que salieron de Tokko pero tenían períodos cargados
     casas.sort((a, b) => a.barrio.localeCompare(b.barrio, "es") || a.casa.localeCompare(b.casa, "es", { numeric: true }));
