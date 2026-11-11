@@ -56,7 +56,7 @@ function casasTokko() {
       for (const p of d.objects) {
         if (!p.reference_code || (p.type && p.type.name === "Terreno")) continue;
         out.push({ cod: p.reference_code, barrio: String((p.location && p.location.name) || "").trim(),
-                   casa: String(p.real_address || p.address || p.publication_title || p.reference_code).trim(), url: p.public_url || "" });
+                   casa: String(p.real_address || p.address || "").trim(), url: p.public_url || "" });
       }
       if (!d.meta.next) break;
     }
@@ -80,6 +80,22 @@ function estadoMapa() {
     console.warn("No pude leer datos.json: " + e);
     return { ok: false, enMapa: {}, fuera: {}, datos: null };
   }
+}
+
+/** {código: nombre interno} de la hoja vieja "Disponibilidad" (Barrio | Casa | Difusión | … | Código). */
+function nombresInternos(libro) {
+  const out = {};
+  const h = libro.getSheetByName("Disponibilidad");
+  if (!h) return out;
+  const v = h.getDataRange().getDisplayValues();
+  const cab = (v[0] || []).map(norm);
+  const iCod = cab.indexOf("codigo"), iCasa = cab.indexOf("casa");
+  if (iCod < 0 || iCasa < 0) return out;
+  for (const f of v.slice(1)) {
+    const cod = String(f[iCod]).trim(), casa = String(f[iCasa]).trim();
+    if (cod && casa) out[cod] = casa;
+  }
+  return out;
 }
 
 function actualizar() {
@@ -115,8 +131,16 @@ function actualizar() {
       }
     }
 
-    // Nombre vacío (Tokko sin dirección o sin respuesta): conservar el nombre interno que ya estaba en la hoja
-    for (const c of casas) if (!c.casa && previo[c.cod] && previo[c.cod].casa) c.casa = String(previo[c.cod].casa).trim();
+    // Nombre interno sin Tokko: 1) hoja vieja "Disponibilidad" (columna Casa = dirección de Tokko), 2) lo que ya
+    // estaba en esta hoja, salvo que sea el título de difusión del sitio, 3) el código.
+    const interno = nombresInternos(libro);
+    const difusion = {};
+    if (mapa.datos) for (const p of mapa.datos.propiedades) difusion[p.ref] = String(p.titulo || "").trim();
+    for (const c of casas) {
+      if (c.casa) continue;
+      const ant = previo[c.cod] ? String(previo[c.cod].casa).trim() : "";
+      c.casa = interno[c.cod] || (ant && ant !== difusion[c.cod] ? ant : "") || c.cod;
+    }
 
     // 3) Filas: casas de Tokko + (abajo, en gris) las que salieron de Tokko pero tenían períodos cargados
     casas.sort((a, b) => a.barrio.localeCompare(b.barrio, "es") || a.casa.localeCompare(b.casa, "es", { numeric: true }));
@@ -184,7 +208,7 @@ function actualizar() {
 
     const sinCargarN = casas.filter(c => !(previo[c.cod] && previo[c.cod].per.some(x => x))).length;
     const fueraN = casas.filter(c => motivo(c) && motivo(c) !== "esperando sincronización").length;
-    if (ERROR_TOKKO) libro.toast("No pude leer Tokko (" + ERROR_TOKKO + "): los nombres internos no se actualizaron.", "Mapas", 15);
+    if (ERROR_TOKKO) libro.toast("No pude leer Tokko (" + ERROR_TOKKO + "). Nombres internos tomados de la hoja Disponibilidad; las casas nuevas salen con el código.", "Mapas", 15);
     else libro.toast(`${casas.length} casas` + (sinCargarN ? ` · ${sinCargarN} sin agenda` : "") + (fueraN ? ` · ${fueraN} fuera del mapa` : ""), "Mapas", 6);
   } finally {
     lock.releaseLock();
