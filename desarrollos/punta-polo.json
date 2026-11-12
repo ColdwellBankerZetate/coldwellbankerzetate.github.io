@@ -2,8 +2,8 @@
   "nombre": "Punta Polo",
   "clase": "barrio",
   "zona": "Manantiales · José Ignacio",
-  "lat": -34.8719,
-  "lng": -54.7512,
+  "lat": -34.8653,
+  "lng": -54.7577,
   "estado": {
     "es": "En venta · preventa",
     "en": "For sale · pre-sale",
@@ -382,5 +382,6 @@
   },
   "drive": "https://drive.google.com/drive/folders/1T2WjL0KmIudBQ8Q-pK-I7yDXT5KERRZT",
   "destacado": true,
-  "orden": 60
+  "orden": 60,
+  "m2_solo_lista": true
 }
