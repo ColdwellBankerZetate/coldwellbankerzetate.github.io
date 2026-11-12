@@ -4,6 +4,11 @@ name: Ubicar desarrollos (OpenStreetMap + satélite)
 # también calcar.py) y deja las imágenes en la rama "verificacion-ci" para revisarlas. No toca main.
 on:
   workflow_dispatch:
+    inputs:
+      solo:
+        description: "Slugs a ubicar, separados por coma (vacío = todos)"
+        required: false
+        default: ""
   push:
     branches: ["claude/**"]
     paths: ["desarrollos/*-calco.json", "ubicar.py", "calcar.py", ".github/workflows/ubicar.yml"]
@@ -16,11 +21,27 @@ jobs:
     runs-on: ubuntu-latest
     steps:
       - uses: actions/checkout@v4
+        with:
+          fetch-depth: 2
       - uses: actions/setup-python@v5
         with:
           python-version: "3.12"
       - run: pip install pillow numpy
-      - run: mkdir -p verificacion && python3 ubicar.py 2>&1 | tee verificacion/log.txt
+      - name: Ubicar
+        env:
+          SOLO_INPUT: ${{ inputs.solo }}
+        run: |
+          # en un push, solo los calcos que cambiaron en ese commit (si cambió el código, todos)
+          if [ "${{ github.event_name }}" = "push" ]; then
+            cambios=$(git diff --name-only HEAD~1 HEAD 2>/dev/null || true)
+            if ! echo "$cambios" | grep -qE '^(ubicar|calcar|verificar)\.py$|ubicar\.yml$'; then
+              export SOLO=$(echo "$cambios" | sed -n 's#^desarrollos/\(.*\)-calco\.json$#\1#p' | tr '\n' ' ')
+            fi
+          else
+            export SOLO="$SOLO_INPUT"
+          fi
+          echo "SOLO=$SOLO"
+          mkdir -p verificacion && python3 ubicar.py 2>&1 | tee verificacion/log.txt
       - name: Guardar resultados en la rama verificacion-ci
         if: always()
         run: |
