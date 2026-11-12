@@ -81,44 +81,53 @@ def grilla(img, px, lat, lng, paso=50):
 
 def main():
     os.makedirs(os.path.join(AQUI, "verificacion"), exist_ok=True)
+    solo = [s for s in os.environ.get("SOLO", "").replace(",", " ").split() if s]  # ej. SOLO=punta-polo
     for f in sorted(glob.glob(os.path.join(AQUI, "desarrollos", "*-calco.json"))):
         slug = os.path.basename(f)[:-len("-calco.json")]
-        cfg = json.load(open(f, encoding="utf-8"))
-        if cfg.get("centro") and not cfg.get("cruce"):  # sin cruce: recorte con grilla alrededor de un punto aproximado
-            lat, lng = cfg["centro"]
-            metros = (cfg.get("recorte") or {}).get("metros", 1500)
-            img, px, _ = recorte(lat, lng, metros, 18 if metros <= 600 else 17)
-            img.save(os.path.join(AQUI, "verificacion", f"{slug}-sat-limpio.jpg"), quality=88)
-            grilla(img, px, lat, lng, (cfg.get("recorte") or {}).get("paso", 50))
-            img.save(os.path.join(AQUI, "verificacion", f"{slug}-sat.jpg"), quality=85)
-            print(f"{slug}: recorte alrededor de {lat},{lng} ({metros} m) -> verificacion/{slug}-sat.jpg")
-        if cfg.get("cruce"):
-            bbox = cfg.get("bbox") or [-34.93, -54.90, -34.85, -54.75]
-            ca, cb = calles(cfg["cruce"][0], bbox), calles(cfg["cruce"][1], bbox)
-            print(f"{slug}: {len(ca)} tramos '{cfg['cruce'][0]}', {len(cb)} tramos '{cfg['cruce'][1]}'")
-            if not ca or not cb:
-                print("  no encontré alguna de las dos calles en OpenStreetMap")
-                continue
-            c = cruce(ca, cb)
-            print(f"  cruce: {c}")
-            json.dump({"cruce": c, "a": ca, "b": cb}, open(os.path.join(AQUI, "verificacion", f"{slug}-ubicacion.json"), "w"),
-                      ensure_ascii=False)
-            rc = cfg.get("recorte") or {}
-            lat = c["lat"] + rc.get("norte", 250) / 110540
-            lng = c["lng"] + rc.get("este", 150) / (111320 * math.cos(math.radians(c["lat"])))
-            metros = rc.get("metros", 800)
-            img, px, _ = recorte(lat, lng, metros, 18 if metros <= 600 else 17)
-            img.save(os.path.join(AQUI, "verificacion", f"{slug}-sat-limpio.jpg"), quality=88)
-            d = ImageDraw.Draw(img)
-            for w, col in [(x, (255, 80, 80)) for x in ca] + [(x, (80, 200, 255)) for x in cb]:
-                d.line([px(*p) for p in w["c"]], fill=col, width=2)
-            x, y = px(c["lat"], c["lng"])
-            d.ellipse([x - 7, y - 7, x + 7, y + 7], outline=(255, 255, 0), width=3)
-            grilla(img, px, lat, lng)
-            img.save(os.path.join(AQUI, "verificacion", f"{slug}-sat.jpg"), quality=85)
-            print(f"  recorte: verificacion/{slug}-sat.jpg ({img.width}x{img.height}, {metros} m de lado)")
-        if cfg.get("control"):
-            subprocess.run([sys.executable, os.path.join(AQUI, "calcar.py"), slug], check=False)
+        if solo and slug not in solo:
+            continue
+        try:
+            ubicar(slug, json.load(open(f, encoding="utf-8")))
+        except Exception as e:  # un desarrollo que falla no frena a los demás
+            print(f"{slug}: falló ({e})")
+
+
+def ubicar(slug, cfg):
+    if cfg.get("centro") and not cfg.get("cruce"):  # sin cruce: recorte con grilla alrededor de un punto aproximado
+        lat, lng = cfg["centro"]
+        metros = (cfg.get("recorte") or {}).get("metros", 1500)
+        img, px, _ = recorte(lat, lng, metros, 18 if metros <= 600 else 17)
+        img.save(os.path.join(AQUI, "verificacion", f"{slug}-sat-limpio.jpg"), quality=88)
+        grilla(img, px, lat, lng, (cfg.get("recorte") or {}).get("paso", 50))
+        img.save(os.path.join(AQUI, "verificacion", f"{slug}-sat.jpg"), quality=85)
+        print(f"{slug}: recorte alrededor de {lat},{lng} ({metros} m) -> verificacion/{slug}-sat.jpg")
+    if cfg.get("cruce"):
+        bbox = cfg.get("bbox") or [-34.93, -54.90, -34.85, -54.75]
+        ca, cb = calles(cfg["cruce"][0], bbox), calles(cfg["cruce"][1], bbox)
+        print(f"{slug}: {len(ca)} tramos '{cfg['cruce'][0]}', {len(cb)} tramos '{cfg['cruce'][1]}'")
+        if not ca or not cb:
+            print("  no encontré alguna de las dos calles en OpenStreetMap")
+            return
+        c = cruce(ca, cb)
+        print(f"  cruce: {c}")
+        json.dump({"cruce": c, "a": ca, "b": cb}, open(os.path.join(AQUI, "verificacion", f"{slug}-ubicacion.json"), "w"),
+                  ensure_ascii=False)
+        rc = cfg.get("recorte") or {}
+        lat = c["lat"] + rc.get("norte", 250) / 110540
+        lng = c["lng"] + rc.get("este", 150) / (111320 * math.cos(math.radians(c["lat"])))
+        metros = rc.get("metros", 800)
+        img, px, _ = recorte(lat, lng, metros, 18 if metros <= 600 else 17)
+        img.save(os.path.join(AQUI, "verificacion", f"{slug}-sat-limpio.jpg"), quality=88)
+        d = ImageDraw.Draw(img)
+        for w, col in [(x, (255, 80, 80)) for x in ca] + [(x, (80, 200, 255)) for x in cb]:
+            d.line([px(*p) for p in w["c"]], fill=col, width=2)
+        x, y = px(c["lat"], c["lng"])
+        d.ellipse([x - 7, y - 7, x + 7, y + 7], outline=(255, 255, 0), width=3)
+        grilla(img, px, lat, lng)
+        img.save(os.path.join(AQUI, "verificacion", f"{slug}-sat.jpg"), quality=85)
+        print(f"  recorte: verificacion/{slug}-sat.jpg ({img.width}x{img.height}, {metros} m de lado)")
+    if cfg.get("control"):
+        subprocess.run([sys.executable, os.path.join(AQUI, "calcar.py"), slug], check=False)
 
 
 if __name__ == "__main__":

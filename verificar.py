@@ -6,7 +6,7 @@
 
 Para pasar un punto de la imagen 'zona' a coordenadas, usá la grilla impresa (lat/lng en los bordes).
 """
-import io, json, math, os, sys, urllib.request
+import io, json, math, os, sys, time, urllib.request
 from PIL import Image, ImageDraw
 
 AQUI = os.path.dirname(os.path.abspath(__file__))
@@ -37,7 +37,15 @@ def recorte(lat, lng, metros=120, z=18):
             ruta = os.path.join(CACHE, f"{z}_{x}_{y}.jpg")
             if not os.path.exists(ruta):
                 req = urllib.request.Request(TILES.format(z=z, x=x, y=y), headers={"User-Agent": "Mozilla/5.0"})
-                open(ruta, "wb").write(urllib.request.urlopen(req, timeout=30).read())
+                for intento in range(4):  # el servidor de tiles a veces tarda: reintentar antes de abandonar
+                    try:
+                        datos = urllib.request.urlopen(req, timeout=30).read()
+                        break
+                    except Exception:
+                        if intento == 3:
+                            raise
+                        time.sleep(3 * (intento + 1))
+                open(ruta, "wb").write(datos)
             img.paste(Image.open(ruta), ((x - x0) * 256, (y - y0) * 256))
     def px(la, ln):
         tx, ty = tile_xy(la, ln, z)
