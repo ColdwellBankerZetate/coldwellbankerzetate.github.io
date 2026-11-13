@@ -93,6 +93,62 @@ def main():
 
 
 def ubicar(slug, cfg):
+    for url in cfg.get("paginas") or []:  # avisos web (ej. infocasas): sacar coordenadas y textos de la página
+        try:
+            req = urllib.request.Request(url, headers={"User-Agent": "Mozilla/5.0 (X11; Linux x86_64) AppleWebKit/537.36 Chrome/124 Safari/537.36",
+                                                       "Accept-Language": "es-UY,es;q=0.9"})
+            with urllib.request.urlopen(req, timeout=60) as r:
+                html = r.read().decode("utf-8", "replace")
+            import re as _re
+            pares = _re.findall(r'(-3[45]\.\d{4,})[^\d-]{1,40}?(-5[45]\.\d{4,})', html)
+            titulo = (_re.search(r"<title>(.*?)</title>", html, _re.S) or [None, ""])[1].strip()
+            print(f"{slug}: {url}\n  título: {titulo}\n  coordenadas: {sorted(set(pares))[:10]}")
+            for clave in ("address", "ubicaci", "Ubicaci", "barrio", "neighborhood", "zona"):
+                for m in _re.finditer(clave, html):
+                    t = _re.sub(r"<[^>]+>|\s+", " ", html[m.start():m.start() + 160])
+                    print(f"  {t}")
+                    break
+            open(os.path.join(AQUI, "verificacion", f"{slug}-pagina-{abs(hash(url)) % 10000}.html"), "w").write(html)
+        except Exception as ex:
+            print(f"{slug}: {url}: {ex}")
+    if cfg.get("buscar"):  # buscar un lugar por nombre (barrio, fraccionamiento, padrón) en OSM; recorte en el primero
+        bbox = cfg.get("bbox") or [-34.93, -54.90, -34.70, -54.50]
+        s, w, n, e = bbox
+        q = f'[out:json][timeout:60];nwr["name"~"{cfg["buscar"]}",i]({s},{w},{n},{e});out center tags;'
+        d = None
+        for intento in range(6):
+            try:
+                req = urllib.request.Request(OVERPASS[intento % len(OVERPASS)], data=urllib.parse.urlencode({"data": q}).encode(),
+                                             headers={"User-Agent": "cbz-mapas/1.0"})
+                with urllib.request.urlopen(req, timeout=90) as r:
+                    d = json.load(r)
+                break
+            except Exception as ex:
+                print(f"  overpass: {ex}; reintento"); time.sleep(5 * (intento + 1))
+        hallados = []
+        for el in (d or {}).get("elements", []):
+            c = el.get("center") or ({"lat": el["lat"], "lon": el["lon"]} if "lat" in el else None)
+            if c:
+                hallados.append({"tipo": el["type"], "id": el["id"], "lat": c["lat"], "lng": c["lon"], "tags": el.get("tags", {})})
+        if not hallados:  # respaldo: Nominatim (buscador de OSM)
+            for texto in cfg.get("nominatim") or [cfg["buscar"]]:
+                try:
+                    url = "https://nominatim.openstreetmap.org/search?" + urllib.parse.urlencode(
+                        {"q": texto, "format": "jsonv2", "limit": 10, "countrycodes": "uy",
+                         "viewbox": f"{w},{n},{e},{s}", "bounded": 1})
+                    with urllib.request.urlopen(urllib.request.Request(url, headers={"User-Agent": "cbz-mapas/1.0"}), timeout=60) as r:
+                        for x in json.load(r):
+                            hallados.append({"tipo": x.get("osm_type"), "id": x.get("osm_id"), "lat": float(x["lat"]), "lng": float(x["lon"]),
+                                             "tags": {"name": x.get("display_name"), "clase": x.get("category"), "tipo": x.get("type")}})
+                except Exception as ex:
+                    print(f"  nominatim '{texto}': {ex}")
+                time.sleep(1.5)
+        print(f"{slug}: '{cfg['buscar']}' → {len(hallados)} resultados")
+        for h in hallados[:20]:
+            print(f"  {h['tipo']} {h['id']} {h['lat']:.6f},{h['lng']:.6f} {h['tags']}")
+        json.dump(hallados, open(os.path.join(AQUI, "verificacion", f"{slug}-busqueda.json"), "w"), ensure_ascii=False)
+        if hallados and not cfg.get("centro"):
+            cfg["centro"] = [hallados[0]["lat"], hallados[0]["lng"]]
     if cfg.get("centro") and not cfg.get("cruce"):  # sin cruce: recorte con grilla alrededor de un punto aproximado
         lat, lng = cfg["centro"]
         metros = (cfg.get("recorte") or {}).get("metros", 1500)
