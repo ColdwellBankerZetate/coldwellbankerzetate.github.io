@@ -1,26 +1,11 @@
 {
-  "_nota": "Amalfi (Club de Chacras, José Ignacio). Paso 1: ubicar el predio. Acceso por Camino de las Portuguesas o Ruta 9 (video del desarrollador); en el mapa comparativo queda al final del Camino de las Portuguesas, al sur de la Ruta 9.",
+  "_nota": "Amalfi (Club de Chacras, José Ignacio). Paso 1: ubicar el predio. Acceso por Camino de las Portuguesas o Ruta 9 (video del desarrollador); en el mapa comparativo queda al final del Camino de las Portuguesas, al sur de la Ruta 9. Altos de José Ignacio: aviso de Infocasas (chacra 10 ha) con pin en -34.8061,-54.6352, al final del Camino de las Portuguesas.",
   "recorte": {
-    "metros": 3000,
+    "metros": 2400,
     "paso": 100
   },
-  "buscar": "Altos de Jos",
-  "bbox": [
-    -34.85,
-    -54.75,
-    -34.65,
-    -54.5
-  ],
-  "nominatim": [
-    "Altos de José Ignacio",
-    "Altos de Jose Ignacio, Maldonado",
-    "Amalfi José Ignacio"
-  ],
-  "paginas": [
-    "https://www.infocasas.com.uy/chacras-de-3-hectareas-ama-jose-ignacio-desde-85000-dolares/193643322",
-    "https://www.infocasas.com.uy/chacras-de-3-hectareas-ama-jose-ignacio-financiadas/193549291",
-    "https://www.infocasas.com.uy/chacras-de-3-hectareas-a-15-minutos-de-jose-ignacio/193749294",
-    "https://www.infocasas.com.uy/venta-chacra-10-hectareas-en-altos-de-jose-ignacio-jose-ignacio/193148868",
-    "https://www.realestate-in-uruguay.com/listings/exclusive-chacras-development-jose-ignacio/"
+  "centro": [
+    -34.804,
+    -54.639
   ]
 }
