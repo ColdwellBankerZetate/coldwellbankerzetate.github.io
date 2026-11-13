@@ -491,15 +491,32 @@ const INTERNO = {
   const sesion = { get: () => { try { return sessionStorage.getItem(K); } catch (_) { return null; } }, set: v => { try { sessionStorage.setItem(K, v); } catch (_) {} }, del: () => { try { sessionStorage.removeItem(K); } catch (_) {} } };
   try { INTERNO.datos = JSON.parse(sesion.get() || leer(K) || "null"); } catch (_) { INTERNO.datos = null; }
   const b64 = s => Uint8Array.from(atob(s), c => c.charCodeAt(0));
+  const a64 = u => btoa(String.fromCharCode(...new Uint8Array(u)));
+  const bajar = async () => { const r = await fetch(raiz() + "interno.dat", { cache: "no-cache" }); if (!r.ok) throw new Error("sin-archivo"); return r.json(); };
+  const abrir = async (j, llave) => JSON.parse(new TextDecoder().decode(await crypto.subtle.decrypt({ name: "AES-GCM", iv: b64(j.n) }, llave, b64(j.c))));
+  /* la llave derivada (no la contraseña) queda guardada junto a los datos (_k, con su sal _s): así, cuando el build publica
+     un interno.dat nuevo (ej. precios actualizados), la página lo abre sola sin volver a pedir la contraseña */
   async function descifrar(clave) {
-    const r = await fetch(raiz() + "interno.dat", { cache: "no-cache" });
-    if (!r.ok) throw new Error("sin-archivo");
-    const j = await r.json();
+    const j = await bajar();
     const base = await crypto.subtle.importKey("raw", new TextEncoder().encode(clave), "PBKDF2", false, ["deriveKey"]);
-    const llave = await crypto.subtle.deriveKey({ name: "PBKDF2", salt: b64(j.s), iterations: j.it, hash: "SHA-256" }, base, { name: "AES-GCM", length: 256 }, false, ["decrypt"]);
-    return JSON.parse(new TextDecoder().decode(await crypto.subtle.decrypt({ name: "AES-GCM", iv: b64(j.n) }, llave, b64(j.c))));
+    const llave = await crypto.subtle.deriveKey({ name: "PBKDF2", salt: b64(j.s), iterations: j.it, hash: "SHA-256" }, base, { name: "AES-GCM", length: 256 }, true, ["decrypt"]);
+    const d = await abrir(j, llave);
+    return Object.assign(d, { _k: a64(await crypto.subtle.exportKey("raw", llave)), _s: j.s, _n: j.n });
+  }
+  const guardar = (d, recordar) => { const s = JSON.stringify(d); sesion.set(s); if (recordar) guardarLS(K, s); };
+  async function refrescar() {
+    const d = INTERNO.datos;
+    if (!d || !d._k || !(window.crypto && crypto.subtle)) return;
+    try {
+      const j = await bajar();
+      if (j.n === d._n || j.s !== d._s) return; /* sin cambios, o cambió la contraseña (hay que volver a entrar) */
+      const llave = await crypto.subtle.importKey("raw", b64(d._k), "AES-GCM", false, ["decrypt"]);
+      const nuevo = Object.assign(await abrir(j, llave), { _k: d._k, _s: d._s, _n: j.n, _tk: d._tk });
+      INTERNO.datos = nuevo; guardar(nuevo, !!leer(K)); avisar();
+    } catch (_) {}
   }
   const avisar = () => document.dispatchEvent(new CustomEvent("interno"));
+  setTimeout(refrescar, 400);
   const css = document.createElement("style");
   css.textContent = `
   #cbz-int{position:fixed;left:max(10px,env(safe-area-inset-left,0px));bottom:calc(10px + env(safe-area-inset-bottom,0px));z-index:5000;width:30px;height:30px;border-radius:50%;border:1px solid rgba(255,255,255,.22);background:rgba(10,10,10,.72);color:#fff;opacity:.45;display:grid;place-items:center;padding:0;cursor:pointer;-webkit-backdrop-filter:blur(6px);backdrop-filter:blur(6px);transition:opacity .2s}
@@ -536,7 +553,7 @@ const INTERNO = {
   }
   eng.addEventListener("click", () => {
     if (INTERNO.activo()) {
-      const m = modal('<div class="c" role="dialog" aria-modal="true"><h3>Modo interno</h3><p>Activo: ves las funciones solo para el equipo.</p><a class="ag" href="' + raiz() + 'agenda/">Agenda de temporada →</a><div class="fila"><button type="button" data-x>Cerrar</button><button type="button" class="pri" data-salir>Salir del modo interno</button></div></div>');
+      const m = modal('<div class="c" role="dialog" aria-modal="true"><h3>Modo interno</h3><p>Activo: ves las funciones solo para el equipo.</p><a class="ag" href="' + raiz() + 'agenda/">Agenda de temporada →</a><a class="ag" href="' + raiz() + '#comparar">Comparar desarrollos →</a><div class="fila"><button type="button" data-x>Cerrar</button><button type="button" class="pri" data-salir>Salir del modo interno</button></div></div>');
       m.querySelector("[data-x]").onclick = cerrar;
       m.querySelector("[data-salir]").onclick = () => { INTERNO.datos = null; sesion.del(); try { localStorage.removeItem(K); } catch (_) {} estado(); cerrar(); avisar(); };
       return;
@@ -554,8 +571,7 @@ const INTERNO = {
         const h = await crypto.subtle.digest("SHA-256", new TextEncoder().encode("cbz-agenda:" + inp.value));
         datos._tk = [...new Uint8Array(h)].map(x => x.toString(16).padStart(2, "0")).join("");
         INTERNO.datos = datos;
-        const s = JSON.stringify(datos);
-        sesion.set(s); if (f.recordar.checked) guardarLS(K, s);
+        guardar(datos, f.recordar.checked);
         estado(); cerrar(); avisar();
       } catch (x) {
         err.textContent = x.message === "sin-archivo" ? "Todavía no hay datos internos publicados."
@@ -565,3 +581,99 @@ const INTERNO = {
     });
   });
 })();
+
+/* --- panel interno (Info de desarrollos, comparativa): ventana grande sobre la página; en el celular, pantalla completa --- */
+INTERNO.panel = function (html, alCerrar) {
+  if (!document.getElementById("cbz-pan-css")) {
+    const css = document.createElement("style"); css.id = "cbz-pan-css";
+    css.textContent = `
+  #cbz-pan{position:fixed;inset:0;z-index:5002;background:rgba(0,0,0,.66);display:grid;place-items:center;padding:24px;-webkit-backdrop-filter:blur(3px);backdrop-filter:blur(3px)}
+  #cbz-pan .v{position:relative;background:#0e0e0e;border:1px solid rgba(255,255,255,.14);border-radius:16px;width:min(1040px,100%);max-height:100%;overflow:auto;color:#f3f1ec;font:14px/1.45 "Hanken Grotesk",system-ui,sans-serif;box-shadow:0 30px 80px rgba(0,0,0,.6);scrollbar-width:thin;scrollbar-color:rgba(255,255,255,.18) transparent;overscroll-behavior:contain}
+  #cbz-pan .cab{position:sticky;top:0;z-index:2;display:flex;align-items:flex-start;justify-content:space-between;gap:14px;padding:20px 24px 16px;background:#0e0e0e;border-bottom:1px solid rgba(255,255,255,.07);margin-bottom:20px}
+  #cbz-pan .cab .k{display:flex;align-items:center;gap:7px;font-size:10.5px;font-weight:700;letter-spacing:.2em;text-transform:uppercase;color:#c8b28a}
+  #cbz-pan .cab h3{margin:4px 0 0;font:italic 500 32px/1.05 "Bodoni Moda",Georgia,serif}
+  #cbz-pan .cab .f{margin:6px 0 0;color:#9b978f;font-size:12.5px}
+  #cbz-pan .cab .f a{color:#c8b28a;text-decoration:none;white-space:nowrap}
+  #cbz-pan .x{flex:none;width:38px;height:38px;border-radius:50%;border:1px solid rgba(255,255,255,.2);background:transparent;color:#fff;font-size:20px;line-height:1;cursor:pointer;display:grid;place-items:center;padding:0}
+  #cbz-pan .x:hover{border-color:#fff}
+  #cbz-pan .cu{padding:0 24px 26px;display:grid;grid-template-columns:minmax(0,1fr);gap:26px}
+  #cbz-pan .cu>*,#cbz-pan .dos>*,#cbz-pan .kpis>*{min-width:0}
+  #cbz-pan h4{margin:0 0 10px;font-size:10.5px;font-weight:700;letter-spacing:.2em;text-transform:uppercase;color:#c8b28a}
+  #cbz-pan .kpis{display:grid;grid-template-columns:repeat(4,minmax(0,1fr));gap:1px;background:rgba(255,255,255,.09);border:1px solid rgba(255,255,255,.09);border-radius:10px;overflow:hidden}
+  #cbz-pan .kpi{background:#0e0e0e;padding:14px 16px;display:grid;gap:3px;min-width:0}
+  #cbz-pan .kpi span{font-size:10px;font-weight:600;letter-spacing:.16em;text-transform:uppercase;color:#6d6a64}
+  #cbz-pan .kpi b{font:500 27px/1.05 "Bodoni Moda",Georgia,serif;font-variant-numeric:lining-nums;white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
+  #cbz-pan .kpi small{font-size:12px;color:#9b978f}
+  #cbz-pan .barra{display:flex;height:8px;border-radius:4px;overflow:hidden;background:#222;margin-top:12px}
+  #cbz-pan .barra i{display:block}
+  #cbz-pan .ley{display:flex;flex-wrap:wrap;gap:14px;margin-top:8px;font-size:12px;color:#9b978f}
+  #cbz-pan .ley span::before{content:"";display:inline-block;width:8px;height:8px;border-radius:2px;margin-right:6px;background:var(--c)}
+  #cbz-pan .dos{display:grid;grid-template-columns:minmax(0,1fr) minmax(0,1fr);gap:26px}
+  #cbz-pan table{width:100%;border-collapse:collapse;font-size:13px;font-variant-numeric:tabular-nums}
+  #cbz-pan th{text-align:left;font-size:10px;font-weight:700;letter-spacing:.14em;text-transform:uppercase;color:#6d6a64;padding:0 10px 8px 0;white-space:nowrap;border-bottom:1px solid rgba(255,255,255,.14)}
+  #cbz-pan th[data-o]{cursor:pointer;user-select:none}
+  #cbz-pan th[data-o]:hover{color:#f3f1ec}
+  #cbz-pan th.on{color:#c8b28a}
+  #cbz-pan td{padding:8px 10px 8px 0;border-bottom:1px solid rgba(255,255,255,.07);white-space:nowrap}
+  #cbz-pan td.r,#cbz-pan th.r{text-align:right}
+  #cbz-pan tr.vendido td{color:#6d6a64;text-decoration:line-through}
+  #cbz-pan tr.reservado td:first-child{color:#c8b28a}
+  #cbz-pan tbody tr[data-n]{cursor:pointer}
+  #cbz-pan tbody tr[data-n]:hover td{background:rgba(255,255,255,.04)}
+  #cbz-pan tbody tr.sel td{background:rgba(200,178,138,.12)}
+  #cbz-pan .tabla{overflow-x:auto;margin:0 -2px;padding:0 2px}
+  #cbz-pan .tag{display:inline-block;border:1px solid rgba(255,255,255,.2);border-radius:999px;padding:1px 8px;font-size:10.5px;font-weight:600;letter-spacing:.06em;color:#9b978f;text-decoration:none}
+  #cbz-pan .tag.d{border-color:rgba(120,200,140,.5);color:#8fd3a0}
+  #cbz-pan .tag.r{border-color:rgba(200,178,138,.6);color:#c8b28a}
+  #cbz-pan .fil{display:flex;flex-wrap:wrap;align-items:center;gap:8px;margin-bottom:10px}
+  #cbz-pan .fil button{background:none;border:1px solid rgba(255,255,255,.2);border-radius:999px;padding:4px 11px;font:600 11px "Hanken Grotesk",system-ui,sans-serif;letter-spacing:.08em;color:#9b978f;cursor:pointer}
+  #cbz-pan .fil button[aria-pressed="true"]{background:#f3f1ec;border-color:#f3f1ec;color:#0a0a0a}
+  #cbz-pan .fil input,#cbz-pan select{background:#000;border:1px solid rgba(255,255,255,.22);border-radius:8px;color:#fff;font:inherit;font-size:14px;padding:7px 10px;min-width:0}
+  #cbz-pan .fil input{flex:1;max-width:180px}
+  #cbz-pan .planes{display:grid;gap:10px}
+  #cbz-pan .plan{border:1px solid rgba(255,255,255,.1);border-radius:10px;padding:12px 14px}
+  #cbz-pan .plan b{display:block;font-size:13.5px;margin-bottom:4px}
+  #cbz-pan .plan ul,#cbz-pan .notas{margin:0;padding:0 0 0 16px;color:#cfcbc3;font-size:13px}
+  #cbz-pan .sim{border:1px solid rgba(200,178,138,.35);border-radius:12px;padding:16px;display:grid;grid-template-columns:minmax(0,1fr);gap:12px;background:rgba(200,178,138,.04)}
+  #cbz-pan .sim .sel2{display:grid;grid-template-columns:1fr 1.4fr;gap:8px}
+  #cbz-pan .sim .tot{display:flex;justify-content:space-between;align-items:baseline;gap:10px;padding-top:10px;border-top:1px solid rgba(255,255,255,.14)}
+  #cbz-pan .sim .tot b{font:500 24px "Bodoni Moda",Georgia,serif}
+  #cbz-pan .bts{display:flex;flex-wrap:wrap;gap:8px}
+  #cbz-pan .bt{display:inline-flex;align-items:center;gap:7px;border-radius:999px;padding:9px 14px;font:700 11px "Hanken Grotesk",system-ui,sans-serif;letter-spacing:.12em;text-transform:uppercase;text-decoration:none;cursor:pointer;border:1px solid rgba(255,255,255,.22);background:transparent;color:#f3f1ec}
+  #cbz-pan .bt.pri{background:#c8b28a;border-color:#c8b28a;color:#0a0a0a}
+  #cbz-pan .bt:hover{border-color:#fff}
+  #cbz-pan .vacio{padding:18px;border:1px dashed rgba(255,255,255,.18);border-radius:10px;color:#9b978f;font-size:13px}
+  #cbz-pan .op{display:grid;gap:6px}
+  #cbz-pan .op button{display:flex;justify-content:space-between;gap:10px;width:100%;background:none;border:0;border-bottom:1px solid rgba(255,255,255,.07);padding:8px 0;color:#f3f1ec;font:inherit;font-size:13px;cursor:pointer;text-align:left}
+  #cbz-pan .op button span{color:#9b978f;text-align:right}
+  #cbz-pan .op button:hover b{color:#c8b28a}
+  @media (max-width:760px){
+    #cbz-pan{padding:0}
+    #cbz-pan .v{border-radius:0;border:0;height:100%;max-height:none}
+    #cbz-pan .cab{padding:calc(14px + env(safe-area-inset-top,0px)) 16px 12px}
+    #cbz-pan .cab h3{font-size:26px}
+    #cbz-pan .cu{padding:0 16px calc(26px + env(safe-area-inset-bottom,0px))}
+    #cbz-pan .kpis{grid-template-columns:minmax(0,1fr) minmax(0,1fr)}
+    #cbz-pan .kpi b{font-size:22px}
+    #cbz-pan .dos{grid-template-columns:minmax(0,1fr)}
+    #cbz-pan .sim .sel2{grid-template-columns:minmax(0,1fr)}
+    #cbz-pan .sim td{white-space:normal}
+    #cbz-pan .sim td.r{white-space:nowrap}
+    #cbz-pan .ocm{display:none}
+  }`;
+    document.head.appendChild(css);
+  }
+  const viejo = document.getElementById("cbz-pan"); if (viejo) viejo.remove();
+  const m = document.createElement("div");
+  m.id = "cbz-pan"; m.innerHTML = `<div class="v" role="dialog" aria-modal="true">${html}</div>`;
+  const cerrar = () => { m.remove(); document.removeEventListener("keydown", tecla); if (alCerrar) alCerrar(); };
+  const tecla = e => { if (e.key === "Escape") cerrar(); };
+  m.addEventListener("click", e => { if (e.target === m || e.target.closest("[data-cerrar]")) cerrar(); });
+  document.addEventListener("keydown", tecla);
+  document.body.appendChild(m);
+  m.cerrar = cerrar;
+  return m;
+};
+const fmtUSD = (n, mon) => n == null ? "—" : `${mon && mon !== "USD" ? mon : "USD"} ${Math.round(n).toLocaleString("es-UY")}`;
+const fmtUSDc = n => n == null ? "—" : n >= 1e6 ? `USD ${(n / 1e6).toLocaleString("es-UY", { maximumFractionDigits: 2 })} M` : `USD ${Math.round(n / 1000).toLocaleString("es-UY")} k`;
+const ICONO_INFO = '<svg viewBox="0 0 24 24" width="14" height="14" aria-hidden="true"><circle cx="12" cy="12" r="9" fill="none" stroke="currentColor" stroke-width="1.8"/><path d="M12 11v6M12 7.5v.5" stroke="currentColor" stroke-width="2" stroke-linecap="round"/></svg>';
