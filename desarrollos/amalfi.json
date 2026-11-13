@@ -2,8 +2,8 @@
   "nombre": "Amalfi",
   "clase": "barrio",
   "zona": "José Ignacio",
-  "lat": null,
-  "lng": null,
+  "lat": -34.8061,
+  "lng": -54.6352,
   "estado": {
     "es": "Lanzamiento",
     "en": "Launch",
