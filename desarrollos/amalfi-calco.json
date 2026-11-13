@@ -1,0 +1,6 @@
+{
+  "_nota": "Amalfi (Club de Chacras, José Ignacio). Paso 1: ubicar el predio. Acceso por Camino de las Portuguesas o Ruta 9 (video del desarrollador); en el mapa comparativo queda al final del Camino de las Portuguesas, al sur de la Ruta 9.",
+  "cruce": ["Portuguesas", "Ruta 9|Ruta Nacional|Olivera"],
+  "bbox": [-34.82, -54.75, -34.68, -54.52],
+  "recorte": {"norte": -1200, "este": 0, "metros": 5000}
+}
