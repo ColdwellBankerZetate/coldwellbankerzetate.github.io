@@ -418,6 +418,9 @@ def armar_desarrollos(sitio, wa_general, avisos):
         kmz_url = ("../" + os.path.basename(r_kmz)) if r_kmz and not r_kmz.startswith("http") else (r_kmz or "")
         if c.get("drive"):  # solo para el equipo: va cifrado en interno.dat, no en la página
             INTERNO.setdefault("desarrollos", {}).setdefault(slug, {})["drive"] = c["drive"]
+        an = analisis_dev(slug, nombre, plano, avisos)  # precios, financiación y disponibilidad (botón "Info", interno)
+        if an:
+            INTERNO.setdefault("desarrollos", {}).setdefault(slug, {})["analisis"] = an
         datos = {"modo": "desarrollo", "slug": slug, "nombre": nombre, "zona": info["zona"], "raiz": "../../",
                  "bajada": texto_es(c.get("bajada")), "amenities": c.get("amenities") or [],
                  "ventajas": c.get("ventajas") or [], "cifras": info["cifras"],
@@ -433,6 +436,61 @@ def armar_desarrollos(sitio, wa_general, avisos):
         print(f"  ok desarrollo {nombre} ({clase})")
     resumen.sort(key=lambda b: (not b["destacado"], b["orden"], b["nombre"]))
     return resumen
+
+
+def analisis_dev(slug, nombre, plano, avisos):
+    """Cruza la lista de precios (desarrollos/<slug>.precios, cifrada; ver cifrar.py) con los lotes del plano
+    (m², vendidos, reservados). Solo para el equipo: va a interno.dat. Sin precios igual da la disponibilidad."""
+    precios, ruta = None, os.path.join(AQUI, "desarrollos", slug + ".precios")
+    if os.path.exists(ruta):
+        clave = clave_interna()
+        if not clave:
+            avisos.append(f"Precios {nombre}: hay {slug}.precios pero falta la contraseña (INTERNO_CLAVE); no se publican")
+        else:
+            try:
+                import cifrar
+                precios = cifrar.descifrar(json.load(open(ruta)), clave)
+            except ImportError:
+                avisos.append(f"Precios {nombre}: falta la librería 'cryptography'; no se publican")
+            except Exception as e:
+                avisos.append(f"Precios {nombre}: no pude abrir {slug}.precios ({e})")
+    if not plano and not precios:
+        return None
+    lotes = {}
+    for lt in (plano or {}).get("lotes", []):
+        lotes[str(lt["n"]).lower()] = {"n": str(lt["n"]), "m2": lt.get("m2"), "estado": lt.get("estado") or "disponible"}
+    for l in (precios or {}).get("lotes", []):
+        k = str(l.get("n", "")).strip().lower()
+        if not k:
+            continue
+        d = lotes.get(k)
+        if d is None:
+            if plano:
+                avisos.append(f"Precios {nombre}: el lote {l['n']} de la lista no está en el plano")
+            d = lotes[k] = {"n": str(l["n"]), "m2": None, "estado": "disponible", "fuera": bool(plano)}
+        for campo in ("precio", "m2", "sector", "extra"):
+            if l.get(campo) not in (None, "", {}):
+                d[campo] = l[campo]
+        if l.get("estado") in ("disponible", "reservado", "vendido"):
+            d["estado"] = l["estado"]
+    lista = list(lotes.values())
+    disp = [x for x in lista if x["estado"] == "disponible"]
+    conp = [x for x in disp if x.get("precio")]
+    m2 = [x["precio"] / x["m2"] for x in conp if x.get("m2")]
+    barato = min(conp, key=lambda x: x["precio"]) if conp else None
+    resumen = {"total": len(lista), "disp": len(disp), "vend": sum(x["estado"] == "vendido" for x in lista),
+               "res": sum(x["estado"] == "reservado" for x in lista), "con_precio": len(conp),
+               "desde": barato["precio"] if barato else None, "desde_n": barato["n"] if barato else None,
+               "hasta": max(x["precio"] for x in conp) if conp else None,
+               "prom": round(statistics.mean(x["precio"] for x in conp)) if conp else None,
+               "prom_m2": round(statistics.mean(m2)) if m2 else None,
+               "min_m2": round(min(m2)) if m2 else None, "max_m2": round(max(m2)) if m2 else None}
+    p = precios or {}
+    if precios:
+        print(f"    precios: {len(conp)} lotes disponibles con precio, desde {p.get('moneda', 'USD')} {resumen['desde'] or 0:,.0f}")
+    return {"fuente": p.get("fuente") or "", "fecha": p.get("fecha") or "", "moneda": p.get("moneda") or "USD",
+            "lista": p.get("lista") or "", "planes": p.get("planes") or [], "costos": p.get("costos") or [],
+            "notas": p.get("notas") or [], "con_lista": bool(precios), "lotes": lista, "resumen": resumen}
 
 
 # ---------------------------------------------------------------- disponibilidad
@@ -680,6 +738,19 @@ def clave_interna():
     return k
 
 
+def escribir_llave_publica(avisos):
+    """interno.pub = llave pública para cifrar listas de precios (cifrar.py). Sale de la contraseña: siempre la misma."""
+    clave = clave_interna()
+    if not clave:
+        return
+    try:
+        import cifrar
+        pub = cifrar.publica(clave)
+    except ImportError:
+        return
+    escribir(os.path.join(AQUI, "interno.pub"), json.dumps({"v": 1, "x25519": pub, "huella": cifrar.huella(pub)}) + "\n")
+
+
 def escribir_interno(avisos):
     """interno.dat = INTERNO cifrado con la contraseña del equipo (PBKDF2-SHA256 + AES-GCM). El navegador lo
     descifra recién cuando alguien ingresa la contraseña; sin ella el archivo no dice nada. Determinístico
@@ -703,12 +774,14 @@ def escribir_interno(avisos):
     iteraciones = 200000
     cuerpo = json.dumps(INTERNO, ensure_ascii=False, sort_keys=True, separators=(",", ":")).encode()
     kb = clave.encode()
-    sal = hmac.new(kb, b"sal" + cuerpo, hashlib.sha256).digest()[:16]
+    # sal fija por contraseña: el navegador guarda la llave derivada y abre solo las versiones nuevas del archivo
+    # (sin volver a pedir la contraseña); el nonce sale del contenido, así que nunca se repite con otro contenido.
+    sal = hmac.new(kb, b"sal-v2", hashlib.sha256).digest()[:16]
     nonce = hmac.new(kb, b"nonce" + cuerpo, hashlib.sha256).digest()[:12]
     llave = hashlib.pbkdf2_hmac("sha256", kb, sal, iteraciones, 32)
     b64 = lambda b: base64.b64encode(b).decode()
     cif = AESGCM(llave).encrypt(nonce, cuerpo, None)
-    escribir(ruta, json.dumps({"v": 1, "it": iteraciones, "s": b64(sal), "n": b64(nonce), "c": b64(cif)}, separators=(",", ":")))
+    escribir(ruta, json.dumps({"v": 2, "it": iteraciones, "s": b64(sal), "n": b64(nonce), "c": b64(cif)}, separators=(",", ":")))
     print(f"  ok interno.dat ({len(INTERNO.get('desarrollos', {}))} desarrollos con datos internos)")
 
 
@@ -880,6 +953,7 @@ def main():
         todo += props
         print(f"  ok {c['nombre']}: {len(props)} propiedades")
 
+    escribir_llave_publica(avisos)
     desarrollos = armar_desarrollos(sitio, wa_general, avisos)
     escribir_interno(avisos)
     # Datos de todo el sitio (los usa la página de selección)
