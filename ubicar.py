@@ -93,6 +93,24 @@ def main():
 
 
 def ubicar(slug, cfg):
+    for url in cfg.get("paginas") or []:  # avisos web (ej. infocasas): sacar coordenadas y textos de la página
+        try:
+            req = urllib.request.Request(url, headers={"User-Agent": "Mozilla/5.0 (X11; Linux x86_64) AppleWebKit/537.36 Chrome/124 Safari/537.36",
+                                                       "Accept-Language": "es-UY,es;q=0.9"})
+            with urllib.request.urlopen(req, timeout=60) as r:
+                html = r.read().decode("utf-8", "replace")
+            import re as _re
+            pares = _re.findall(r'(-3[45]\.\d{4,})[^\d-]{1,40}?(-5[45]\.\d{4,})', html)
+            titulo = (_re.search(r"<title>(.*?)</title>", html, _re.S) or [None, ""])[1].strip()
+            print(f"{slug}: {url}\n  título: {titulo}\n  coordenadas: {sorted(set(pares))[:10]}")
+            for clave in ("address", "ubicaci", "Ubicaci", "barrio", "neighborhood", "zona"):
+                for m in _re.finditer(clave, html):
+                    t = _re.sub(r"<[^>]+>|\s+", " ", html[m.start():m.start() + 160])
+                    print(f"  {t}")
+                    break
+            open(os.path.join(AQUI, "verificacion", f"{slug}-pagina-{abs(hash(url)) % 10000}.html"), "w").write(html)
+        except Exception as ex:
+            print(f"{slug}: {url}: {ex}")
     if cfg.get("buscar"):  # buscar un lugar por nombre (barrio, fraccionamiento, padrón) en OSM; recorte en el primero
         bbox = cfg.get("bbox") or [-34.93, -54.90, -34.70, -54.50]
         s, w, n, e = bbox
