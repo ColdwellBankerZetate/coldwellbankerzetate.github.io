@@ -93,6 +93,31 @@ def main():
 
 
 def ubicar(slug, cfg):
+    if cfg.get("buscar"):  # buscar un lugar por nombre (barrio, fraccionamiento, padrón) en OSM; recorte en el primero
+        bbox = cfg.get("bbox") or [-34.93, -54.90, -34.70, -54.50]
+        s, w, n, e = bbox
+        q = f'[out:json][timeout:60];nwr["name"~"{cfg["buscar"]}",i]({s},{w},{n},{e});out center tags;'
+        d = None
+        for intento in range(6):
+            try:
+                req = urllib.request.Request(OVERPASS[intento % len(OVERPASS)], data=urllib.parse.urlencode({"data": q}).encode(),
+                                             headers={"User-Agent": "cbz-mapas/1.0"})
+                with urllib.request.urlopen(req, timeout=90) as r:
+                    d = json.load(r)
+                break
+            except Exception as ex:
+                print(f"  overpass: {ex}; reintento"); time.sleep(5 * (intento + 1))
+        hallados = []
+        for el in (d or {}).get("elements", []):
+            c = el.get("center") or ({"lat": el["lat"], "lon": el["lon"]} if "lat" in el else None)
+            if c:
+                hallados.append({"tipo": el["type"], "id": el["id"], "lat": c["lat"], "lng": c["lon"], "tags": el.get("tags", {})})
+        print(f"{slug}: '{cfg['buscar']}' → {len(hallados)} resultados")
+        for h in hallados[:20]:
+            print(f"  {h['tipo']} {h['id']} {h['lat']:.6f},{h['lng']:.6f} {h['tags']}")
+        json.dump(hallados, open(os.path.join(AQUI, "verificacion", f"{slug}-busqueda.json"), "w"), ensure_ascii=False)
+        if hallados and not cfg.get("centro"):
+            cfg["centro"] = [hallados[0]["lat"], hallados[0]["lng"]]
     if cfg.get("centro") and not cfg.get("cruce"):  # sin cruce: recorte con grilla alrededor de un punto aproximado
         lat, lng = cfg["centro"]
         metros = (cfg.get("recorte") or {}).get("metros", 1500)

@@ -1,11 +1,14 @@
 {
   "_nota": "Amalfi (Club de Chacras, José Ignacio). Paso 1: ubicar el predio. Acceso por Camino de las Portuguesas o Ruta 9 (video del desarrollador); en el mapa comparativo queda al final del Camino de las Portuguesas, al sur de la Ruta 9.",
   "recorte": {
-    "metros": 2600,
+    "metros": 3000,
     "paso": 100
   },
-  "centro": [
-    -34.7975,
-    -54.6285
+  "buscar": "Altos de Jos",
+  "bbox": [
+    -34.85,
+    -54.75,
+    -34.65,
+    -54.5
   ]
 }
