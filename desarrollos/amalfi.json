@@ -1,0 +1,169 @@
+{
+  "nombre": "Amalfi",
+  "clase": "barrio",
+  "zona": "José Ignacio",
+  "lat": null,
+  "lng": null,
+  "estado": {
+    "es": "Lanzamiento",
+    "en": "Launch",
+    "pt": "Lançamento"
+  },
+  "entrega": "07/2028",
+  "bajada": {
+    "es": "Club de chacras a 15 minutos de José Ignacio, con acceso por el Camino de las Portuguesas o por la Ruta 9. Un campo de 74 hectáreas con tajamares, arboledas, arroyo y fauna nativa, dividido en 23 chacras de 3 hectáreas promedio. Lo desarrolla NOIR, con proyecto de Pacífica Arquitectura (Ezequiel Gil y Alexis Plaghos), y lo comercializa Única Real Estate. Posesión y permisos de construcción desde abril de 2027; obras comunes terminadas y entrega final del barrio en julio de 2028.",
+    "en": "A club of country estates 15 minutes from José Ignacio, reached by Camino de las Portuguesas or Route 9. A 74-hectare property with ponds, groves, a stream and native wildlife, divided into 23 estates of about 3 hectares each. Developed by NOIR, designed by Pacífica Arquitectura (Ezequiel Gil and Alexis Plaghos) and marketed by Única Real Estate. Possession and building permits from April 2027; common works finished and final handover in July 2028.",
+    "pt": "Clube de chácaras a 15 minutos de José Ignacio, com acesso pelo Camino de las Portuguesas ou pela Rota 9. Um campo de 74 hectares com açudes, arvoredos, arroio e fauna nativa, dividido em 23 chácaras de 3 hectares em média. Desenvolvido pela NOIR, com projeto da Pacífica Arquitectura (Ezequiel Gil e Alexis Plaghos) e comercializado pela Única Real Estate. Posse e licenças de construção a partir de abril de 2027; obras comuns concluídas e entrega final em julho de 2028."
+  },
+  "cifras": [
+    {
+      "valor": "23",
+      "nombre": {
+        "es": "Chacras",
+        "en": "Estates",
+        "pt": "Chácaras"
+      }
+    },
+    {
+      "valor": "3 ha",
+      "nombre": {
+        "es": "Promedio por chacra",
+        "en": "Average per estate",
+        "pt": "Média por chácara"
+      }
+    },
+    {
+      "valor": "74 ha",
+      "nombre": {
+        "es": "Predio",
+        "en": "Total area",
+        "pt": "Área total"
+      }
+    },
+    {
+      "valor": "15 min",
+      "nombre": {
+        "es": "A José Ignacio",
+        "en": "To José Ignacio",
+        "pt": "Até José Ignacio"
+      }
+    }
+  ],
+  "ventajas": [
+    {
+      "es": "Campo con todo su encanto: tajamares, arboledas, vistas al arroyo y llanura, con ñandúes y fauna nativa.",
+      "en": "Countryside at its best: ponds, groves, views of the stream and the plains, with rheas and native wildlife.",
+      "pt": "O campo com todo o seu encanto: açudes, arvoredos, vista para o arroio e a planície, com emas e fauna nativa."
+    },
+    {
+      "es": "Chacras de 3 hectáreas promedio: privacidad y espacio, a 15 minutos del pueblo de José Ignacio.",
+      "en": "Estates of about 3 hectares: privacy and space, 15 minutes from the village of José Ignacio.",
+      "pt": "Chácaras de 3 hectares em média: privacidade e espaço, a 15 minutos da vila de José Ignacio."
+    },
+    {
+      "es": "Cuadrilla de caseros para los espacios verdes y asistencia a las chacras los 365 días del año.",
+      "en": "A team of caretakers for the green areas and assistance to the estates 365 days a year.",
+      "pt": "Equipe de caseiros para as áreas verdes e assistência às chácaras 365 dias por ano."
+    },
+    {
+      "es": "Gastos comunes bonificados hasta el 1 de julio de 2028.",
+      "en": "Common charges waived until July 1, 2028.",
+      "pt": "Taxas comuns bonificadas até 1º de julho de 2028."
+    },
+    {
+      "es": "Alianza con Itaú: créditos hipotecarios para construcción, habilitados al escriturar los lotes.",
+      "en": "Partnership with Itaú: construction mortgages, available once the lots are deeded.",
+      "pt": "Parceria com o Itaú: crédito imobiliário para construção, disponível na escritura dos lotes."
+    },
+    {
+      "es": "Arquitectura de Pacífica (Ezequiel Gil y Alexis Plaghos) y desarrollo de NOIR.",
+      "en": "Architecture by Pacífica (Ezequiel Gil and Alexis Plaghos), developed by NOIR.",
+      "pt": "Arquitetura da Pacífica (Ezequiel Gil e Alexis Plaghos) e desenvolvimento da NOIR."
+    }
+  ],
+  "amenities": [
+    {
+      "es": "Cancha de tenis",
+      "en": "Tennis court",
+      "pt": "Quadra de tênis"
+    },
+    {
+      "es": "Cancha de pádel",
+      "en": "Padel court",
+      "pt": "Quadra de padel"
+    },
+    {
+      "es": "Gimnasio sobre la laguna",
+      "en": "Gym over the lagoon",
+      "pt": "Academia sobre a lagoa"
+    },
+    {
+      "es": "Sector ecuestre y caballerizas",
+      "en": "Equestrian area and stables",
+      "pt": "Setor equestre e cocheiras"
+    },
+    {
+      "es": "Yoga a demanda en temporada",
+      "en": "Yoga on demand in season",
+      "pt": "Ioga sob demanda na temporada"
+    },
+    {
+      "es": "Cuadrilla de caseros 365 días",
+      "en": "Caretakers 365 days a year",
+      "pt": "Caseiros 365 dias por ano"
+    },
+    {
+      "es": "Seguridad en el acceso y rondines",
+      "en": "Gate security and patrols",
+      "pt": "Segurança na entrada e rondas"
+    },
+    {
+      "es": "Cerco perimetral",
+      "en": "Perimeter fence",
+      "pt": "Cerca perimetral"
+    },
+    {
+      "es": "Conexión eléctrica subterránea",
+      "en": "Underground power",
+      "pt": "Rede elétrica subterrânea"
+    }
+  ],
+  "fotos": [],
+  "lotes_m2": {
+    "2": 30020,
+    "3": 30062,
+    "4": 30062,
+    "5": 30124,
+    "6": 30066,
+    "7": 30126,
+    "8": 39986,
+    "9": 30168,
+    "10": 30071,
+    "11": 33534,
+    "12": 30009,
+    "13": 30376,
+    "14": 33544,
+    "15": 30482,
+    "16": 30292,
+    "17": 30293,
+    "18": 30211,
+    "19": 30104,
+    "20": 30000,
+    "21": 30000,
+    "22": 30000,
+    "23": 30000,
+    "24": 30000
+  },
+  "lotes_estado": {
+    "2": "reservado",
+    "3": "reservado",
+    "5": "reservado",
+    "14": "reservado",
+    "15": "reservado",
+    "19": "reservado",
+    "21": "reservado"
+  },
+  "destacado": true,
+  "orden": 70,
+  "drive": "https://drive.google.com/drive/folders/15i-LC12K6tsFiLcv7WgaRumjT4SXuLZy"
+}
