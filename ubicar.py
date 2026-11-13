@@ -112,6 +112,19 @@ def ubicar(slug, cfg):
             c = el.get("center") or ({"lat": el["lat"], "lon": el["lon"]} if "lat" in el else None)
             if c:
                 hallados.append({"tipo": el["type"], "id": el["id"], "lat": c["lat"], "lng": c["lon"], "tags": el.get("tags", {})})
+        if not hallados:  # respaldo: Nominatim (buscador de OSM)
+            for texto in cfg.get("nominatim") or [cfg["buscar"]]:
+                try:
+                    url = "https://nominatim.openstreetmap.org/search?" + urllib.parse.urlencode(
+                        {"q": texto, "format": "jsonv2", "limit": 10, "countrycodes": "uy",
+                         "viewbox": f"{w},{n},{e},{s}", "bounded": 1})
+                    with urllib.request.urlopen(urllib.request.Request(url, headers={"User-Agent": "cbz-mapas/1.0"}), timeout=60) as r:
+                        for x in json.load(r):
+                            hallados.append({"tipo": x.get("osm_type"), "id": x.get("osm_id"), "lat": float(x["lat"]), "lng": float(x["lon"]),
+                                             "tags": {"name": x.get("display_name"), "clase": x.get("category"), "tipo": x.get("type")}})
+                except Exception as ex:
+                    print(f"  nominatim '{texto}': {ex}")
+                time.sleep(1.5)
         print(f"{slug}: '{cfg['buscar']}' → {len(hallados)} resultados")
         for h in hallados[:20]:
             print(f"  {h['tipo']} {h['id']} {h['lat']:.6f},{h['lng']:.6f} {h['tags']}")
