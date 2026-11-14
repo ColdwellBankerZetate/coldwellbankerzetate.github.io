@@ -225,10 +225,34 @@ function actualizar() {
  * La URL que termina en /exec va en sitio.json → "agenda_app". Al pegar una versión nueva de este archivo:
  * Implementar → Gestionar implementaciones → editar (lápiz) → Versión: nueva → Implementar (la URL no cambia).
  * Sin la contraseña la App web no devuelve ni guarda nada.
+ *
+ * Datos de cada alquiler (cliente, contacto, monto, notas): NO van en esta planilla (es pública, "cualquiera con el
+ * link"), sino en otra planilla privada de tu Drive, "Agenda – datos de alquileres (interno)", que se crea sola.
+ * Una vez, después de pegar esta versión: elegir la función "prepararNotas" y Ejecutar (pide permiso para crearla).
  * ==================================================================================================== */
 const HOJA_OCU = "Ocupación";
 const CAB_OCU = ["Código", "Casa", "Desde", "Hasta", "Estado"];
 const ESTADOS = ["alquilada", "reservada", "libre"];
+const HOJA_NOT = "Datos";
+const CAB_NOT = ["Código", "Casa", "Desde", "Hasta", "Estado", "Cliente", "Contacto", "Monto", "Notas"];
+const CAMPOS = ["c", "t", "m", "n"]; /* cliente, contacto, monto, notas (mismo orden que CAB_NOT desde la columna 6) */
+
+/* Planilla privada con los datos de los alquileres. crear=false → null si todavía no existe. */
+function libroNotas(crear) {
+  const props = PropertiesService.getScriptProperties();
+  const id = props.getProperty("NOTAS_ID");
+  if (id) { try { return SpreadsheetApp.openById(id); } catch (_) { if (!crear) return null; } }
+  if (!crear) return null;
+  const l = SpreadsheetApp.create("Agenda – datos de alquileres (interno)");
+  const h = l.getSheets()[0].setName(HOJA_NOT);
+  h.getRange(1, 1, 1, CAB_NOT.length).setValues([CAB_NOT]).setFontWeight("bold").setFontColor("#ffffff").setBackground("#111111");
+  h.setFrozenRows(1); h.setColumnWidth(2, 220); h.setColumnWidth(9, 380);
+  h.getRange(1, 1).setNote("La carga la página interna /agenda/ (ventana de datos al marcar días alquilados/reservados). " +
+    "Privada: no compartir con 'cualquiera con el link'.");
+  props.setProperty("NOTAS_ID", l.getId());
+  return l;
+}
+function prepararNotas() { Logger.log("Datos de alquileres: " + libroNotas(true).getUrl()); }
 
 function hojaOcupacion(libro) {
   let h = libro.getSheetByName(HOJA_OCU);
@@ -301,14 +325,30 @@ function leerTodo(libro) {
     const c = porCod[String(f[0]).trim()], d = isoDe(f[2]), hh = isoDe(f[3]) || d, est = norm(f[4]);
     if (c && d && ESTADOS.includes(est)) c.dias.push({ d, h: hh, e: est });
   }
-  return { ok: true, periodos: PERIODOS, casas };
+  const ln = libroNotas(false), hn = ln && ln.getSheetByName(HOJA_NOT);
+  if (hn) {
+    const datos = {};
+    for (const f of hn.getDataRange().getDisplayValues().slice(1)) {
+      const k = [String(f[0]).trim(), isoDe(f[2]), isoDe(f[3]) || isoDe(f[2])].join("|");
+      datos[k] = { c: f[5], t: f[6], m: f[7], n: f[8] };
+    }
+    for (const c of casas) for (const z of c.dias) {
+      const x = datos[[c.cod, z.d, z.h].join("|")];
+      if (x) CAMPOS.forEach(k => { if (String(x[k] || "").trim()) z[k] = String(x[k]).trim(); });
+    }
+  }
+  return { ok: true, periodos: PERIODOS, casas, notas: !!hn };
 }
 
 function guardarCasa(libro, q) {
   const cod = String(q.cod || "").trim();
   if (!cod) return { error: "falta el código" };
-  const rangos = (q.dias || []).map(r => ({ d: isoDe(r.d), h: isoDe(r.h || r.d), e: norm(r.e) }))
-    .filter(r => r.d && r.h && ESTADOS.includes(r.e));
+  const rangos = (q.dias || []).map(r => {
+    const x = { d: isoDe(r.d), h: isoDe(r.h || r.d), e: norm(r.e) };
+    CAMPOS.forEach(k => { x[k] = String(r[k] == null ? "" : r[k]).trim().slice(0, 2000); });
+    return x;
+  }).filter(r => r.d && r.h && ESTADOS.includes(r.e));
+  const conDatos = rangos.filter(r => r.e !== "libre" && CAMPOS.some(k => r[k]));
   // 1) Precios en "Agenda" (solo las celdas que manda la página)
   const h = libro.getSheetByName(HOJA);
   const v = h.getDataRange().getDisplayValues();
@@ -317,6 +357,19 @@ function guardarCasa(libro, q) {
   const fila = v.findIndex((f, i) => i > 0 && String(f[iCod]).trim() === cod);
   if (fila < 0) return { error: "esa casa ya no está en la hoja Agenda" };
   const casa = String(v[fila][iCasa] || "").trim();
+  // 0) Datos de los alquileres en la planilla privada (primero: si falta el permiso, no se guarda nada a medias)
+  let ln;
+  try { ln = libroNotas(conDatos.length > 0); }
+  catch (e) { return { error: "falta autorizar la planilla de datos: en Apps Script ejecutá una vez la función prepararNotas" }; }
+  const hn = ln && ln.getSheetByName(HOJA_NOT);
+  if (hn) {
+    const nv = hn.getDataRange().getDisplayValues();
+    const quedan = nv.slice(1).filter(f => String(f[0]).trim() && String(f[0]).trim() !== cod);
+    const filas = quedan.concat(conDatos.sort((a, b) => a.d < b.d ? -1 : 1)
+      .map(r => [cod, casa, ddmm(r.d), ddmm(r.h), r.e].concat(CAMPOS.map(k => r[k]))));
+    if (hn.getLastRow() > 1) hn.getRange(2, 1, hn.getLastRow() - 1, CAB_NOT.length).clearContent();
+    if (filas.length) hn.getRange(2, 1, filas.length, CAB_NOT.length).setNumberFormat("@").setValues(filas);
+  }
   for (const p of Object.keys(q.per || {})) {
     const i = cab.indexOf(norm(p));
     if (i < 0) continue;
