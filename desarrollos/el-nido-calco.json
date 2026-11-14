@@ -1,0 +1,7 @@
+{
+  "_nota": "El Nido Beach & Surf Homes (Balneario Buenos Aires, Ruta 10). Primero: ubicar el predio (buscar en OSM) y recorte del satélite.",
+  "buscar": "Nido|Wavegarden|Buenos Aires",
+  "bbox": [-34.92, -54.84, -34.85, -54.73],
+  "nominatim": ["El Nido Surf Maldonado", "Balneario Buenos Aires, Maldonado"],
+  "recorte": {"metros": 3000, "paso": 100}
+}
