@@ -61,6 +61,23 @@ h1{margin:0;font:italic 500 38px/1 var(--f-display)}
 .d.hoy{box-shadow:inset 0 0 0 1px var(--fg)}
 .d.sel{outline:2px solid var(--champ);outline-offset:-2px;z-index:1}
 .d.ini{background:var(--champ);color:var(--ink)}
+.d.nota::after{content:"";position:absolute;top:4px;right:4px;width:5px;height:5px;border-radius:50%;background:var(--champ)}
+.d.alquilada.nota::after{background:#cfcfcf}
+.tip{position:fixed;z-index:40;max-width:300px;background:#1b1b1b;border:1px solid var(--line-2);border-radius:10px;padding:10px 12px;font-size:13px;line-height:1.4;box-shadow:0 10px 30px rgba(0,0,0,.6);pointer-events:none;white-space:pre-wrap}
+.tip[hidden]{display:none}
+.tip .e,.barra .datos .e{font-size:10.5px;font-weight:700;letter-spacing:.16em;text-transform:uppercase;color:var(--champ);margin-bottom:4px}
+.tip .k,.barra .datos .k{color:var(--dim)}
+.tip .vac{color:var(--dim);font-style:italic}
+.barra .datos{flex-basis:100%;font-size:13px;color:var(--fg);white-space:pre-wrap;order:-1;border-left:2px solid var(--champ);padding-left:10px}
+.velo{position:fixed;inset:0;z-index:50;background:rgba(0,0,0,.6);display:grid;place-items:center;padding:16px}
+.ficha-d{background:var(--panel);border:1px solid var(--line-2);border-radius:14px;padding:20px;width:min(440px,100%);box-sizing:border-box;display:grid;gap:12px;max-height:calc(100dvh - 32px);overflow:auto}
+.ficha-d h3{margin:0;font:italic 500 24px/1.1 var(--f-display)}
+.ficha-d p{margin:-6px 0 0;color:var(--muted);font-size:13px}
+.ficha-d label{display:grid;gap:4px;font-size:11.5px;color:var(--muted)}
+.ficha-d input,.ficha-d textarea{background:#000;border:1px solid var(--line-2);border-radius:8px;padding:9px 10px;font-size:16px;width:100%;box-sizing:border-box;font-family:inherit}
+.ficha-d textarea{min-height:90px;resize:vertical}
+.ficha-d input:focus,.ficha-d textarea:focus{outline:none;border-color:var(--champ)}
+.ficha-d .fila{display:flex;gap:8px;justify-content:flex-end;flex-wrap:wrap}
 .i-li{background:#1c2a20}.i-st{background:#151515;border:1px solid var(--line-2)}.i-al{background:#2a2a2a}.i-re{background:#4a3d22}
 
 .precios{margin-top:30px;border-top:1px solid var(--line);padding-top:18px}
@@ -92,7 +109,8 @@ h1{margin:0;font:italic 500 38px/1 var(--f-display)}
   .detalle{padding:16px 16px 140px}
   .volver-m{display:block}
   .barra{left:0;padding-inline:52px 16px;display:grid;grid-template-columns:repeat(3,1fr) auto;gap:8px}
-  .barra .txt{grid-column:1/-1}
+  .barra .txt,.barra .datos{grid-column:1/-1}
+  .barra .datos{max-height:40dvh;overflow:auto}
   .barra .btn{padding-inline:8px}
   .barra .btn.pri{grid-column:1/-2}
   .cab{padding-inline:16px}.casa{padding-inline:16px}.grupo{padding-inline:16px}
@@ -113,6 +131,7 @@ h1{margin:0;font:italic 500 38px/1 var(--f-display)}
   <main class="detalle" id="detalle"><div class="vacio">Elegí una casa de la lista.</div></main>
 </div>
 <div class="barra" id="barra" hidden></div>
+<div class="tip" id="tip" hidden></div>
 <script>
 /*__COMUN__*/
 </script>
@@ -124,7 +143,7 @@ const APP = (DATOS.sitio || {}).agenda_app || "";
 const CANON = { "1ra Dic": "1ra quincena de diciembre", "2da Dic": "2da quincena de diciembre", "Fin de año": "Fin de año",
   "1ra Ene": "1ra quincena de enero", "2da Ene": "2da quincena de enero", "1ra Feb": "1ra quincena de febrero",
   "2da Feb": "2da quincena de febrero", "1ra Mar": "1ra quincena de marzo", "2da Mar": "2da quincena de marzo", "Semana santa": "Semana santa" };
-let PERS = Object.keys(CANON), CASAS = [], actual = null, dias = new Map(), precios = {}, sucio = false, ini = null, sel = null;
+let PERS = Object.keys(CANON), CASAS = [], actual = null, dias = new Map(), info = new Map(), precios = {}, sucio = false, ini = null, sel = null;
 
 async function api(cuerpo) {
   const r = await fetch(APP, { method: "POST", headers: { "Content-Type": "text/plain;charset=utf-8" },
@@ -190,7 +209,7 @@ function abrir(cod) {
   if (!c) return;
   actual = c; sucio = false; ini = sel = null;
   /* estado por día: períodos marcados "A"/"R" en la hoja (formato viejo) + tramos de "Ocupación" */
-  dias = new Map(); precios = {};
+  dias = new Map(); info = new Map(); precios = {};
   for (const p of PERS) {
     const txt = String(c.per[p] || "").trim(), r = rangoPeriodo(CANON[p] || p);
     const m = txt.match(/^(alq\w*|res\w*|a|r)(?=[\s:.\-\d]|$)/i);
@@ -207,7 +226,10 @@ function abrir(cod) {
       }
     }
   }
-  for (const z of c.dias) recorrer(z.d, z.h, k => z.e === "libre" ? dias.delete(k) : dias.set(k, z.e));
+  for (const z of c.dias) {
+    const x = CAMPOS.some(f => z[f]) ? Object.fromEntries(CAMPOS.map(f => [f, z[f] || ""])) : null;
+    recorrer(z.d, z.h, k => { if (z.e === "libre") { dias.delete(k); info.delete(k); } else { dias.set(k, z.e); if (x) info.set(k, x); else info.delete(k); } });
+  }
   $("app").classList.add("abierta");
   history.replaceState(null, "", "?casa=" + encodeURIComponent(cod));
   pintarLista(); pintarDetalle(); cerrarBarra();
@@ -235,9 +257,9 @@ function pintarDetalle() {
     for (let d = 1; d <= n; d++) {
       const k = iso(new Date(y, m, d)), e = dias.get(k), x = pd.get(k);
       const cls = e || (x ? "" : "st");
-      const tit = [e ? e[0].toUpperCase() + e.slice(1) : "Libre", x ? `${x.p} · U$S ${fmt(+precios[x.p])}` : "sin precio"].join(" · ");
+      const tit = e && HOVER ? "" : [e ? e[0].toUpperCase() + e.slice(1) : "Libre", x ? `${x.p} · U$S ${fmt(+precios[x.p])}` : "sin precio"].join(" · ");
       const enSel = sel && k >= sel[0] && k <= sel[1];
-      h += `<button type="button" class="d ${cls}${k < hoy ? " pas" : ""}${k === hoy ? " hoy" : ""}${enSel ? " sel" : ""}${ini === k ? " ini" : ""}" data-k="${k}" title="${esc(tit)}">${d}</button>`;
+      h += `<button type="button" class="d ${cls}${k < hoy ? " pas" : ""}${k === hoy ? " hoy" : ""}${enSel ? " sel" : ""}${ini === k ? " ini" : ""}${e && info.has(k) ? " nota" : ""}" data-k="${k}"${tit ? ` title="${esc(tit)}"` : ""}>${d}</button>`;
     }
     return `<div class="mes"><h3>${esc(fmtMes.format(d0))}</h3><div class="grid">${h}</div></div>`;
   };
@@ -246,8 +268,8 @@ function pintarDetalle() {
     <div class="dcab"><div><h2>${esc(c.casa || c.cod)}</h2>
       <p>${esc(c.barrio)} · ${esc(c.cod)}${s.url ? ` · <a href="${esc(s.url)}" target="_blank" rel="noopener">Ver ficha</a>` : ""}${s.mapa ? ` · <a href="${esc(raiz() + s.mapa)}">Ver en el mapa</a>` : ""}</p></div>
       <div><button class="btn pri" type="button" id="guardar" ${sucio ? "" : "disabled"}>Guardar</button> <span class="estado-g" id="estado-g"></span></div></div>
-    <p class="ayuda">Tocá el primer día y después el último: elegís si queda alquilada, reservada o libre. Un solo día: tocalo dos veces.</p>
-    <div class="ley"><span><i class="i-li"></i>Libre (con precio)</span><span><i class="i-st"></i>Libre, sin precio cargado</span><span><i class="i-al"></i>Alquilada</span><span><i class="i-re"></i>Reservada</span></div>
+    <p class="ayuda">Tocá el primer día y después el último: elegís si queda alquilada, reservada o libre, y anotás los datos del alquiler. Un solo día: tocalo dos veces. ${HOVER ? "Pasá el mouse por un día tomado para ver sus datos." : "Tocá un día tomado para ver sus datos."}</p>
+    <div class="ley"><span><i class="i-li"></i>Libre (con precio)</span><span><i class="i-st"></i>Libre, sin precio cargado</span><span><i class="i-al"></i>Alquilada</span><span><i class="i-re"></i>Reservada</span><span>● con datos</span></div>
     <div class="meses">${meses.map(htmlMes).join("")}</div>
     <section class="precios"><h3>Precios por período (U$S)</h3>
       <p>Vacío = ese período no se ofrece. El precio del pin es el más bajo de lo que sigue libre.</p>
@@ -255,7 +277,10 @@ function pintarDetalle() {
     </section>`;
   $("volver").onclick = () => { if (sucio && !confirm("Hay cambios sin guardar. ¿Descartarlos?")) return; sucio = false; actual = null; $("app").classList.remove("abierta"); history.replaceState(null, "", location.pathname); cerrarBarra(); pintarLista(); };
   $("guardar").onclick = guardar;
-  $("detalle").querySelectorAll(".d").forEach(b => b.addEventListener("click", () => tocar(b.dataset.k)));
+  $("detalle").querySelectorAll(".d").forEach(b => {
+    b.addEventListener("click", () => { ocultarTip(); tocar(b.dataset.k); });
+    if (HOVER) { b.addEventListener("mouseenter", () => verTip(b)); b.addEventListener("mouseleave", ocultarTip); }
+  });
   $("detalle").querySelectorAll(".pgrid input").forEach(i => i.addEventListener("input", () => {
     i.value = i.value.replace(/\D/g, ""); precios[i.dataset.p] = i.value; marcar();
   }));
@@ -267,22 +292,31 @@ function marcar() {
 
 /* ---------- elegir días ---------- */
 function tocar(k) {
-  if (!ini || sel) { ini = k; sel = null; pintarDetalleKeep(); barra(`Desde <b>${dm(k)}</b> · tocá el último día`); return; }
+  if (!ini || sel) {
+    ini = k; sel = null; pintarDetalleKeep();
+    const t = tramoDe(k);
+    barra(`Desde <b>${dm(k)}</b> · tocá el último día`, false, false,
+      t ? { html: textoDatos(t), vacio: !t.x, editar: () => { ini = null; sel = [t.d, t.h]; pintarDetalleKeep(); pedirDatos(t.e); } } : null);
+    return;
+  }
   sel = ini <= k ? [ini, k] : [k, ini]; ini = null;
   pintarDetalleKeep();
   let n = 0; recorrer(sel[0], sel[1], () => n++);
   barra(`<b>${sel[0] === sel[1] ? dm(sel[0]) : `${dm(sel[0])} – ${dm(sel[1])}`}</b> · ${n} ${n === 1 ? "día" : "días"}`, true);
 }
 function pintarDetalleKeep() { const y = $("detalle").scrollTop; pintarDetalle(); $("detalle").scrollTop = y; }
-function barra(txt, acciones, conGuardar) {
+function barra(txt, acciones, conGuardar, datos) {
   const b = $("barra");
-  b.innerHTML = `<span class="txt">${txt}</span>` + (acciones ? `
+  b.innerHTML = (datos ? `<div class="datos">${datos.html}</div>` : "") + `<span class="txt">${txt}</span>` +
+    (datos ? `<button class="btn" type="button" data-ed>${datos.vacio ? "Agregar datos" : "Editar datos"}</button>` : "") + (acciones ? `
     <button class="btn al" type="button" data-e="alquilada">Alquilada</button>
     <button class="btn re" type="button" data-e="reservada">Reservada</button>
     <button class="btn li" type="button" data-e="libre">Libre</button>` : "") +
     (conGuardar ? `<button class="btn pri" type="button" data-g>Guardar</button>` : `<button class="btn" type="button" data-x>✕</button>`);
   b.hidden = false;
   b.querySelectorAll("[data-e]").forEach(x => x.onclick = () => aplicar(x.dataset.e));
+  const ed = b.querySelector("[data-ed]");
+  if (ed) ed.onclick = datos.editar;
   const x = b.querySelector("[data-x]");
   if (x) x.onclick = () => { ini = sel = null; cerrarBarra(); pintarDetalleKeep(); };
   const g = b.querySelector("[data-g]");
@@ -292,17 +326,81 @@ function cerrarBarra() { /* con cambios pendientes queda la barra con "Guardar" 
   if (sucio && actual) barra('<b>Cambios sin guardar</b>', false, true); else $("barra").hidden = true;
 }
 function aplicar(e) {
-  recorrer(sel[0], sel[1], k => e === "libre" ? dias.delete(k) : dias.set(k, e));
+  if (e !== "libre") return pedirDatos(e);
+  recorrer(sel[0], sel[1], k => { dias.delete(k); info.delete(k); });
   sel = ini = null; sucio = true; pintarDetalleKeep(); marcar(); cerrarBarra();
+}
+
+/* ---------- datos del alquiler (cliente, contacto, monto, notas) ---------- */
+const CAMPOS = ["c", "t", "m", "n"];
+const ETQ = { c: "Cliente", t: "Contacto", m: "Monto", n: "Notas" };
+const HOVER = matchMedia("(hover: hover) and (pointer: fine)").matches;
+function tramoDe(k) { /* días seguidos con el mismo estado y los mismos datos */
+  const e = dias.get(k);
+  if (!e) return null;
+  const x = info.get(k) || null, igual = j => dias.get(j) === e && (info.get(j) || null) === x;
+  const mov = (j, n) => { const d = new Date(j + "T12:00"); d.setDate(d.getDate() + n); return iso(d); };
+  let d = k, h = k;
+  while (igual(mov(d, -1))) d = mov(d, -1);
+  while (igual(mov(h, 1))) h = mov(h, 1);
+  return { d, h, e, x };
+}
+function textoDatos(t) {
+  const cab = `<div class="e">${t.e === "alquilada" ? "Alquilada" : "Reservada"} · ${t.d === t.h ? dm(t.d) : `${dm(t.d)} – ${dm(t.h)}`}</div>`;
+  if (!t.x) return cab + '<span class="vac">Sin datos anotados</span>';
+  return cab + CAMPOS.filter(f => t.x[f]).map(f => f === "n" ? esc(t.x.n) : `<span class="k">${ETQ[f]}:</span> ${esc(t.x[f])}`).join("\n");
+}
+function verTip(b) {
+  const t = tramoDe(b.dataset.k);
+  if (!t) return ocultarTip();
+  const tip = $("tip");
+  tip.innerHTML = textoDatos(t); tip.hidden = false;
+  const r = b.getBoundingClientRect(), w = tip.offsetWidth, h = tip.offsetHeight;
+  let x = r.left + r.width / 2 - w / 2, y = r.top - h - 8;
+  if (y < 8) y = r.bottom + 8;
+  tip.style.left = Math.max(8, Math.min(innerWidth - w - 8, x)) + "px";
+  tip.style.top = y + "px";
+}
+function ocultarTip() { $("tip").hidden = true; }
+function pedirDatos(e) {
+  const [a, b] = sel;
+  let previo = null;
+  recorrer(a, b, k => { if (!previo && info.get(k)) previo = info.get(k); });
+  const v = previo || {};
+  const velo = document.createElement("div");
+  velo.className = "velo";
+  velo.innerHTML = `<form class="ficha-d" role="dialog" aria-modal="true">
+    <h3>${e === "alquilada" ? "Alquilada" : "Reservada"}</h3>
+    <p>${a === b ? dm(a) : `${dm(a)} – ${dm(b)}`} · datos internos, solo los ve el equipo (todo opcional)</p>
+    <label>Cliente<input name="c" autocomplete="off" value="${esc(v.c || "")}" placeholder="Nombre"></label>
+    <label>Contacto<input name="t" autocomplete="off" value="${esc(v.t || "")}" placeholder="Teléfono o mail"></label>
+    <label>Monto<input name="m" autocomplete="off" value="${esc(v.m || "")}" placeholder="Ej. U$S 9.000 · seña 50%"></label>
+    <label>Notas<textarea name="n" placeholder="Personas, mascotas, hora de llegada, quién lo trajo…">${esc(v.n || "")}</textarea></label>
+    <div class="fila"><button class="btn" type="button" data-x>Cancelar</button><button class="btn pri" type="submit">Listo</button></div></form>`;
+  document.body.appendChild(velo);
+  const f = velo.querySelector("form");
+  const cerrar = () => velo.remove();
+  velo.addEventListener("click", ev => { if (ev.target === velo) cerrar(); });
+  velo.querySelector("[data-x]").onclick = cerrar;
+  velo.addEventListener("keydown", ev => { if (ev.key === "Escape") cerrar(); });
+  f.onsubmit = ev => {
+    ev.preventDefault();
+    const x = Object.fromEntries(CAMPOS.map(k => [k, f.elements[k].value.trim()]));
+    const hay = CAMPOS.some(k => x[k]);
+    recorrer(a, b, k => { dias.set(k, e); if (hay) info.set(k, x); else info.delete(k); });
+    cerrar();
+    sel = ini = null; sucio = true; pintarDetalleKeep(); marcar(); cerrarBarra();
+  };
+  setTimeout(() => f.elements.c.focus(), 30);
 }
 
 /* ---------- guardar ---------- */
 function tramos() { /* Map día → estado  →  [{d,h,e}] consecutivos */
   const out = [];
   for (const k of [...dias.keys()].sort()) {
-    const e = dias.get(k), u = out[out.length - 1];
-    if (u && u.e === e) { const sig = new Date(u.h + "T12:00"); sig.setDate(sig.getDate() + 1); if (iso(sig) === k) { u.h = k; continue; } }
-    out.push({ d: k, h: k, e });
+    const e = dias.get(k), x = info.get(k) || null, u = out[out.length - 1];
+    if (u && u.e === e && u._x === x) { const sig = new Date(u.h + "T12:00"); sig.setDate(sig.getDate() + 1); if (iso(sig) === k) { u.h = k; continue; } }
+    out.push({ d: k, h: k, e, _x: x, ...(x || {}) });
   }
   return out;
 }
@@ -311,7 +409,7 @@ async function guardar() {
   g.disabled = true; s.className = "estado-g"; s.textContent = "Guardando…";
   barra("Guardando…");
   try {
-    const dt = tramos();
+    const dt = tramos().map(({ _x, ...z }) => z);
     await api({ accion: "guardar", cod: actual.cod, dias: dt, per: precios });
     actual.dias = dt;
     for (const p of PERS) actual.per[p] = precios[p] || "";
