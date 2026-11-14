@@ -99,8 +99,10 @@ def ubicar(slug, cfg):
                                                        "Accept-Language": "es-UY,es;q=0.9"})
             with urllib.request.urlopen(req, timeout=60) as r:
                 html = r.read().decode("utf-8", "replace")
+                final = urllib.parse.unquote(r.geturl())  # links cortos (maps.app.goo.gl): la URL final trae las coordenadas
             import re as _re
-            pares = _re.findall(r'(-3[45]\.\d{4,})[^\d-]{1,40}?(-5[45]\.\d{4,})', html)
+            print(f"  url final: {final}")
+            pares = _re.findall(r'(-3[45]\.\d{4,})[^\d-]{1,40}?(-5[45]\.\d{4,})', final + " " + html)
             titulo = (_re.search(r"<title>(.*?)</title>", html, _re.S) or [None, ""])[1].strip()
             print(f"{slug}: {url}\n  título: {titulo}\n  coordenadas: {sorted(set(pares))[:10]}")
             for clave in ("address", "ubicaci", "Ubicaci", "barrio", "neighborhood", "zona"):
