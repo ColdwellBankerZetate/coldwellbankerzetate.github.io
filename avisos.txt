@@ -64,3 +64,4 @@ Punta Negra: CCC350461 LA14342913 comparte ubicación con 3 más
 Punta Negra: CCC350461 LA14342937 comparte ubicación con 3 más
 Punta Negra: CCC350461 LA14342949 comparte ubicación con 3 más
 Punta Negra: CCC350461 LA14343009 comparte ubicación con 3 más
+Desarrollo el-nido-web: falta lat/lng en desarrollos/el-nido-web.json — no se publica
