@@ -1,8 +1,7 @@
-Cantegril: CLA13743816 comparte ubicación con 4 más
-Cantegril: CPN350462 LA14342929 comparte ubicación con 4 más
-Cantegril: CPN350462 LA14342988 comparte ubicación con 4 más
-Cantegril: CPN350462 LA14343008 comparte ubicación con 4 más
-Cantegril: CPN350462 LA14343019 comparte ubicación con 4 más
+Cantegril: CPN350462 LA14342929 comparte ubicación con 3 más
+Cantegril: CPN350462 LA14342988 comparte ubicación con 3 más
+Cantegril: CPN350462 LA14343008 comparte ubicación con 3 más
+Cantegril: CPN350462 LA14343019 comparte ubicación con 3 más
 Club de Mar: CHO8441423 comparte ubicación con 2 más
 Club de Mar: CHO8571448 comparte ubicación con 2 más
 Club de Mar: CHO13736277 comparte ubicación con 2 más
@@ -24,11 +23,10 @@ José Ignacio: CCC350465 LA14343132 comparte ubicación con 3 más
 José Ignacio: CCC350465 LA14343133 comparte ubicación con 3 más
 José Ignacio: CCC350465 LA14343135 comparte ubicación con 3 más
 José Ignacio: CCC350465 LA14343136 comparte ubicación con 3 más
-La Barra: CLA13714995 comparte ubicación con 4 más
-La Barra: CPN350460 LA14342893 comparte ubicación con 4 más
-La Barra: CPN350460 LA14342906 comparte ubicación con 4 más
-La Barra: CPN350460 LA14342912 comparte ubicación con 4 más
-La Barra: CPN350460 LA14342950 comparte ubicación con 4 más
+La Barra: CPN350460 LA14342893 comparte ubicación con 3 más
+La Barra: CPN350460 LA14342906 comparte ubicación con 3 más
+La Barra: CPN350460 LA14342912 comparte ubicación con 3 más
+La Barra: CPN350460 LA14342950 comparte ubicación con 3 más
 La Juanita: CAP8512988 comparte ubicación con 7 más
 La Juanita: CAP8515520 comparte ubicación con 7 más
 La Juanita: CAP8515675 comparte ubicación con 7 más
@@ -61,8 +59,7 @@ Pinar del Faro: CHO13552885 comparte ubicación con 9 más
 Pinar del Faro: CHO13738736 comparte ubicación con 9 más
 Pueblo Mío: FRO953 comparte ubicación con 1 más
 Pueblo Mío: FRO1206 comparte ubicación con 1 más
-Punta Negra: CLA13730210 comparte ubicación con 4 más
-Punta Negra: CCC350461 LA14342913 comparte ubicación con 4 más
-Punta Negra: CCC350461 LA14342937 comparte ubicación con 4 más
-Punta Negra: CCC350461 LA14342949 comparte ubicación con 4 más
-Punta Negra: CCC350461 LA14343009 comparte ubicación con 4 más
+Punta Negra: CCC350461 LA14342913 comparte ubicación con 3 más
+Punta Negra: CCC350461 LA14342937 comparte ubicación con 3 más
+Punta Negra: CCC350461 LA14342949 comparte ubicación con 3 más
+Punta Negra: CCC350461 LA14343009 comparte ubicación con 3 más
