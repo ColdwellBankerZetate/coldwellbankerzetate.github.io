@@ -1,0 +1,54 @@
+name: Bajar web de un desarrollo
+
+# Corre bajar_web.py (textos, imágenes, logos y tipografías de la web del desarrollador, para armar el brochure)
+# y deja todo en la rama "verificacion-web". No toca main.
+on:
+  workflow_dispatch:
+    inputs:
+      solo:
+        description: "Slugs, separados por coma (vacío = todos los desarrollos/*-web.json)"
+        required: false
+        default: ""
+  push:
+    branches: ["claude/**"]
+    paths: ["desarrollos/*-web.json", "bajar_web.py", ".github/workflows/bajar-web.yml"]
+
+permissions:
+  contents: write
+
+jobs:
+  bajar:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+        with:
+          fetch-depth: 2
+      - uses: actions/setup-python@v5
+        with:
+          python-version: "3.12"
+      - run: pip install playwright && python -m playwright install --with-deps chromium
+      - name: Bajar
+        env:
+          SOLO_INPUT: ${{ inputs.solo }}
+        run: |
+          if [ "${{ github.event_name }}" = "push" ]; then
+            cambios=$(git diff --name-only HEAD~1 HEAD 2>/dev/null || true)
+            if ! echo "$cambios" | grep -qE '^bajar_web\.py$|bajar-web\.yml$'; then
+              export SOLO=$(echo "$cambios" | sed -n 's#^desarrollos/\(.*\)-web\.json$#\1#p' | tr '\n' ' ')
+            fi
+          else
+            export SOLO="$SOLO_INPUT"
+          fi
+          mkdir -p web && python3 bajar_web.py 2>&1 | tee web/log.txt
+      - name: Guardar en la rama verificacion-web
+        if: always()
+        run: |
+          mkdir -p /tmp/salida && cp -r web /tmp/salida/
+          git config user.name "Claude"
+          git config user.email "noreply@anthropic.com"
+          git checkout --orphan verificacion-web
+          git rm -rqf . && git clean -fdxq
+          cp -r /tmp/salida/* .
+          git add -A -f
+          git commit -qm "Web bajada en ${GITHUB_SHA::7}"
+          git push -qf origin verificacion-web
