@@ -67,6 +67,13 @@ El usuario es Mateo (Coldwell Banker Zetaté, Punta del Este). Habla español ri
 - `window.INTERNO` (en `comun.js`): `INTERNO.dev(slug).drive`, `INTERNO.activo()`; evento `interno` al entrar/salir (las páginas se vuelven a dibujar). Para sumar otra función interna: agregar el dato a `INTERNO` en `build.py` y leerlo en la plantilla.
 - Ojo: el link de Drive sigue escrito en `desarrollos/<slug>.json` (repo público): lo que de verdad lo protege es el permiso de la carpeta en Drive (restringida, no "cualquiera con el link").
 
+## Comparativo de desarrollos (interno, `/comparativo/`)
+
+- Dashboard de Bauti ("Emprendimientos en venta", d3) adaptado al sitio: `plantillas/comparativo.html` (sus gráficos y cálculos tal cual; colores negro/champagne). Acceso: modo interno → engranaje "Comparativo de desarrollos" o botón "Comparativo de precios →" en la sección Desarrollos de la portada.
+- **Datos en vivo, nunca en el repo**: planilla PRIVADA "Precios desarrollos (interno)" en Mi unidad de Mateo (id en `sitio.json` → `precios_planilla`; sin compartir por link — NO moverla a la carpeta `Desarrollos`, que es "cualquiera con el link"). Hojas: `Emprendimientos` (una fila por desarrollo; Código = slug; textos de financiación, comisión, entrega, expensas, amenities, respaldo; `Entrada % del precio` y `Cuota % del precio` sobre la unidad disponible más barata; `Unidades totales` solo si la lista no trae todos los lotes; `Sin dato de vendidos` = sí), `Lotes` (Emprendimiento · Lote · Sector · m² · Estado Disponible/Reservado/Vendido/Consultar · Precio USD · Precio lote/casa · Nota), `Notas`, `Cómo se usa`.
+- La página pide los datos a la App web de `planilla/Codigo.gs` (`accion: "comparativo"`, misma contraseña que `/agenda/`; propiedad opcional `PRECIOS_ID`) y calcula todo (desde, mediana, stock, % vendido, USD/m², superficies, entrada y cuota) desde `Lotes`: cambiar la planilla = cambia el comparativo al recargar.
+- **"Actualizá precios de X"**: bajar la lista nueva de `05 Precios` del desarrollo y pasarla a la hoja `Lotes` (y estados). Hoy no hay herramienta para escribir en Sheets desde la sesión: subir un xlsx nuevo y que Mateo pegue, o que lo cargue a mano. Datos iniciales: comparativo de Bauti, 5–14 nov-2026.
+
 ## Disponibilidad (agenda de temporada)
 
 - **Fuente: hoja `Agenda` de la planilla de Google "Disponibilidad temporada"** (id en `sitio.json`, "disponibilidad"; compartida "cualquiera con el link puede ver"; la carga solo Mateo). Tokko NO guarda estado por período, así que la agenda es propia: Tokko solo aporta la lista de casas.

@@ -296,6 +296,7 @@ function doPost(e) {
   if (!tokenOk(q.tk)) return responder({ error: "clave" });
   const libro = SpreadsheetApp.getActive();
   if (q.accion === "casas") return responder(leerTodo(libro));
+  if (q.accion === "comparativo") return responder(leerPrecios());
   if (q.accion === "guardar") {
     const lock = LockService.getDocumentLock();
     if (!lock.tryLock(20000)) return responder({ error: "La planilla está ocupada, probá de nuevo en un rato." });
@@ -386,4 +387,47 @@ function guardarCasa(libro, q) {
   if (o.getLastRow() > 1) o.getRange(2, 1, o.getLastRow() - 1, CAB_OCU.length).clearContent();
   if (todas.length) o.getRange(2, 1, todas.length, CAB_OCU.length).setNumberFormat("@").setValues(todas);
   return { ok: true, guardado: new Date().toISOString() };
+}
+
+/* ======================================================================================================
+ * Comparativo de desarrollos (página interna /comparativo/ del sitio): lee la planilla PRIVADA
+ * "Precios desarrollos (interno)" (hojas Emprendimientos, Lotes y Notas) y la devuelve con la misma contraseña.
+ * Precios y comisiones viven solo ahí: nunca en esta planilla (pública), en el repo ni en la web.
+ * Otra planilla: Propiedades del script → PRECIOS_ID = su id. Al pegar esta versión: nueva versión de la App web
+ * (Implementar → Gestionar implementaciones → lápiz → Versión: nueva).
+ * ==================================================================================================== */
+const PRECIOS_ID_DEF = "1oSHDCO-h4A6w5szYhlnBkrRPWyFIrhg4qhtaiIGlLB8";
+const CAMPOS_EMP = { "Código": "id", "Nombre": "nombre", "Zona": "zona", "Producto": "producto", "Lote típico": "lote_tipico",
+  "Desarrollador": "desarrollador", "Unidades totales": "unidades_totales", "Nota del total": "total_nota",
+  "Sin dato de vendidos": "sin_vendidos", "Entrada % del precio": "entrada_pct", "Entrada (texto)": "entrada_nota",
+  "Cuota % del precio": "cuota_pct", "Cuota (texto)": "cuota_nota", "Financiación (tipo)": "fin_tipo",
+  "Financiación (forma)": "fin_forma", "Comisión": "comision", "Entrega": "entrega", "Costos extra": "costos_extra",
+  "Expensas": "expensas", "Amenities": "amenities", "Playa": "playa", "Respaldo": "respaldo",
+  "Nota superficie": "sup_nota", "Lista de precios": "lista" };
+const CAMPOS_LOT = { "Emprendimiento": "emprendimiento", "Lote": "lote", "Sector": "sector", "m²": "superficie_m2",
+  "Estado": "estado", "Precio USD": "precio_usd", "Precio lote USD": "precio_lote_usd", "Precio casa USD": "precio_casa_usd",
+  "Nota": "nota" };
+
+function filasHoja(libro, nombre, campos) {
+  const h = libro.getSheetByName(nombre);
+  if (!h) return [];
+  const v = h.getDataRange().getValues();
+  const cab = (v[0] || []).map(c => campos[String(c).trim()] || "");
+  return v.slice(1).filter(f => f.some(x => x !== "" && x !== null)).map(f => {
+    const o = {};
+    cab.forEach((k, i) => { if (k) o[k] = f[i] === "" ? null : (f[i] instanceof Date ? Utilities.formatDate(f[i], "America/Montevideo", "dd/MM/yyyy") : f[i]); });
+    return o;
+  });
+}
+
+function leerPrecios() {
+  const id = PropertiesService.getScriptProperties().getProperty("PRECIOS_ID") || PRECIOS_ID_DEF;
+  let libro;
+  try { libro = SpreadsheetApp.openById(id); } catch (_) { return { error: "No se pudo abrir la planilla de precios (revisá PRECIOS_ID y el permiso del script)." }; }
+  const notas = libro.getSheetByName("Notas");
+  return {
+    emprendimientos: filasHoja(libro, "Emprendimientos", CAMPOS_EMP).filter(e => e.id),
+    lotes: filasHoja(libro, "Lotes", CAMPOS_LOT).filter(l => l.emprendimiento && l.lote !== null),
+    notas: notas ? notas.getDataRange().getDisplayValues().slice(1).map(f => String(f[0]).trim()).filter(Boolean) : [],
+  };
 }

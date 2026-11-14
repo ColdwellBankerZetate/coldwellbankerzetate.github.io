@@ -1,0 +1,613 @@
+<title>__TITULO__</title>
+<meta name="robots" content="noindex, nofollow">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Bodoni+Moda:ital,opsz,wght@0,6..96,500;1,6..96,500&family=Hanken+Grotesk:wght@400;500;600;700&display=swap">
+<style>
+/* Comparativo de desarrollos (interno). Dashboard de Bauti ("Emprendimientos en venta"), con los colores del sitio.
+   Los datos NO están en esta página: los trae en vivo desde la planilla privada "Precios desarrollos (interno)"
+   a través de la App web del script de la planilla (accion "comparativo"), con la contraseña del modo interno.
+   Todo lo que se calcula (desde, mediana, stock, % vendido, USD/m², entrada y cuota) sale de la hoja Lotes. */
+:root{
+  --color-fg:#f3f1ec; --color-fg-muted:#9b978f; --color-bg:#0a0a0a; --color-panel:#121212; --color-border-line:rgba(255,255,255,.09);
+  --color-ok:#7fc79a; --color-warn:#c8b28a; --color-bad:#e3141e;
+  --font-anthropic-sans:"Hanken Grotesk",system-ui,-apple-system,"Segoe UI",sans-serif;
+  --font-anthropic-serif:"Bodoni Moda","Didot","Bodoni 72",Georgia,serif;
+  --cds-font-size-caption:12px; --cds-font-size-body:14px; --cds-font-size-heading:18px; --cds-font-size-title:38px; --cds-font-weight-medium:600;
+  --cds-gap-xs:4px; --cds-gap-sm:8px; --cds-gap-md:12px; --cds-gap-lg:20px; --cds-gap-xl:36px;
+  --cds-pad-xs:4px; --cds-pad-sm:6px; --cds-pad-md:10px; --cds-pad-lg:16px; --cds-pad-xl:24px; --cds-radius:8px;
+  --cds-chart-muted:#5a5852; --cds-chart-grid:rgba(255,255,255,.06); --cds-chart-axis:rgba(255,255,255,.18); --cds-text-secondary:#9b978f;
+  --cds-surface-popover:#1b1b1b; --cds-border:rgba(255,255,255,.18); --cds-shadow-popover:0 10px 30px rgba(0,0,0,.6);
+  --series-0:#c8b28a;
+  color-scheme:dark;
+}
+html,body{background:var(--color-bg)}
+body{color:var(--color-fg);font:14px/1.45 var(--font-anthropic-sans);-webkit-font-smoothing:antialiased}
+a{color:inherit}
+#dash-root{max-width:1200px;margin:0 auto;padding-block:22px 64px;padding-left:max(16px,env(safe-area-inset-left,0px));padding-right:max(16px,env(safe-area-inset-right,0px))}
+.dash-select{appearance:none;font:inherit;font-size:16px;color:var(--color-fg);background-color:#000;border:1px solid var(--cds-border);border-radius:var(--cds-radius);padding:7px 30px 7px 10px;
+  background-image:url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='10' height='6'%3E%3Cpath d='M0 0l5 6 5-6z' fill='%23888'/%3E%3C/svg%3E");background-repeat:no-repeat;background-position:right 10px center}
+.dash-select:focus{outline:none;border-color:var(--series-0)}
+.src-note{margin-top:32px;font-size:12px;color:var(--color-fg-muted)}
+.src-note a{color:var(--series-0)}
+.sup{display:flex;justify-content:space-between;align-items:center;margin-bottom:18px;font-size:11px;letter-spacing:.14em;text-transform:uppercase}
+.sup a{color:var(--color-fg-muted);text-decoration:none;font-weight:600}
+.sup a:hover{color:var(--color-fg)}
+.sup img{height:30px;width:auto;display:block}
+.msg{max-width:440px;margin:18vh auto 0;text-align:center;display:grid;gap:8px;color:var(--color-fg-muted)}
+.msg b{color:var(--color-fg);font:italic 500 26px var(--font-anthropic-serif)}
+  .cx { display: flex; flex-direction: column; gap: var(--cds-gap-xl); font-family: var(--font-anthropic-sans); color: var(--color-fg); }
+  .cx-head h1 { font-family: var(--font-anthropic-serif); font-weight: 400; font-size: var(--cds-font-size-title); margin: 0; text-wrap: balance; }
+  .cx-take { margin: var(--cds-gap-sm) 0 0; color: var(--color-fg-muted); max-width: 70ch; line-height: 1.5; }
+  .cx-take b { color: var(--color-fg); font-weight: var(--cds-font-weight-medium); font-variant-numeric: tabular-nums; }
+  .cx-kpis { display: grid; grid-template-columns: repeat(auto-fit, minmax(170px, 1fr)); gap: var(--cds-gap-md); }
+  .cx-kpi { background: var(--color-panel); border: 1px solid var(--color-border-line); border-radius: var(--cds-radius); padding: var(--cds-pad-lg); display: flex; flex-direction: column; gap: var(--cds-gap-xs); min-width: 0; }
+  .cx-kpi .lbl { font-size: var(--cds-font-size-caption); color: var(--color-fg-muted); text-transform: uppercase; letter-spacing: .04em; }
+  .cx-kpi .val { font-family: var(--font-anthropic-serif); font-weight: 400; font-size: 1.9rem; font-variant-numeric: tabular-nums; line-height: 1.1; }
+  .cx-kpi .sub { font-size: var(--cds-font-size-caption); color: var(--color-fg-muted); }
+  .cx-sec { display: flex; flex-direction: column; gap: var(--cds-gap-sm); min-width: 0; }
+  .cx-sec h2 { font-size: var(--cds-font-size-heading); font-weight: var(--cds-font-weight-medium); margin: 0; }
+  .cx-sec .note { font-size: var(--cds-font-size-caption); color: var(--color-fg-muted); margin: 0; max-width: 75ch; line-height: 1.45; }
+  .cx-chart { position: relative; min-height: 120px; width: 100%; }
+  .cx-chart svg { display: block; width: 100%; overflow: visible; }
+  .cx-chart text { font-size: var(--cds-font-size-caption); fill: var(--cds-text-secondary); font-family: var(--font-anthropic-sans); }
+  .cx-chart .name { fill: var(--color-fg); font-size: var(--cds-font-size-body); }
+  .cx-chart .axis text { fill: var(--cds-text-secondary); font-size: var(--cds-font-size-caption); }
+  .cx-chart .axis path, .cx-chart .axis line { stroke: var(--cds-chart-axis); }
+  .cx-chart .grid line { stroke: var(--cds-chart-grid); }
+  .cx-tip { position: absolute; pointer-events: none; background: var(--cds-surface-popover); border: 1px solid var(--cds-border); box-shadow: var(--cds-shadow-popover); border-radius: var(--cds-radius); padding: var(--cds-pad-sm) var(--cds-pad-md); font-size: var(--cds-font-size-caption); color: var(--color-fg); white-space: nowrap; z-index: 5; font-variant-numeric: tabular-nums; }
+  .cx-tip span { color: var(--cds-text-secondary); }
+  .cx-legend { display: flex; flex-wrap: wrap; gap: var(--cds-gap-md); font-size: var(--cds-font-size-caption); color: var(--color-fg-muted); }
+  .cx-legend i { display: inline-block; width: 10px; height: 10px; border-radius: 2px; margin-right: 6px; vertical-align: -1px; }
+  .cx-controls { display: flex; flex-wrap: wrap; gap: var(--cds-gap-md); align-items: end; }
+  .cx-controls label { display: flex; flex-direction: column; gap: var(--cds-gap-xs); font-size: var(--cds-font-size-caption); color: var(--color-fg-muted); }
+  .cx-chips { display: flex; flex-wrap: wrap; gap: var(--cds-gap-sm); }
+  .cx-chip { background: var(--color-panel); border: 1px solid var(--color-border-line); border-radius: 999px; padding: 4px 12px; font-size: var(--cds-font-size-caption); font-variant-numeric: tabular-nums; }
+  .cx-chip b { font-weight: var(--cds-font-weight-medium); }
+  .cx-tablewrap { overflow-x: auto; border: 1px solid var(--color-border-line); border-radius: var(--cds-radius); max-height: 460px; overflow-y: auto; }
+  .cx-table { width: 100%; border-collapse: collapse; font-size: var(--cds-font-size-caption); font-variant-numeric: tabular-nums; }
+  .cx-table th { position: sticky; top: 0; background: var(--color-panel); text-align: left; font-weight: var(--cds-font-weight-medium); color: var(--color-fg-muted); padding: 8px 10px; border-bottom: 1px solid var(--color-border-line); white-space: nowrap; }
+  .cx-table td { padding: 7px 10px; border-bottom: 1px solid var(--color-border-line); vertical-align: top; }
+  .cx-table td.num, .cx-table th.num { text-align: right; white-space: nowrap; }
+  .cx-table.cond td { min-width: 120px; line-height: 1.4; }
+  .cx-table.cond td:first-child { min-width: 110px; font-weight: var(--cds-font-weight-medium); }
+  .cx-table.cmp td { line-height: 1.4; }
+  .cx-table.cmp td.wide { min-width: 190px; }
+  .cx-table.cmp td.wide-s { min-width: 170px; }
+  .cx-table.cmp td.wide-l { min-width: 260px; }
+  .cx-table.cmp .cmp-gap { margin-top: 6px; }
+  .cx-table.cmp td:first-child { min-width: 130px; position: sticky; left: 0; background: var(--color-bg); z-index: 1; }
+  .cx-table.cmp th:first-child { left: 0; z-index: 2; }
+  .cx-table.cmp .cmp-name { font-weight: var(--cds-font-weight-medium); font-size: var(--cds-font-size-body); margin-bottom: 4px; }
+  .cx-table.cmp .cmp-big { font-size: var(--cds-font-size-body); font-weight: var(--cds-font-weight-medium); color: var(--color-fg); }
+  .cx-table.cmp .cmp-sub { color: var(--color-fg-muted); font-size: 11px; }
+  .cx-table.cmp .cmp-tag { font-weight: var(--cds-font-weight-medium); margin-bottom: 2px; }
+  .cx-table.cmp .cmp-bar { height: 4px; background: var(--color-border-line); border-radius: 2px; margin: 4px 0 2px auto; width: 72px; overflow: hidden; }
+  .cx-table.cmp .cmp-bar i { display: block; height: 100%; background: var(--cds-chart-muted); }
+  .cx-table.cmp td.muted { color: var(--color-fg-muted); }
+  .cx-table.cmp td.ok { color: var(--color-ok); font-weight: var(--cds-font-weight-medium); }
+  .cx-pill { display: inline-block; padding: 1px 8px; border-radius: 999px; font-size: 11px; border: 1px solid var(--color-border-line); white-space: nowrap; }
+  .cx-pill.lote { color: var(--color-fg-muted); }
+  .cx-pill.casa { color: var(--color-ok); border-color: var(--color-ok); }
+  .cx-pill.chacra { color: var(--color-warn); border-color: var(--color-warn); }
+  [data-dash-source-state=refreshing] { opacity: .5; }
+  .cx details { font-size: var(--cds-font-size-caption); color: var(--color-fg-muted); }
+  .cx details li { margin: 4px 0; line-height: 1.45; }
+.cx-head h1{font-style:italic;font-weight:500;line-height:1.05}
+.cx-kpi .val{font-weight:500}
+.cx-table th{background:#141414}
+.cx-table.cmp td:first-child{background:var(--color-bg)}
+.cx-table.cmp .cmp-map{display:inline-block;margin-top:6px;font-size:11px;color:var(--series-0);text-decoration:none}
+.cx-table.cmp .cmp-map:hover{text-decoration:underline}
+.cx-table.cmp .cmp-bar i{background:var(--series-0)}
+.cx details summary{cursor:pointer;color:var(--color-fg)}
+@media (max-width:640px){.sup img{height:20px}.cx-head h1{font-size:30px}.cx-kpis{grid-template-columns:1fr 1fr}.cx-kpi{padding:12px}.cx-kpi .val{font-size:1.35rem}}
+</style>
+<!--CUERPO-->
+<div id="dash-root">
+<div class="msg" id="msg"><b>Cargando…</b></div>
+<div id="cx-wrap" hidden>
+<div class="cx" lang="es">
+  <header class="cx-head" id="encabezado">
+    <div class="sup"><a href="__RAIZ__#desarrollos">← Desarrollos</a><img src="__RAIZ__assets/logo-horizontal.png" alt="Coldwell Banker Zetaté"></div>
+    <h1>Comparativo de desarrollos</h1>
+    <p class="cx-take" data-read lang="es">Hay <b data-draw="t-disp" data-source="resumen" data-field="disponibles" data-row="0">—</b> lotes disponibles con precio en <b data-draw="t-n" data-source="resumen" data-field="emprendimientos" data-row="0">—</b> emprendimientos. La entrada más baja es <b data-draw="t-desde-n" data-source="resumen" data-field="desde_nombre" data-row="0">—</b>, desde <b data-draw="t-desde" data-source="resumen" data-field="desde_precio" data-row="0">—</b>, y el mayor stock está en <b data-draw="t-stock-n" data-source="resumen" data-field="mayor_stock_nombre" data-row="0">—</b>.</p>
+  </header>
+
+  <section class="cx-kpis" id="kpis">
+    <div class="cx-kpi"><span class="lbl">Disponibles con precio</span><span class="val" data-draw="k-disp" data-source="resumen" data-field="disponibles" data-row="0">—</span><span class="sub">más <span data-draw="k-cs" data-source="resumen" data-field="sin_precio" data-row="0">—</span> disponibles sin precio publicado</span></div>
+    <div class="cx-kpi"><span class="lbl">Stock en venta</span><span class="val" data-draw="k-stock" data-source="resumen" data-field="stock_usd" data-row="0">—</span><span class="sub">suma de precios de lista disponibles</span></div>
+    <div class="cx-kpi"><span class="lbl">Entrada más baja</span><span class="val" data-draw="k-desde" data-source="resumen" data-field="desde_precio" data-row="0">—</span><span class="sub" data-draw="k-desde-n" data-source="resumen" data-field="desde_nombre" data-row="0">—</span></div>
+    <div class="cx-kpi"><span class="lbl">Mayor avance de ventas</span><span class="val" data-draw="k-vend" data-source="resumen" data-field="max_vendido_pct" data-row="0">—</span><span class="sub" data-draw="k-vend-n" data-source="resumen" data-field="max_vendido_nombre" data-row="0">—</span></div>
+  </section>
+
+  <section class="cx-sec" id="comparativo">
+    <h2>Comparativo de emprendimientos</h2>
+    <p class="note">Ordenado por precio de entrada. Precio por m² y superficies sobre las unidades disponibles. Deslizá la tabla hacia el costado para ver todas las columnas.</p>
+    <div class="cx-tablewrap" style="max-height:none">
+      <table class="cx-table cmp" data-source="emprendimientos" data-row-key="id">
+        <thead><tr>
+          <th data-field="nombre">Emprendimiento</th>
+          <th class="num" data-field="entrada_usd">Entrada y cuota</th>
+          <th class="num" data-field="usd_m2_prom">USD/m²</th>
+          <th class="num" data-field="sup_desde_m2">Superficie</th>
+          <th class="num" data-field="pct_vendido">% vendido</th>
+          <th data-field="fin_tipo">Financiación</th>
+          <th data-field="zona">Zona</th>
+          <th data-field="entrega">Entrega</th>
+          <th data-field="expensas">Expensas estimadas</th>
+          <th data-field="comision">Comisión inmobiliaria</th>
+          <th data-field="amenities">Amenities y playa</th>
+          <th data-field="respaldo">Desarrollador y respaldo</th>
+        </tr></thead>
+        <tbody data-draw="cmp-tabla"></tbody>
+      </table>
+    </div>
+    <p class="note">Entrada y cuota: calculadas sobre la unidad disponible más barata de cada emprendimiento con su plan de financiación directa (en Playa Brava, una estimación de crédito Itaú). USD/m²: promedio ponderado (precio del lote ÷ superficie) y, debajo, el rango; en Pueblo Colibrí es solo el lote, sin la casa. "Sin dato" significa que el material del desarrollador no lo informa. Los que no tienen lista de precios no figuran.</p>
+  </section>
+
+  <section class="cx-sec" id="rango-precios">
+    <h2>Rango de precios disponibles</h2>
+    <p class="note">De la unidad más barata a la más cara entre las disponibles; el punto es la mediana. En Pueblo Colibrí el precio es lote + casa llave en mano.</p>
+    <div class="cx-chart" data-draw="rango" data-source="emprendimientos" style="min-height:300px"></div>
+  </section>
+
+  <section class="cx-sec" id="usd-m2">
+    <h2>Precio por m² de terreno</h2>
+    <p class="note">Promedio ponderado de los lotes disponibles (precio del lote ÷ superficie). Amalfi son chacras de unas 3 ha, por eso su valor por m² es mucho menor. En Colibrí solo cuenta el lote, sin la casa.</p>
+    <div class="cx-chart" data-draw="m2" data-source="emprendimientos" style="min-height:260px"></div>
+  </section>
+
+  <section class="cx-sec" id="avance-ventas">
+    <h2>Avance de ventas</h2>
+    <div class="cx-legend"><span><i style="background:var(--cds-chart-muted)"></i>Vendidos</span><span><i style="background:var(--color-warn)"></i>Reservados</span><span><i style="background:var(--color-ok)"></i>Disponibles</span></div>
+    <div class="cx-chart" data-draw="ventas" data-source="emprendimientos" style="min-height:280px"></div>
+    <p class="note">Sobre el total de unidades de cada lista. Punta Polo solo publica sus disponibles, sin vendidos. En Aura los 33 lotes "housing" que guarda el desarrollador cuentan como reservados.</p>
+  </section>
+
+  <section class="cx-sec" id="presupuesto">
+    <h2>Qué entra en el presupuesto de un cliente</h2>
+    <div class="cx-controls">
+      <label for="cx-max">Presupuesto máximo
+        <select id="cx-max" class="dash-select" aria-label="Presupuesto máximo">
+          <option value="200000">USD 200.000</option>
+          <option value="250000">USD 250.000</option>
+          <option value="300000">USD 300.000</option>
+          <option value="350000">USD 350.000</option>
+          <option value="400000">USD 400.000</option>
+          <option value="500000">USD 500.000</option>
+          <option value="650000">USD 650.000</option>
+          <option value="800000">USD 800.000</option>
+          <option value="1000000">USD 1.000.000</option>
+          <option value="2000000">USD 2.000.000</option>
+        </select>
+      </label>
+      <label for="cx-prod">Producto
+        <select id="cx-prod" class="dash-select" aria-label="Producto">
+          <option value="">Todos</option>
+          <option value="Lote">Lotes</option>
+          <option value="Lote + casa">Lote + casa</option>
+          <option value="Chacra">Chacras (≥ 3 ha)</option>
+        </select>
+      </label>
+    </div>
+    <p class="cx-take" style="margin:0"><b data-draw="p-n" data-source="presupuesto_resumen" data-field="lotes" data-row="0">—</b> unidades disponibles en <b data-draw="p-e" data-source="presupuesto_resumen" data-field="emprendimientos" data-row="0">—</b> emprendimientos.</p>
+    <div class="cx-chips" data-draw="p-chips" data-source="presupuesto_por_emp"></div>
+    <div class="cx-tablewrap">
+      <table class="cx-table" data-source="lotes_presupuesto" data-row-key="emprendimiento,lote">
+        <thead><tr><th data-field="nombre">Emprendimiento</th><th data-field="lote">Unidad</th><th data-field="sector">Sector / tipo</th><th class="num" data-field="superficie_m2">m²</th><th class="num" data-field="precio_usd">Precio USD</th><th class="num" data-field="usd_m2">USD/m²</th></tr></thead>
+        <tbody data-draw="p-tabla"></tbody>
+      </table>
+    </div>
+    <p class="note">Muestra hasta 150 unidades, de la más barata a la más cara. Las unidades sin precio (ej. "coming soon") no aparecen.</p>
+  </section>
+
+  <details id="notas">
+    <summary>Notas y faltantes</summary>
+    <ul id="cx-notas"></ul>
+  </details>
+</div>
+<p class="src-note" id="cx-fuente"></p>
+</div>
+</div>
+<script>
+/*__COMUN__*/
+</script>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/d3/7.8.5/d3.min.js"></script>
+<script>
+const DATOS = /*__DATOS__*/null;
+const APP = (DATOS.sitio || {}).agenda_app || "";
+const DEVS = DATOS.devs || [];
+const PLANILLA = DATOS.planilla || "";
+
+/* ---- datos: hoja Lotes + Emprendimientos → lo mismo que usaba el dashboard de Bauti (todo calculado) ---- */
+/* números de la planilla: llegan como número; si alguien escribió texto ("USD 321.693", "0,3", "30%") se interpreta */
+function num(v) {
+  if (typeof v === "number") return isFinite(v) ? v : null;
+  let s = String(v ?? "").trim();
+  if (!s) return null;
+  const pct = /%$/.test(s);
+  s = s.replace(/[^\d.,-]/g, "");
+  if (/^-?\d{1,3}(\.\d{3})+(,\d+)?$/.test(s)) s = s.replace(/\./g, "");   // 321.693 / 1.234,5
+  s = s.replace(",", ".");
+  const n = parseFloat(s);
+  return isNaN(n) ? null : pct ? n / 100 : n;
+}
+const txt = v => (v === null || v === undefined ? "" : String(v).trim());
+const ESTADOS = { disponible: "Disponible", reservado: "Reservado", reservada: "Reservado", vendido: "Vendido", vendida: "Vendido", consultar: "Consultar" };
+function armar(r) {
+  const lotes = (r.lotes || []).map(l => {
+    const m2 = num(l.superficie_m2), p = num(l.precio_usd), pl = num(l.precio_lote_usd);
+    const base = pl != null ? pl : p;
+    return { emprendimiento: txt(l.emprendimiento), lote: txt(l.lote), sector: txt(l.sector), superficie_m2: m2,
+      estado: ESTADOS[txt(l.estado).toLowerCase()] || "Consultar", precio_usd: p, precio_lote_usd: pl, precio_casa_usd: num(l.precio_casa_usd),
+      usd_m2: base != null && m2 ? Math.round(base / m2) : null, nota: txt(l.nota) };
+  });
+  const emprendimientos = (r.emprendimientos || []).map(e0 => {
+    const e = {}; for (const k in e0) e[k] = typeof e0[k] === "string" ? e0[k].trim() : e0[k];
+    const ls = lotes.filter(l => l.emprendimiento === e.id);
+    const d = ls.filter(l => l.estado === "Disponible"), dp = d.filter(l => l.precio_usd != null);
+    const res = ls.filter(l => l.estado === "Reservado").length, cons = ls.filter(l => l.estado === "Consultar").length;
+    const tot = num(e.unidades_totales) || ls.length;
+    const sinV = /^(s[ií]|x|true|1)$/i.test(txt(e.sin_vendidos));
+    const vend = sinV ? null : num(e.unidades_totales) ? Math.max(0, tot - d.length - res - cons) : ls.filter(l => l.estado === "Vendido").length;
+    const pr = dp.map(l => l.precio_usd).sort((a, b) => a - b);
+    const conM2 = dp.filter(l => l.superficie_m2);
+    const m2s = d.map(l => l.superficie_m2).filter(Boolean), um = dp.map(l => l.usd_m2).filter(v => v != null);
+    const barata = dp.slice().sort((a, b) => a.precio_usd - b.precio_usd)[0];
+    const ep = num(e.entrada_pct), cp = num(e.cuota_pct);
+    return Object.assign(e, {
+      lotes_totales: tot, disponibles: d.length, disponibles_con_precio: dp.length, vendidos: vend, reservados: res,
+      pct_vendido: vend == null || !tot ? null : Math.round(1000 * vend / tot) / 10,
+      precio_desde: pr.length ? pr[0] : null, precio_mediana: pr.length ? pr[Math.floor(pr.length / 2)] : null, precio_hasta: pr.length ? pr[pr.length - 1] : null,
+      stock_usd: d3.sum(pr),
+      usd_m2_prom: conM2.length ? Math.round(d3.sum(conM2, l => l.precio_lote_usd ?? l.precio_usd) / d3.sum(conM2, l => l.superficie_m2)) : null,
+      usd_m2_min: um.length ? d3.min(um) : null, usd_m2_max: um.length ? d3.max(um) : null,
+      sup_desde_m2: m2s.length ? d3.min(m2s) : null, sup_hasta_m2: m2s.length ? d3.max(m2s) : null,
+      unidad_entrada: barata ? barata.lote : null,
+      entrada_usd: barata && ep ? Math.round(barata.precio_usd * ep) : null,
+      cuota_usd: barata && ep && cp ? Math.round(barata.precio_usd * cp) : null,
+      entrada_nota: txt(e.entrada_nota) || (ep ? "" : "Sin dato"), cuota_nota: txt(e.cuota_nota),
+    });
+  });
+  return { emprendimientos, lotes };
+}
+</script>
+<script>
+  // Mismo "runtime" mínimo que traía el dashboard; los datos llegan después, desde la planilla.
+  (function () {
+    const raw = { emprendimientos: [], lotes: [] };
+    const calcs = {}, draws = [], onDatas = [];
+    let params = { presupuesto: 400000, producto: '' };
+    const val = (id) => (id in raw ? raw[id] : id in calcs ? calcs[id].fn(...calcs[id].inputs.map(val)) : null);
+    function runAll() {
+      onDatas.forEach((fn) => { try { fn(); } catch (e) { console.error(e); } });
+      draws.forEach(([name, fn]) => document.querySelectorAll('[data-draw="' + name + '"]').forEach((el) => { try { fn(el); } catch (e) { console.error(name, e); } }));
+    }
+    window.dash = {
+      colors: ['var(--series-0)'],
+      data: (id) => ({ status: 'ok', data: val(id), message: null, refreshing: false, truncated: false, meta: null }),
+      calc: (id, def) => { calcs[id] = def; },
+      loader: () => {}, setLink: () => {}, refresh: () => {},
+      draw: (name, fn) => { if (typeof fn === 'function') draws.push([name, fn]); else runAll(); },
+      onData: (fn) => { onDatas.push(fn); },
+      params: () => ({ ...params }),
+      setParams: (p) => { params = { ...params, ...p }; runAll(); },
+      resetParams: () => { params = { presupuesto: 400000, producto: '' }; runAll(); },
+    };
+    window.__cxSet = (d) => { raw.emprendimientos = d.emprendimientos; raw.lotes = d.lotes; runAll(); };
+    let w = window.innerWidth;
+    window.addEventListener('resize', () => { if (Math.abs(window.innerWidth - w) > 20) { w = window.innerWidth; runAll(); } });
+  })();
+</script>
+<script>
+  (function () {
+    const loc = d3.formatLocale({ decimal: ',', thousands: '.', grouping: [3], currency: ['USD ', ''] });
+    window.cxFmt = {
+      usd: (v) => (v == null ? '—' : 'USD ' + loc.format(',.0f')(v)),
+      k: (v) => (v == null ? '—' : v >= 1e6 ? 'USD ' + loc.format(',.2~f')(v / 1e6) + ' M' : 'USD ' + loc.format(',.0f')(v / 1e3) + 'k'),
+      n: (v) => (v == null ? '—' : loc.format(',.0f')(v)),
+      pct: (v) => (v == null ? '—' : loc.format(',.0f')(v) + '%'),
+    };
+  })();
+
+  dash.calc('resumen', {
+    title: 'Resumen general',
+    description: 'Totales de unidades disponibles, stock y entrada más baja entre todos los emprendimientos.',
+    inputs: ['emprendimientos'],
+    fn: (emprendimientos) => {
+      const conP = emprendimientos.filter((e) => e.precio_desde != null);
+      const desde = conP.slice().sort((a, b) => a.precio_desde - b.precio_desde)[0] || {};
+      const stock = conP.slice().sort((a, b) => b.stock_usd - a.stock_usd)[0] || {};
+      const vend = emprendimientos.filter((e) => e.pct_vendido != null).sort((a, b) => b.pct_vendido - a.pct_vendido)[0] || {};
+      return [{
+        disponibles: d3.sum(emprendimientos, (e) => e.disponibles_con_precio),
+        sin_precio: d3.sum(emprendimientos, (e) => e.disponibles - e.disponibles_con_precio),
+        emprendimientos: emprendimientos.length,
+        stock_usd: d3.sum(emprendimientos, (e) => e.stock_usd),
+        desde_precio: desde.precio_desde ?? null,
+        desde_nombre: desde.nombre ?? null,
+        mayor_stock_nombre: stock.nombre ?? null,
+        max_vendido_pct: vend.pct_vendido ?? null,
+        max_vendido_nombre: vend.nombre ?? null,
+      }];
+    },
+  });
+
+  dash.calc('lotes_presupuesto', {
+    title: 'Unidades dentro del presupuesto',
+    description: 'Unidades disponibles con precio hasta el presupuesto elegido, filtradas por producto, de la más barata a la más cara (máximo 150).',
+    inputs: ['lotes', 'emprendimientos'],
+    fn: (lotes, emprendimientos) => {
+      const p = dash.params();
+      const max = Number(p.presupuesto) || 400000;
+      const prod = p.producto || '';
+      const byId = new Map(emprendimientos.map((e) => [e.id, e]));
+      return lotes
+        .filter((l) => l.estado === 'Disponible' && l.precio_usd != null && l.precio_usd <= max)
+        .filter((l) => {
+          const e = byId.get(l.emprendimiento) || {};
+          if (!prod) return true;
+          if (prod === 'Chacra') return e.producto === 'Chacra' || /Polo/.test(l.sector || '');
+          if (prod === 'Lote + casa') return e.producto === 'Lote + casa';
+          return e.producto !== 'Lote + casa' && e.producto !== 'Chacra';
+        })
+        .sort((a, b) => a.precio_usd - b.precio_usd)
+        .map((l) => ({ emprendimiento: l.emprendimiento, nombre: (byId.get(l.emprendimiento) || {}).nombre, lote: l.lote, sector: l.sector, superficie_m2: l.superficie_m2, precio_usd: l.precio_usd, usd_m2: l.usd_m2 }));
+    },
+  });
+
+  dash.calc('presupuesto_por_emp', {
+    title: 'Unidades en presupuesto por emprendimiento',
+    description: 'Cuántas unidades disponibles entran en el presupuesto en cada emprendimiento y desde qué precio.',
+    inputs: ['lotes', 'emprendimientos'],
+    fn: (lotes, emprendimientos) => {
+      const p = dash.params();
+      const max = Number(p.presupuesto) || 400000;
+      const prod = p.producto || '';
+      return emprendimientos.map((e) => {
+        const L = lotes.filter((l) => l.emprendimiento === e.id && l.estado === 'Disponible' && l.precio_usd != null && l.precio_usd <= max)
+          .filter((l) => !prod || (prod === 'Chacra' ? (e.producto === 'Chacra' || /Polo/.test(l.sector || '')) : prod === 'Lote + casa' ? e.producto === 'Lote + casa' : (e.producto !== 'Lote + casa' && e.producto !== 'Chacra')));
+        return { id: e.id, nombre: e.nombre, lotes: L.length, desde: L.length ? d3.min(L, (l) => l.precio_usd) : null };
+      }).filter((r) => r.lotes > 0).sort((a, b) => b.lotes - a.lotes);
+    },
+  });
+
+  dash.calc('presupuesto_resumen', {
+    title: 'Total en presupuesto',
+    description: 'Total de unidades dentro del presupuesto y en cuántos emprendimientos.',
+    inputs: ['presupuesto_por_emp'],
+    fn: (porEmp) => [{ lotes: d3.sum(porEmp || [], (r) => r.lotes), emprendimientos: (porEmp || []).length }],
+  });
+
+  // Controls: listen only
+  document.querySelectorAll('#cx-max').forEach((el) => el.addEventListener('change', () => dash.setParams({ presupuesto: Number(el.value) })));
+  document.querySelectorAll('#cx-prod').forEach((el) => el.addEventListener('change', () => dash.setParams({ producto: el.value })));
+  dash.onData(() => {
+    const p = dash.params();
+    document.querySelectorAll('#cx-max').forEach((el) => { if (document.activeElement !== el) el.value = String(p.presupuesto ?? 400000); });
+    document.querySelectorAll('#cx-prod').forEach((el) => { if (document.activeElement !== el) el.value = p.producto ?? ''; });
+  });
+
+  // Simple text drawings from the summary calc
+  const cxText = (name, src, field, fmt) => dash.draw(name, (el) => {
+    const r = dash.data(src);
+    const row = r.status === 'ok' && r.data && r.data[0];
+    el.textContent = row && row[field] != null ? fmt(row[field]) : '—';
+  });
+  const F = window.cxFmt;
+  cxText('t-disp', 'resumen', 'disponibles', F.n);
+  cxText('t-n', 'resumen', 'emprendimientos', F.n);
+  cxText('t-desde-n', 'resumen', 'desde_nombre', String);
+  cxText('t-desde', 'resumen', 'desde_precio', F.usd);
+  cxText('t-stock-n', 'resumen', 'mayor_stock_nombre', String);
+  cxText('k-disp', 'resumen', 'disponibles', F.n);
+  cxText('k-cs', 'resumen', 'sin_precio', F.n);
+  cxText('k-stock', 'resumen', 'stock_usd', F.k);
+  cxText('k-desde', 'resumen', 'desde_precio', F.usd);
+  cxText('k-desde-n', 'resumen', 'desde_nombre', String);
+  cxText('k-vend', 'resumen', 'max_vendido_pct', F.pct);
+  cxText('k-vend-n', 'resumen', 'max_vendido_nombre', String);
+  cxText('p-n', 'presupuesto_resumen', 'lotes', F.n);
+  cxText('p-e', 'presupuesto_resumen', 'emprendimientos', F.n);
+
+  // Shared tooltip helper
+  window.cxTip = (box) => {
+    let t = box.querySelector('.cx-tip');
+    if (!t) { t = document.createElement('div'); t.className = 'cx-tip'; t.hidden = true; box.appendChild(t); }
+    return {
+      show(ev, lines) {
+        t.replaceChildren(...lines.map(([a, b], i) => { const d = document.createElement('div'); if (b == null) { d.textContent = a; d.style.fontWeight = '600'; } else { const s = document.createElement('span'); s.textContent = a + ' '; d.append(s, document.createTextNode(b)); } return d; }));
+        t.hidden = false;
+        const r = box.getBoundingClientRect();
+        let x = ev.clientX - r.left + 12, y = ev.clientY - r.top + 12;
+        const w = t.offsetWidth;
+        if (x + w > r.width) x = Math.max(0, ev.clientX - r.left - w - 12);
+        t.style.left = x + 'px'; t.style.top = y + 'px';
+      },
+      hide() { t.hidden = true; },
+    };
+  };
+
+  function cxLabelWidth(svg, labels, cls) {
+    const g = svg.append('g');
+    let w = 0;
+    labels.forEach((l) => { const t = g.append('text').attr('class', cls).text(l); w = Math.max(w, t.node().getComputedTextLength()); });
+    g.remove();
+    return w;
+  }
+
+  // Price range chart
+  dash.draw('rango', (el) => {
+    const r = dash.data('emprendimientos');
+    el.replaceChildren();
+    if (r.status !== 'ok') { el.textContent = r.status === 'error' ? 'No se pudo cargar' : '—'; return; }
+    const rows = r.data.slice().sort((a, b) => (a.precio_desde ?? 1e12) - (b.precio_desde ?? 1e12));
+    const W = el.clientWidth || 600, rowH = 34, H = rows.length * rowH + 30;
+    const svg = d3.select(el).append('svg').attr('viewBox', `0 0 ${W} ${H}`).attr('height', H).attr('role', 'img').attr('aria-label', 'Rango de precios disponibles por emprendimiento');
+    const lw = Math.min(W * 0.4, cxLabelWidth(svg, rows.map((d) => d.nombre), 'name') + 12);
+    const max = d3.max(rows, (d) => d.precio_hasta) || 1;
+    const min = d3.min(rows, (d) => d.precio_desde) || 140000;
+    const x = d3.scaleLog().domain([Math.min(140000, min * 0.9), max * 1.05]).range([lw, W - 10]);
+    const ticks = [50000, 100000, 150000, 250000, 400000, 600000, 1000000, 2000000].filter((t) => t <= max * 1.05 && t >= x.domain()[0]);
+    const fmtT = (v) => (v >= 1e6 ? (v / 1e6) + ' M' : v / 1e3 + 'k');
+    svg.append('g').attr('class', 'grid').selectAll('line').data(ticks).join('line').attr('x1', x).attr('x2', x).attr('y1', 0).attr('y2', H - 22);
+    svg.append('g').attr('class', 'axis').attr('transform', `translate(0,${H - 22})`).call(d3.axisBottom(x).tickValues(ticks).tickFormat(fmtT).tickSize(0)).call((g) => g.select('.domain').remove());
+    const tip = window.cxTip(el);
+    const g = svg.append('g').selectAll('g').data(rows).join('g').attr('transform', (d, i) => `translate(0,${i * rowH + rowH / 2})`);
+    g.append('text').attr('class', 'name').attr('x', 0).attr('dy', '0.35em').text((d) => d.nombre);
+    const has = g.filter((d) => d.precio_desde != null);
+    has.append('line').attr('x1', (d) => x(d.precio_desde)).attr('x2', (d) => x(d.precio_hasta)).attr('stroke-width', 8).attr('stroke-linecap', 'round').style('stroke', dash.colors[0]).style('opacity', 0.35);
+    has.append('circle').attr('cx', (d) => x(d.precio_mediana)).attr('r', 6).style('fill', dash.colors[0]);
+    g.filter((d) => d.precio_desde == null).append('text').attr('x', lw).attr('dy', '0.35em').text('Sin lista de precios');
+    g.append('rect').attr('x', 0).attr('y', -rowH / 2).attr('width', W).attr('height', rowH).style('fill', 'transparent')
+      .on('pointermove', (ev, d) => tip.show(ev, d.precio_desde == null ? [[d.nombre], ['', 'Sin precios publicados']] : [[d.nombre], ['Desde', window.cxFmt.usd(d.precio_desde)], ['Mediana', window.cxFmt.usd(d.precio_mediana)], ['Hasta', window.cxFmt.usd(d.precio_hasta)], ['Con precio', window.cxFmt.n(d.disponibles_con_precio) + ' unidades']]))
+      .on('pointerleave', () => tip.hide());
+  });
+
+  // USD/m2 bars
+  dash.draw('m2', (el) => {
+    const r = dash.data('emprendimientos');
+    el.replaceChildren();
+    if (r.status !== 'ok') { el.textContent = r.status === 'error' ? 'No se pudo cargar' : '—'; return; }
+    const rows = r.data.filter((d) => d.usd_m2_prom != null).sort((a, b) => b.usd_m2_prom - a.usd_m2_prom);
+    const W = el.clientWidth || 600, rowH = 30, H = rows.length * rowH + 6;
+    const svg = d3.select(el).append('svg').attr('viewBox', `0 0 ${W} ${H}`).attr('height', H).attr('role', 'img').attr('aria-label', 'Precio promedio por metro cuadrado de terreno');
+    const lw = Math.min(W * 0.4, cxLabelWidth(svg, rows.map((d) => d.nombre), 'name') + 12);
+    const vw = cxLabelWidth(svg, rows.map((d) => 'USD ' + d.usd_m2_prom), '') + 8;
+    const x = d3.scaleLinear().domain([0, d3.max(rows, (d) => d.usd_m2_prom)]).range([lw, W - vw]);
+    const tip = window.cxTip(el);
+    const g = svg.selectAll('g.r').data(rows).join('g').attr('class', 'r').attr('transform', (d, i) => `translate(0,${i * rowH})`);
+    g.append('text').attr('class', 'name').attr('x', 0).attr('y', rowH / 2).attr('dy', '0.35em').text((d) => d.nombre);
+    g.append('rect').attr('x', lw).attr('y', 6).attr('height', rowH - 12).attr('rx', 3).attr('width', (d) => Math.max(1, x(d.usd_m2_prom) - lw)).style('fill', dash.colors[0]);
+    g.append('text').attr('x', (d) => x(d.usd_m2_prom) + 6).attr('y', rowH / 2).attr('dy', '0.35em').text((d) => 'USD ' + d.usd_m2_prom);
+    g.append('rect').attr('width', W).attr('height', rowH).style('fill', 'transparent')
+      .on('pointermove', (ev, d) => tip.show(ev, [[d.nombre], ['USD/m² promedio', 'USD ' + d.usd_m2_prom], ['Lote típico', d.lote_tipico]]))
+      .on('pointerleave', () => tip.hide());
+  });
+
+  // Sales progress stacked bars
+  dash.draw('ventas', (el) => {
+    const r = dash.data('emprendimientos');
+    el.replaceChildren();
+    if (r.status !== 'ok') { el.textContent = r.status === 'error' ? 'No se pudo cargar' : '—'; return; }
+    const rows = r.data.slice().sort((a, b) => (b.pct_vendido ?? -1) - (a.pct_vendido ?? -1));
+    const W = el.clientWidth || 600, rowH = 32, H = rows.length * rowH + 4;
+    const svg = d3.select(el).append('svg').attr('viewBox', `0 0 ${W} ${H}`).attr('height', H).attr('role', 'img').attr('aria-label', 'Vendidos, reservados y disponibles por emprendimiento');
+    const lw = Math.min(W * 0.4, cxLabelWidth(svg, rows.map((d) => d.nombre), 'name') + 12);
+    const rw = cxLabelWidth(svg, ['100% vendido'], '') + 10;
+    const x = d3.scaleLinear().domain([0, 1]).range([lw, W - rw]);
+    const tip = window.cxTip(el);
+    const g = svg.selectAll('g.r').data(rows).join('g').attr('class', 'r').attr('transform', (d, i) => `translate(0,${i * rowH})`);
+    g.append('text').attr('class', 'name').attr('y', rowH / 2).attr('dy', '0.35em').text((d) => d.nombre);
+    g.each(function (d) {
+      const tot = d.lotes_totales || 1;
+      const parts = [[d.vendidos || 0, 'var(--cds-chart-muted)'], [d.reservados || 0, 'var(--color-warn)'], [d.disponibles || 0, 'var(--color-ok)']];
+      let acc = 0;
+      const sel = d3.select(this);
+      parts.forEach(([v, c]) => { const w = (v / tot) * (x(1) - lw); sel.append('rect').attr('x', lw + acc).attr('y', 7).attr('height', rowH - 14).attr('width', Math.max(0, w)).style('fill', c); acc += w; });
+      sel.append('text').attr('x', x(1) + 6).attr('y', rowH / 2).attr('dy', '0.35em').text(d.pct_vendido == null ? 's/d vendidos' : window.cxFmt.pct(d.pct_vendido) + ' vendido');
+    });
+    g.append('rect').attr('width', W).attr('height', rowH).style('fill', 'transparent')
+      .on('pointermove', (ev, d) => tip.show(ev, [[d.nombre + ' · ' + window.cxFmt.n(d.lotes_totales) + ' unidades' + (d.total_nota ? ' (' + d.total_nota + ')' : '')], ['Vendidos', d.vendidos == null ? 's/d' : window.cxFmt.n(d.vendidos)], ['Reservados', window.cxFmt.n(d.reservados)], ['Disponibles', window.cxFmt.n(d.disponibles)]]))
+      .on('pointerleave', () => tip.hide());
+  });
+
+  // Budget chips
+  dash.draw('p-chips', (el) => {
+    const r = dash.data('presupuesto_por_emp');
+    if (r.status !== 'ok' || !r.data) { el.replaceChildren(); return; }
+    el.replaceChildren(...r.data.map((d) => { const s = document.createElement('span'); s.className = 'cx-chip'; const b = document.createElement('b'); b.textContent = d.nombre; s.append(b, document.createTextNode(' · ' + d.lotes + ' · desde ' + window.cxFmt.k(d.desde))); return s; }));
+  });
+
+  // Budget table
+  dash.draw('p-tabla', (el) => {
+    const r = dash.data('lotes_presupuesto');
+    if (r.status !== 'ok' || !r.data) { el.replaceChildren(); return; }
+    const rows = r.data.slice(0, 150);
+    d3.select(el).selectAll('tr').data(rows, (d) => d.emprendimiento + '|' + d.lote).join('tr')
+      .attr('data-key', (d) => encodeURIComponent(d.emprendimiento) + ',' + encodeURIComponent(d.lote))
+      .each(function (d) {
+        const cells = [d.nombre, d.lote, d.sector || '—', window.cxFmt.n(d.superficie_m2), window.cxFmt.n(d.precio_usd), d.usd_m2 == null ? '—' : window.cxFmt.n(d.usd_m2)];
+        d3.select(this).selectAll('td').data(cells).join('td').attr('class', (c, i) => (i >= 3 ? 'num' : null)).text((c) => c);
+      });
+  });
+
+  // Comparison table
+  dash.draw('cmp-tabla', (el) => {
+    const r = dash.data('emprendimientos');
+    if (r.status !== 'ok') { el.replaceChildren(); return; }
+    const F = window.cxFmt;
+    const sup = (v) => (v == null ? null : v >= 10000 ? (v / 10000).toLocaleString('es-UY', { maximumFractionDigits: 1 }) + ' ha' : F.n(v) + ' m²');
+    const rows = r.data.filter((d) => d.precio_desde != null).sort((a, b) => (a.precio_desde ?? 1e12) - (b.precio_desde ?? 1e12));
+    d3.select(el).selectAll('tr').data(rows, (d) => d.id).join('tr').attr('data-key', (d) => encodeURIComponent(d.id))
+      .each(function (d) {
+        const tr = d3.select(this).html(null);
+        const c0 = tr.append('td');
+        c0.append('div').attr('class', 'cmp-name').text(d.nombre);
+        if (DEVS.includes(d.id)) c0.append('a').attr('class', 'cmp-map').attr('href', '__RAIZ__desarrollos/' + d.id + '/').text('Ver desarrollo →');
+        c0.append('span').attr('class', 'cx-pill ' + (d.producto === 'Lote + casa' ? 'casa' : d.producto === 'Chacra' ? 'chacra' : 'lote')).text(d.producto);
+        const ce = tr.append('td').attr('class', 'num wide-s');
+        if (d.entrada_usd == null) ce.append('div').attr('class', 'cmp-sub').text(d.entrada_nota || 'Sin dato');
+        else {
+          ce.append('div').attr('class', 'cmp-big').text(F.usd(d.entrada_usd));
+          ce.append('div').attr('class', 'cmp-sub').text(d.entrada_nota);
+          if (d.cuota_usd != null) { ce.append('div').attr('class', 'cmp-big cmp-gap').text(F.usd(d.cuota_usd) + ' /mes'); ce.append('div').attr('class', 'cmp-sub').text(d.cuota_nota); }
+          ce.append('div').attr('class', 'cmp-sub cmp-gap').text('Unidad ' + d.unidad_entrada + ' · ' + F.usd(d.precio_desde));
+        }
+        const c1 = tr.append('td').attr('class', 'num');
+        c1.append('div').attr('class', 'cmp-big').text(d.usd_m2_prom == null ? '—' : 'USD ' + F.n(d.usd_m2_prom));
+        if (d.usd_m2_min != null) c1.append('div').attr('class', 'cmp-sub').text(F.n(d.usd_m2_min) + ' – ' + F.n(d.usd_m2_max));
+        const c2 = tr.append('td').attr('class', 'num');
+        c2.append('div').text(d.sup_desde_m2 == null ? '—' : sup(d.sup_desde_m2) + ' – ' + sup(d.sup_hasta_m2));
+        if (d.sup_nota) c2.append('div').attr('class', 'cmp-sub').text(d.sup_nota);
+        const c3 = tr.append('td').attr('class', 'num');
+        if (d.pct_vendido == null) c3.append('span').attr('class', 'cmp-sub').text('Sin dato');
+        else {
+          c3.append('div').attr('class', 'cmp-big').text(F.pct(d.pct_vendido));
+          const bar = c3.append('div').attr('class', 'cmp-bar');
+          bar.append('i').style('width', Math.min(100, d.pct_vendido) + '%');
+          c3.append('div').attr('class', 'cmp-sub').text(F.n(d.disponibles) + ' disp. de ' + F.n(d.lotes_totales));
+        }
+        const c4 = tr.append('td').attr('class', 'wide');
+        c4.append('div').attr('class', 'cmp-tag').text(d.fin_tipo || 'Sin dato');
+        c4.append('div').attr('class', 'cmp-sub').text(d.fin_forma || '');
+        tr.append('td').text(d.zona);
+        tr.append('td').attr('class', 'wide').text(d.entrega);
+        tr.append('td').attr('class', 'wide' + (/^Sin dato/.test(d.expensas || '') ? ' muted' : '')).text(d.expensas || 'Sin dato');
+        tr.append('td').attr('class', /confirmar|no definido/i.test(d.comision || '') ? 'muted' : 'ok').text(d.comision || 'Sin dato');
+        const ca = tr.append('td').attr('class', 'wide-l');
+        ca.append('div').text(d.amenities || 'Sin dato');
+        ca.append('div').attr('class', 'cmp-sub cmp-gap').text(d.playa || '');
+        tr.append('td').attr('class', 'wide-l' + (/^Sin dato/.test(d.respaldo || '') ? ' muted' : '')).text(d.respaldo || 'Sin dato');
+      });
+  });
+</script>
+<script>
+const $ = id => document.getElementById(id);
+const escH = s => String(s).replace(/[&<>"]/g, c => ({ "&": "&amp;", "<": "&lt;", ">": "&gt;", '"': "&quot;" })[c]);
+function mensaje(t, s) { $("cx-wrap").hidden = true; $("cx-fuente").textContent = ""; $("msg").hidden = false; $("msg").innerHTML = `<b>${t}</b>${s ? `<span>${s}</span>` : ""}`; }
+async function iniciar() {
+  if (!INTERNO.activo()) return mensaje("Solo para el equipo.", "Entrá con el engranaje de abajo a la izquierda.");
+  if (!INTERNO.token()) return mensaje("Volvé a entrar.", "Tocá el engranaje → Salir, y entrá de nuevo con la contraseña.");
+  if (!APP) return mensaje("Falta conectar la planilla.", "Hay que publicar el script de la planilla como App web (sitio.json → agenda_app).");
+  if ($("cx-wrap").hidden) mensaje("Cargando…");
+  try {
+    const r = await fetch(APP, { method: "POST", headers: { "Content-Type": "text/plain;charset=utf-8" }, body: JSON.stringify({ accion: "comparativo", tk: INTERNO.token() }) });
+    const j = await r.json();
+    if (j.error) throw new Error(j.error === "clave" ? "La planilla no reconoce la contraseña (revisá CLAVE en Propiedades del script)."
+      : /desconocida/.test(j.error) ? "Falta actualizar el script de la planilla (pegar la versión nueva de planilla/Codigo.gs y publicar una versión nueva de la App web)." : j.error);
+    const d = armar(j);
+    if (!d.emprendimientos.length) throw new Error("La planilla de precios no tiene emprendimientos cargados.");
+    $("msg").hidden = true; $("cx-wrap").hidden = false;
+    $("cx-notas").innerHTML = (j.notas || []).map(n => `<li>${escH(n)}</li>`).join("");
+    $("notas").hidden = !(j.notas || []).length;
+    const listas = d.emprendimientos.filter(e => e.lista).map(e => `${escH(e.nombre)}: ${escH(e.lista)}`).join(" · ");
+    $("cx-fuente").innerHTML = `Datos en vivo de la planilla privada <a href="https://docs.google.com/spreadsheets/d/${PLANILLA}/edit" target="_blank" rel="noopener">Precios desarrollos (interno)</a>: lo que se cambia ahí se ve al recargar. Precios en USD; sujetos a cambios del desarrollador.${listas ? "<br>" + listas : ""}`;
+    window.__cxSet(d);
+  } catch (e) {
+    mensaje("No se pudo cargar.", escH(e.message || "Error de conexión."));
+  }
+}
+document.addEventListener("interno", iniciar);
+iniciar();
+</script>
