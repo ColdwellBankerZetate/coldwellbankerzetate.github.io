@@ -267,11 +267,10 @@ function htmlAcciones(sinKmz, sinChips) {
     `<a href="${esc(BR[k])}" target="_blank" rel="noopener" data-ev="brochure-${k}">${k.toUpperCase()}</a>`).join("")}</div>` : "";
   return `<div class="acciones">${b.join("")}</div>${sinKmz ? "" : chips}`;
 }
-/* modo interno: carpeta de Drive + Info (precios, financiación, disponibilidad) */
+/* modo interno: carpeta de Drive */
 function botonesInternos() {
   const b = [], drive = INTERNO.dev(DEV.slug).drive;
   if (drive) b.push(`<a class="b-sec" href="${esc(drive)}" target="_blank" rel="noopener" data-ev="drive" title="${t("interno")}">${ICONO_CANDADO}${t("drive_b")}</a>`);
-  if (INTERNO.activo()) b.push(`<button type="button" class="b-sec" data-info title="Precios, financiación y disponibilidad (solo equipo)">${ICONO_INFO}Info</button>`);
   if (b.length === 1) b[0] = b[0].replace('class="b-', 'class="ancho b-');
   return b;
 }
@@ -327,7 +326,6 @@ function enganchar(raiz) {
     b.hidden = tx.scrollHeight <= tx.clientHeight + 2;
     b.onclick = () => { const c = tx.classList.toggle("corto"); b.textContent = c ? t("ver_mas") : t("ver_menos"); };
   });
-  raiz.querySelectorAll("[data-info]").forEach(b => b.onclick = () => { abrirInfo(); track("info/" + DEV.slug); });
   raiz.querySelectorAll("[data-vista]").forEach(b => b.onclick = () => { ponerVista(b.dataset.vista); cerrarHoja(); });
   raiz.querySelectorAll("[data-ev]").forEach(a => a.addEventListener("click", () => track(a.dataset.ev + "/" + DEV.slug)));
 }
@@ -350,10 +348,8 @@ function pintar() {
 }
 
 /* ---------- plano (KMZ) sobre el satélite ---------- */
-const POL = {}; /* lote → polígono (para "ver en el mapa" desde Info) */
 function dibujarPlano() {
   capaPlano.clearLayers();
-  for (const k in POL) delete POL[k];
   if (PL) {
     if (PL.perimetro) L.polygon(PL.perimetro, { color: "#2f8bff", weight: 2.5, fill: false, interactive: false }).addTo(capaPlano);
     PL.areas.forEach(a => L.polygon(a.c, { color: "rgba(170,210,170,.85)", weight: 1, fillColor: "#6fa56f", fillOpacity: .28 })
@@ -365,7 +361,6 @@ function dibujarPlano() {
         : est === "reservado" ? { color: "#c8b28a", weight: 1.2, fillColor: "#c8b28a", fillOpacity: .18 }
         : { color: "rgba(255,255,255,.8)", weight: 1, fillColor: "#fff", fillOpacity: .07 };
       const pol = L.polygon(lt.c, estilo).addTo(capaPlano);
-      pol._est = estilo; POL[String(lt.n).toLowerCase()] = pol;
       pol.bindTooltip(`<b>${t("lote")} ${esc(lt.n)}</b><span>${lt.m2 ? fmt(lt.m2) + " m²" : ""}${lt.m2 && est ? " · " : ""}${est ? t(est) : ""}</span>`, { className: "tt", sticky: true });
       L.marker(pol.getBounds().getCenter(), { interactive: false, keyboard: false, icon: L.divIcon({ className: "ico", iconSize: [0, 0], html: `<span class="n-lote${est ? " " + est : ""}">${esc(lt.n)}</span>` }) }).addTo(capaPlano);
     });
@@ -453,157 +448,6 @@ function armarMasterplan() {
 }
 
 
-/* ---------- Info (modo interno): lista de precios, lo más barato, financiación, simulador y disponibilidad ----------
-   Los datos vienen de interno.dat (INTERNO.dev(slug).analisis: build.py cruza desarrollos/<slug>.precios con el plano).
-   Nada de esto está en la página: sin la contraseña no existe. */
-const IN = { sel: null, filtro: "disp", orden: ["precio", 1], busca: "", plan: 0, m: null };
-const m2p = l => l.precio && l.m2 ? l.precio / l.m2 : null;
-const sectorDe = l => l.sector || (/^([A-Za-z]+)\d/.exec(l.n) || [])[1] || "";
-const natural = (a, b) => String(a).localeCompare(String(b), "es", { numeric: true });
-const planesDe = (a, n) => (a.planes || []).filter(p => { try { return !p.aplica || new RegExp(p.aplica, "i").test(n); } catch (_) { return true; } });
-const cuotaDe = (monto, n, tasa) => { if (!tasa) return monto / n; const i = tasa / 100 / 12; return monto * i / (1 - Math.pow(1 + i, -n)); };
-const fm2 = n => n == null ? "—" : Math.round(n).toLocaleString("es-UY");
-function simular(a, l, p) {
-  const filas = (p ? p.pagos : [{ pct: 100, txt: "Contado" }]).map(x => {
-    const monto = l.precio * x.pct / 100;
-    if (!x.cuotas) return { ...x, monto, total: monto };
-    const c = cuotaDe(monto, x.cuotas, x.interes || 0);
-    return { ...x, monto, cuota: c, total: c * x.cuotas };
-  });
-  const costos = (a.costos || []).map(c => {
-    const monto = c.pct ? l.precio * c.pct / 100 : c.usd_m2 && l.m2 ? c.usd_m2 * l.m2 : c.usd_m2_mes && l.m2 ? c.usd_m2_mes * l.m2 : null;
-    return { ...c, monto, mensual: !!c.usd_m2_mes };
-  }).filter(c => c.monto != null);
-  const total = filas.reduce((s, x) => s + x.total, 0) + costos.filter(c => !c.mensual).reduce((s, c) => s + c.monto, 0);
-  return { filas, costos, total };
-}
-function htmlSim(a) {
-  const disp = a.lotes.filter(l => l.precio && l.estado !== "vendido").sort((x, y) => x.precio - y.precio);
-  if (!disp.length) return "";
-  const l = disp.find(x => x.n === IN.sel) || disp[0]; IN.sel = l.n;
-  const ps = planesDe(a, l.n); if (IN.plan >= ps.length) IN.plan = 0;
-  const p = ps[IN.plan], r = simular(a, l, p), mon = a.moneda;
-  return `<div class="sim">
-    <div class="sel2"><select data-in="lote" aria-label="Lote">${disp.map(x => `<option value="${esc(x.n)}"${x.n === l.n ? " selected" : ""}>Lote ${esc(x.n)} · ${fmtUSDc(x.precio)}${x.estado === "reservado" ? " · reservado" : ""}</option>`).join("")}</select>
-      <select data-in="plan" aria-label="Plan de pago"${ps.length < 2 ? " disabled" : ""}>${(ps.length ? ps : [{ nombre: "Contado" }]).map((x, k) => `<option value="${k}"${k === IN.plan ? " selected" : ""}>${esc(x.nombre)}</option>`).join("")}</select></div>
-    <div><b style="font-size:15px">Lote ${esc(l.n)}</b> <span style="color:#9b978f">· ${[sectorDe(l), l.m2 ? fm2(l.m2) + " m²" : "", m2p(l) ? `${fmtUSD(m2p(l), mon)}/m²` : ""].filter(Boolean).join(" · ")}</span>
-      ${l.extra ? `<div style="color:#9b978f;font-size:12.5px;margin-top:2px">${Object.entries(l.extra).map(([k, v]) => `${esc(k)}: ${esc(typeof v === "number" && v > 999 ? fmtUSD(v, mon) : v)}`).join(" · ")}</div>` : ""}</div>
-    <table><tbody>
-      <tr><td>Precio del lote</td><td class="r"><b>${fmtUSD(l.precio, mon)}</b></td></tr>
-      ${r.filas.map(x => `<tr><td>${esc(x.txt || "")} <span style="color:#6d6a64">${x.pct} %</span></td><td class="r">${x.cuotas ? `${x.cuotas} × ${fmtUSD(x.cuota, mon)}` : fmtUSD(x.monto, mon)}</td></tr>`).join("")}
-      ${r.costos.map(c => `<tr><td>${esc(c.nombre)} <span style="color:#6d6a64">${c.pct ? c.pct + " %" : c.usd_m2 ? `${c.usd_m2} USD/m²` : `${c.usd_m2_mes} USD/m²/mes`}${c.cuando ? " · " + esc(c.cuando) : ""}</span></td><td class="r">${fmtUSD(c.monto, mon)}${c.mensual ? " /mes" : ""}</td></tr>`).join("")}
-    </tbody></table>
-    <div class="tot"><span>Total a pagar${r.costos.some(c => !c.mensual) ? " (con costos extra)" : ""}${r.filas.some(x => x.interes) ? " · con intereses" : ""}</span><b>${fmtUSD(r.total, mon)}</b></div>
-    <div class="bts"><button type="button" class="bt pri" data-in="copiar">Copiar para WhatsApp</button>${POL[l.n.toLowerCase()] ? `<button type="button" class="bt" data-in="ver" data-n="${esc(l.n)}">Ver en el mapa</button>` : ""}</div>
-  </div>`;
-}
-function textoWA(a) {
-  const l = a.lotes.find(x => x.n === IN.sel); if (!l) return "";
-  const p = planesDe(a, l.n)[IN.plan], r = simular(a, l, p), mon = a.moneda;
-  return [`*${DEV.nombre}* — Lote ${l.n}`, [sectorDe(l), l.m2 ? fm2(l.m2) + " m²" : ""].filter(Boolean).join(" · "),
-    `Precio: ${fmtUSD(l.precio, mon)}${m2p(l) ? ` (${fmtUSD(m2p(l), mon)}/m²)` : ""}`,
-    ...(l.extra ? Object.entries(l.extra).map(([k, v]) => `${k}: ${typeof v === "number" && v > 999 ? fmtUSD(v, mon) : v}`) : []),
-    p && p.pagos.length > 1 ? `\nForma de pago (${p.nombre}):` : "",
-    ...(p && p.pagos.length > 1 ? r.filas.map(x => `• ${x.txt} (${x.pct} %): ${x.cuotas ? `${x.cuotas} cuotas de ${fmtUSD(x.cuota, mon)}` : fmtUSD(x.monto, mon)}`) : []),
-    ...(r.costos.length ? ["\nCostos aparte:", ...r.costos.map(c => `• ${c.nombre}: ${fmtUSD(c.monto, mon)}${c.mensual ? " por mes" : ""}`)] : []),
-    `\n${location.origin}${location.pathname}`].filter(x => x !== "").join("\n");
-}
-function htmlTabla(a) {
-  const extras = [...new Set(a.lotes.flatMap(l => Object.keys(l.extra || {})))];
-  const q = IN.busca.trim().toLowerCase();
-  const filas = a.lotes.filter(l => (IN.filtro === "todos" || (IN.filtro === "disp" ? l.estado !== "vendido" && (l.precio || !a.con_lista) : l.estado === IN.filtro))
-      && (!q || (l.n + " " + sectorDe(l)).toLowerCase().includes(q)));
-  const [k, dir] = IN.orden, val = l => k === "n" ? l.n : k === "sector" ? sectorDe(l) : k === "m2p" ? m2p(l) : l[k];
-  filas.sort((x, y) => { const a1 = val(x), b1 = val(y); if (a1 == null && b1 == null) return natural(x.n, y.n); if (a1 == null) return 1; if (b1 == null) return -1;
-    return (typeof a1 === "string" ? natural(a1, b1) : a1 - b1) * dir || natural(x.n, y.n); });
-  const th = (c, x, r, cls) => `<th data-o="${c}" class="${[r ? "r" : "", cls || "", k === c ? "on" : ""].join(" ")}">${x}${k === c ? (dir > 0 ? " ↑" : " ↓") : ""}</th>`;
-  const hayS = a.lotes.some(sectorDe), cnt = e => a.lotes.filter(l => l.estado === e).length;
-  return `<div class="fil">${[["disp", `Disponibles (${a.lotes.filter(l => l.estado !== "vendido" && (l.precio || !a.con_lista)).length})`], ["reservado", `Reservados (${cnt("reservado")})`], ["vendido", `Vendidos (${cnt("vendido")})`], ["todos", `Todos (${a.lotes.length})`]]
-      .filter(([f]) => f !== "reservado" || cnt("reservado")).map(([f, x]) => `<button type="button" data-f="${f}" aria-pressed="${IN.filtro === f}">${x}</button>`).join("")}
-      <input type="search" data-in="busca" placeholder="Buscar lote o sector" value="${esc(IN.busca)}"></div>
-    <div class="tabla"><table><thead><tr>${th("n", "Lote")}${hayS ? th("sector", "Sector", false, "ocm") : ""}${th("m2", "m²", true)}${a.con_lista ? th("precio", "Precio", true) + th("m2p", "USD/m²", true) : ""}<th>Estado</th>${extras.map(e => `<th class="ocm">${esc(e)}</th>`).join("")}</tr></thead>
-    <tbody>${filas.map(l => `<tr class="${l.estado}${l.n === IN.sel ? " sel" : ""}" data-n="${esc(l.n)}"><td><b>${esc(l.n)}</b></td>${hayS ? `<td class="ocm">${esc(sectorDe(l))}</td>` : ""}<td class="r">${fm2(l.m2)}</td>
-      ${a.con_lista ? `<td class="r">${l.precio ? fmtUSD(l.precio, a.moneda) : l.estado === "vendido" ? "" : "s/precio"}</td><td class="r">${m2p(l) ? fm2(m2p(l)) : ""}</td>` : ""}
-      <td><span class="tag${l.estado === "disponible" ? " d" : l.estado === "reservado" ? " r" : ""}">${l.estado}</span></td>
-      ${extras.map(e => { const v = (l.extra || {})[e]; return `<td class="ocm${typeof v === "number" ? " r" : ""}">${v == null ? "" : esc(typeof v === "number" && v > 999 ? fmtUSD(v, a.moneda) : v)}</td>`; }).join("")}</tr>`).join("")
-      || `<tr><td colspan="9" style="color:#6d6a64">Ningún lote con ese filtro.</td></tr>`}</tbody></table></div>`;
-}
-function htmlInfo(a) {
-  const drive = INTERNO.dev(DEV.slug).drive;
-  const cab = `<div class="cab"><div><span class="k">${ICONO_CANDADO} Info interna · solo equipo</span><h3>${esc(DEV.nombre)}</h3>
-    <p class="f">${a ? [a.fuente ? esc(a.fuente) : "", a.lista ? `<a href="${esc(a.lista)}" target="_blank" rel="noopener">Lista original ↗</a>` : "", drive ? `<a href="${esc(drive)}" target="_blank" rel="noopener">Drive ↗</a>` : ""].filter(Boolean).join(" · ") : ""}</p></div>
-    <button type="button" class="x" data-cerrar aria-label="Cerrar">×</button></div>`;
-  if (!a) return cab + `<div class="cu"><div class="vacio">No hay datos de este desarrollo en tu sesión. Tocá el engranaje → <b>Salir del modo interno</b> y volvé a entrar con la contraseña para cargar los datos nuevos.</div></div>`;
-  const r = a.resumen, mon = a.moneda, pv = r.total ? Math.round(100 * r.vend / r.total) : 0;
-  const conP = a.lotes.filter(l => l.precio && l.estado === "disponible");
-  const sectores = {};
-  conP.forEach(l => { const s = sectorDe(l) || "—"; (sectores[s] = sectores[s] || []).push(l); });
-  a.lotes.forEach(l => { const s = sectorDe(l) || "—"; if (sectores[s]) sectores[s].tot = (sectores[s].tot || 0) + 1; });
-  const filasS = Object.entries(sectores).map(([s, ls]) => ({ s, n: ls.length, tot: ls.tot, desde: Math.min(...ls.map(l => l.precio)),
-    m2: ls.filter(m2p).length ? ls.filter(m2p).reduce((x, l) => x + m2p(l), 0) / ls.filter(m2p).length : null })).sort((x, y) => x.desde - y.desde);
-  const mejores = conP.filter(m2p).sort((x, y) => m2p(x) - m2p(y)).slice(0, 5);
-  const baratos = [...conP].sort((x, y) => x.precio - y.precio).slice(0, 5);
-  const kpi = (n, b, sm) => `<div class="kpi"><span>${n}</span><b>${b}</b>${sm ? `<small>${sm}</small>` : ""}</div>`;
-  const op = (l, der) => `<button type="button" data-n="${esc(l.n)}"><b>Lote ${esc(l.n)}</b><span>${der}</span></button>`;
-  return cab + `<div class="cu">
-    <section><div class="kpis">
-      ${kpi("Disponibles", `${r.disp}<small style="font:400 14px var(--f-body,sans-serif);color:#6d6a64"> / ${r.total}</small>`, `${pv} % vendido${r.res ? ` · ${r.res} reservados` : ""}`)}
-      ${kpi("Más barato", fmtUSD(r.desde, mon), r.desde_n ? `Lote ${esc(r.desde_n)}${(a.lotes.find(l => l.n === r.desde_n) || {}).m2 ? " · " + fm2(a.lotes.find(l => l.n === r.desde_n).m2) + " m²" : ""}` : "sin lista de precios")}
-      ${kpi("Precio promedio", fmtUSD(r.prom, mon), r.hasta ? `el más caro ${fmtUSDc(r.hasta)}` : "")}
-      ${kpi("USD / m² promedio", r.prom_m2 ? fm2(r.prom_m2) : "—", r.min_m2 ? `de ${fm2(r.min_m2)} a ${fm2(r.max_m2)}` : "")}
-    </div>
-    <div class="barra" aria-hidden="true"><i style="width:${100 * r.vend / (r.total || 1)}%;background:#4a4844"></i><i style="width:${100 * r.res / (r.total || 1)}%;background:#c8b28a"></i><i style="flex:1;background:#5fae76"></i></div>
-    <div class="ley"><span style="--c:#4a4844">${r.vend} vendidos</span>${r.res ? `<span style="--c:#c8b28a">${r.res} reservados</span>` : ""}<span style="--c:#5fae76">${r.disp} disponibles${a.con_lista && r.con_precio < r.disp ? ` (${r.con_precio} con precio)` : ""}</span>${a.fecha ? `<span style="--c:transparent">Lista ${esc(a.fecha)}</span>` : ""}</div></section>
-    ${!a.con_lista ? `<div class="vacio">Todavía no hay lista de precios cargada para ${esc(DEV.nombre)}: la disponibilidad sale del mapa. Para sumarla, pasale la lista a Claude ("cargá los precios de ${esc(DEV.nombre)}") o dejala en Drive, carpeta <b>05 Precios</b>.</div>` : `
-    <div class="dos">
-      <section><h4>Lo más barato</h4><div class="op">${baratos.map(l => op(l, `${fmtUSD(l.precio, mon)} · ${fm2(l.m2)} m²`)).join("")}</div></section>
-      <section><h4>Mejor precio por m²</h4><div class="op">${mejores.map(l => op(l, `${fm2(m2p(l))} USD/m² · ${fmtUSDc(l.precio)}`)).join("") || `<span class="nota">Sin m² en la lista.</span>`}</div></section>
-    </div>
-    ${filasS.length > 1 ? `<section><h4>Por sector</h4><div class="tabla"><table><thead><tr><th>Sector</th><th class="r">Disponibles</th><th class="r">Desde</th><th class="r">USD/m² prom.</th></tr></thead><tbody>
-      ${filasS.map(x => `<tr><td>${esc(x.s)}</td><td class="r">${x.n}${x.tot ? ` <span style="color:#6d6a64">/ ${x.tot}</span>` : ""}</td><td class="r">${fmtUSD(x.desde, mon)}</td><td class="r">${x.m2 ? fm2(x.m2) : "—"}</td></tr>`).join("")}</tbody></table></div></section>` : ""}
-    <div class="dos">
-      <section><h4>Financiación</h4><div class="planes">${(a.planes || []).map(p => `<div class="plan"><b>${esc(p.nombre)}</b><ul>${p.pagos.map(x => `<li>${x.pct} % ${esc(x.txt || "")}</li>`).join("")}</ul></div>`).join("") || `<div class="vacio">Sin datos de financiación.</div>`}
-        ${(a.costos || []).length ? `<div class="plan"><b>Costos aparte del precio</b><ul>${a.costos.map(c => `<li>${esc(c.nombre)}: ${c.pct ? c.pct + " % del lote" : c.usd_m2 ? c.usd_m2 + " USD/m²" : c.usd_m2_mes + " USD/m² por mes"}${c.cuando ? " — " + esc(c.cuando) : ""}</li>`).join("")}</ul></div>` : ""}</div></section>
-      <section><h4>Simulador</h4><div id="in-sim">${htmlSim(a)}</div></section>
-    </div>`}
-    <section><h4>${a.con_lista ? "Lista de precios" : "Lotes"}</h4><div id="in-tabla">${htmlTabla(a)}</div></section>
-    ${(a.notas || []).length ? `<section><h4>Notas</h4><ul class="notas">${a.notas.map(n => `<li>${esc(n)}</li>`).join("")}</ul></section>` : ""}
-  </div>`;
-}
-function verLote(n) {
-  const pol = POL[String(n).toLowerCase()]; if (!pol) return;
-  if (IN.m) IN.m.cerrar();
-  cerrarHoja();
-  if (VISTA !== "plano") ponerVista("plano", true);
-  mapa.flyToBounds(pol.getBounds(), { ...pad(), maxZoom: 18, duration: .9 });
-  pol.setStyle({ color: "#e3141e", weight: 3, fillColor: "#e3141e", fillOpacity: .35 });
-  setTimeout(() => pol.openTooltip(), 1000);
-  setTimeout(() => { pol.setStyle(pol._est); pol.closeTooltip(); }, 5000);
-}
-function abrirInfo() {
-  const a = INTERNO.dev(DEV.slug).analisis;
-  const m = IN.m = INTERNO.panel(htmlInfo(a), () => { IN.m = null; });
-  if (!a) return;
-  const sim = () => { const s = m.querySelector("#in-sim"); if (s) s.innerHTML = htmlSim(a); };
-  const tabla = () => { const tb = m.querySelector("#in-tabla"), foco = document.activeElement && document.activeElement.dataset.in === "busca";
-    tb.innerHTML = htmlTabla(a); if (foco) { const i = tb.querySelector("[data-in=busca]"); i.focus(); i.setSelectionRange(i.value.length, i.value.length); } };
-  const elegir = n => { IN.sel = n; IN.plan = 0; sim(); tabla(); const s = m.querySelector("#in-sim"); if (s) s.scrollIntoView({ behavior: "smooth", block: "nearest" }); };
-  m.addEventListener("click", async e => {
-    const f = e.target.closest("[data-f]"), o = e.target.closest("th[data-o]"), fila = e.target.closest("tr[data-n],.op button[data-n]"), b = e.target.closest("[data-in]");
-    if (f) { IN.filtro = f.dataset.f; tabla(); }
-    else if (o) { IN.orden = [o.dataset.o, IN.orden[0] === o.dataset.o ? -IN.orden[1] : 1]; tabla(); }
-    else if (b && b.dataset.in === "ver") verLote(b.dataset.n);
-    else if (b && b.dataset.in === "copiar") {
-      const tx = textoWA(a);
-      try { await navigator.clipboard.writeText(tx); } catch (_) { const ta = document.createElement("textarea"); ta.value = tx; document.body.appendChild(ta); ta.select(); document.execCommand("copy"); ta.remove(); }
-      b.textContent = "Copiado ✓"; setTimeout(() => { b.textContent = "Copiar para WhatsApp"; }, 1800); track("info-copiar/" + DEV.slug);
-    }
-    else if (fila) { const l = a.lotes.find(x => x.n === fila.dataset.n); if (l && l.precio && l.estado !== "vendido") elegir(l.n); else verLote(fila.dataset.n); }
-  });
-  m.addEventListener("change", e => { const d = e.target.dataset.in; if (d === "lote") { IN.sel = e.target.value; IN.plan = 0; sim(); tabla(); } if (d === "plan") { IN.plan = +e.target.value; sim(); } });
-  m.addEventListener("input", e => { if (e.target.dataset.in === "busca") { IN.busca = e.target.value; tabla(); } });
-}
-
 function todo() { pintar(); dibujarPlano(); if (VISTA === "zona") capaLugares.addTo(mapa); else mapa.removeLayer(capaLugares); if (MP) $("ayuda-mp").textContent = t(tactil ? "ayuda_mp_t" : "ayuda_mp"); }
 armarIdiomas($("idiomas-m"), todo);
 document.addEventListener("interno", todo);
@@ -611,5 +455,4 @@ todo();
 mapa.fitBounds(encuadrePlano(), { ...pad(), maxZoom: PL ? 17 : 15.5 });
 mapa.getContainer().classList.toggle("sin-num", mapa.getZoom() < 16.5);
 window.addEventListener("resize", () => { mapa.invalidateSize(); mpCubrir(); });
-if (location.hash === "#info" && INTERNO.activo()) abrirInfo();
 </script>
