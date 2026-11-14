@@ -257,7 +257,6 @@ const brochureLang = () => BR[LANG] ? LANG : (BR.es ? "es" : (BR.en ? "en" : Obj
 function htmlAcciones(sinKmz, sinChips) {
   const b = [], bl = brochureLang();
   if (bl) b.push(`<a class="b-pri" href="${esc(BR[bl])}" target="_blank" rel="noopener" data-ev="brochure-${bl}">${ICONO_DOC}${t("brochure_b")}</a>`);
-  b.push(`<a class="b-${bl ? "sec" : "pri"}" href="${esc(waDev(DEV))}" target="_blank" rel="noopener" data-ev="whatsapp-dev">${ICONO_WA}${t("consultar")}</a>`);
   b.push(...botonesInternos());
   if (DATOS.kmz && !sinKmz) b.push(`<a class="b-sec ancho" href="${esc(DATOS.kmz)}" download data-ev="kmz">${t("bajar_kmz")}</a>`);
   if (!bl && DEV.url && !/coldwellbankerzetate\.com\/?$/.test(DEV.url)) b.push(`<a class="b-sec" href="${esc(DEV.url)}" target="_blank" rel="noopener">${t("brochure")} ↗</a>`);
