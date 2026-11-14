@@ -51,6 +51,13 @@ El usuario es Mateo (Coldwell Banker Zetaté, Punta del Este). Habla español ri
 - `ubicar.py` además: `buscar` (nombre en OSM; respaldo Nominatim con `nominatim` [textos]) y `paginas` [urls] (lee coordenadas de avisos web, ej. Infocasas, que la sesión no alcanza).
 - Desarrollos cargados: Pueblo Colibrí, Agreste Punta Negra, Aura, Dunas, Playa Brava, Punta Polo, Amalfi, El Nido (se cargan de a uno).
 - Sin ningún desarrollo cargado, la sección muestra "Próximamente" con WhatsApp.
+- **Lotes al día desde Drive (tarea programada "Lotes desde Drive")**: Mateo tira la lista nueva del desarrollador (PDF, planilla, imagen) en `<Desarrollo>/05 Precios` y una tarea programada (2 veces por día) actualiza el mapa sola. Receta (también sirve si Mateo dice "actualizá los lotes"):
+  1. Por cada `desarrollos/<slug>.json` con `drive`: buscar la subcarpeta `05 Precios` (`search_files` con `parentId` = id del link) y los archivos con `modifiedTime` o `createdTime` de las últimas 48 h. Ignorar los `… - precios web.json` y lo que no sea una lista de lotes (fichas de reserva, condiciones de venta). Sin nada nuevo en ningún desarrollo: terminar sin commitear.
+  2. Leer la lista (`download_file_content` / `read_file_content`; PDF → texto o imagen) y armar el estado de cada lote: vendido / reservado / disponible. Mismas reglas de cada desarrollo que arriba (nombres al revés en Agreste, HOUSING = reservado en Aura, `m2_solo_lista` = disponibles son solo los de la lista y el resto vendido, etc.).
+  3. Reemplazar `lotes_estado` (disponible = no va) y, si la lista trae m², `lotes_m2`. **Nunca** precios en el repo. Controlar que cada lote exista en el KML/calco del desarrollo.
+  4. Freno de seguridad: si la lista no se entiende, o el cambio parece raro (lotes que no existen, más de ~30 % de lotes cambian, lotes vendidos que vuelven a disponibles), NO publicar: avisarle a Mateo qué vio.
+  5. Si hubo cambios: commit "Lotes al día: <desarrollo> (<archivo>)", PR, merge y "Run workflow" de `sincronizar.yml`. Avisar a Mateo un resumen corto (qué lotes cambiaron).
+  - Dunas no tiene `05 Precios` con archivos: su estado sale del masterplan (`02 Masterplan y KMZ`); si aparece un masterplan nuevo ahí, usarlo igual.
 
 ## Modo interno (equipo)
 
