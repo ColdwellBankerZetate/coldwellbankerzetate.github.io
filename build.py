@@ -908,6 +908,13 @@ def main():
                      "casas": {p["ref"]: {"url": p["url"], "foto": (p.get("fotos") or [""])[0], "mapa": p["barrio"] + "/"}
                                for p in todo if p["tipo"] != "terreno" and p.get("fuente") == "tokko"}},
                     "Agenda interna de temporada."))
+    # Comparativo de desarrollos (/comparativo/, interno): dashboard de Bauti. Precios y comisiones NO van acá: la página
+    # los trae en vivo de la planilla privada "Precios desarrollos (interno)" (sitio.json → precios_planilla) vía la App web.
+    escribir(os.path.join(AQUI, "comparativo", "index.html"),
+             pagina("comparativo.html", "Comparativo de desarrollos · Coldwell Banker Zetaté",
+                    {"modo": "comparativo", "raiz": "../", "sitio": sitio, "planilla": sitio.get("precios_planilla", ""),
+                     "devs": [d["slug"] for d in desarrollos]},
+                    "Comparativo interno de desarrollos."))
     refs = {p["ref"].upper() for p in todo}
     avisos += [f"Disponibilidad: el código {r} de la planilla no está en ningún mapa" for r in disp if r not in refs]
     avisos += [f"Fuera del mapa: {x['ref']} ({x['casa'] or x['barrio'] or 's/d'}) — {x['motivo']}" for x in fuera]

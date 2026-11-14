@@ -1,0 +1,1212 @@
+<!doctype html>
+<html lang="es">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+<meta name="theme-color" content="#0a0a0a">
+<meta name="description" content="Comparativo interno de desarrollos.">
+<meta property="og:title" content="Comparativo de desarrollos · Coldwell Banker Zetaté">
+<meta property="og:description" content="Comparativo interno de desarrollos.">
+<style>body{margin:0}img{max-width:100%}[hidden]{display:none!important}</style>
+<script data-goatcounter="https://cbzetate.goatcounter.com/count" async src="//gc.zgo.at/count.js"></script>
+<title>Comparativo de desarrollos · Coldwell Banker Zetaté</title>
+<meta name="robots" content="noindex, nofollow">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Bodoni+Moda:ital,opsz,wght@0,6..96,500;1,6..96,500&family=Hanken+Grotesk:wght@400;500;600;700&display=swap">
+<style>
+/* Comparativo de desarrollos (interno). Dashboard de Bauti ("Emprendimientos en venta"), con los colores del sitio.
+   Los datos NO están en esta página: los trae en vivo desde la planilla privada "Precios desarrollos (interno)"
+   a través de la App web del script de la planilla (accion "comparativo"), con la contraseña del modo interno.
+   Todo lo que se calcula (desde, mediana, stock, % vendido, USD/m², entrada y cuota) sale de la hoja Lotes. */
+:root{
+  --color-fg:#f3f1ec; --color-fg-muted:#9b978f; --color-bg:#0a0a0a; --color-panel:#121212; --color-border-line:rgba(255,255,255,.09);
+  --color-ok:#7fc79a; --color-warn:#c8b28a; --color-bad:#e3141e;
+  --font-anthropic-sans:"Hanken Grotesk",system-ui,-apple-system,"Segoe UI",sans-serif;
+  --font-anthropic-serif:"Bodoni Moda","Didot","Bodoni 72",Georgia,serif;
+  --cds-font-size-caption:12px; --cds-font-size-body:14px; --cds-font-size-heading:18px; --cds-font-size-title:38px; --cds-font-weight-medium:600;
+  --cds-gap-xs:4px; --cds-gap-sm:8px; --cds-gap-md:12px; --cds-gap-lg:20px; --cds-gap-xl:36px;
+  --cds-pad-xs:4px; --cds-pad-sm:6px; --cds-pad-md:10px; --cds-pad-lg:16px; --cds-pad-xl:24px; --cds-radius:8px;
+  --cds-chart-muted:#5a5852; --cds-chart-grid:rgba(255,255,255,.06); --cds-chart-axis:rgba(255,255,255,.18); --cds-text-secondary:#9b978f;
+  --cds-surface-popover:#1b1b1b; --cds-border:rgba(255,255,255,.18); --cds-shadow-popover:0 10px 30px rgba(0,0,0,.6);
+  --series-0:#c8b28a;
+  color-scheme:dark;
+}
+html,body{background:var(--color-bg)}
+body{color:var(--color-fg);font:14px/1.45 var(--font-anthropic-sans);-webkit-font-smoothing:antialiased}
+a{color:inherit}
+#dash-root{max-width:1200px;margin:0 auto;padding-block:22px 64px;padding-left:max(16px,env(safe-area-inset-left,0px));padding-right:max(16px,env(safe-area-inset-right,0px))}
+.dash-select{appearance:none;font:inherit;font-size:16px;color:var(--color-fg);background-color:#000;border:1px solid var(--cds-border);border-radius:var(--cds-radius);padding:7px 30px 7px 10px;
+  background-image:url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='10' height='6'%3E%3Cpath d='M0 0l5 6 5-6z' fill='%23888'/%3E%3C/svg%3E");background-repeat:no-repeat;background-position:right 10px center}
+.dash-select:focus{outline:none;border-color:var(--series-0)}
+.src-note{margin-top:32px;font-size:12px;color:var(--color-fg-muted)}
+.src-note a{color:var(--series-0)}
+.sup{display:flex;justify-content:space-between;align-items:center;margin-bottom:18px;font-size:11px;letter-spacing:.14em;text-transform:uppercase}
+.sup a{color:var(--color-fg-muted);text-decoration:none;font-weight:600}
+.sup a:hover{color:var(--color-fg)}
+.sup img{height:30px;width:auto;display:block}
+.msg{max-width:440px;margin:18vh auto 0;text-align:center;display:grid;gap:8px;color:var(--color-fg-muted)}
+.msg b{color:var(--color-fg);font:italic 500 26px var(--font-anthropic-serif)}
+  .cx { display: flex; flex-direction: column; gap: var(--cds-gap-xl); font-family: var(--font-anthropic-sans); color: var(--color-fg); }
+  .cx-head h1 { font-family: var(--font-anthropic-serif); font-weight: 400; font-size: var(--cds-font-size-title); margin: 0; text-wrap: balance; }
+  .cx-take { margin: var(--cds-gap-sm) 0 0; color: var(--color-fg-muted); max-width: 70ch; line-height: 1.5; }
+  .cx-take b { color: var(--color-fg); font-weight: var(--cds-font-weight-medium); font-variant-numeric: tabular-nums; }
+  .cx-kpis { display: grid; grid-template-columns: repeat(auto-fit, minmax(170px, 1fr)); gap: var(--cds-gap-md); }
+  .cx-kpi { background: var(--color-panel); border: 1px solid var(--color-border-line); border-radius: var(--cds-radius); padding: var(--cds-pad-lg); display: flex; flex-direction: column; gap: var(--cds-gap-xs); min-width: 0; }
+  .cx-kpi .lbl { font-size: var(--cds-font-size-caption); color: var(--color-fg-muted); text-transform: uppercase; letter-spacing: .04em; }
+  .cx-kpi .val { font-family: var(--font-anthropic-serif); font-weight: 400; font-size: 1.9rem; font-variant-numeric: tabular-nums; line-height: 1.1; }
+  .cx-kpi .sub { font-size: var(--cds-font-size-caption); color: var(--color-fg-muted); }
+  .cx-sec { display: flex; flex-direction: column; gap: var(--cds-gap-sm); min-width: 0; }
+  .cx-sec h2 { font-size: var(--cds-font-size-heading); font-weight: var(--cds-font-weight-medium); margin: 0; }
+  .cx-sec .note { font-size: var(--cds-font-size-caption); color: var(--color-fg-muted); margin: 0; max-width: 75ch; line-height: 1.45; }
+  .cx-chart { position: relative; min-height: 120px; width: 100%; }
+  .cx-chart svg { display: block; width: 100%; overflow: visible; }
+  .cx-chart text { font-size: var(--cds-font-size-caption); fill: var(--cds-text-secondary); font-family: var(--font-anthropic-sans); }
+  .cx-chart .name { fill: var(--color-fg); font-size: var(--cds-font-size-body); }
+  .cx-chart .axis text { fill: var(--cds-text-secondary); font-size: var(--cds-font-size-caption); }
+  .cx-chart .axis path, .cx-chart .axis line { stroke: var(--cds-chart-axis); }
+  .cx-chart .grid line { stroke: var(--cds-chart-grid); }
+  .cx-tip { position: absolute; pointer-events: none; background: var(--cds-surface-popover); border: 1px solid var(--cds-border); box-shadow: var(--cds-shadow-popover); border-radius: var(--cds-radius); padding: var(--cds-pad-sm) var(--cds-pad-md); font-size: var(--cds-font-size-caption); color: var(--color-fg); white-space: nowrap; z-index: 5; font-variant-numeric: tabular-nums; }
+  .cx-tip span { color: var(--cds-text-secondary); }
+  .cx-legend { display: flex; flex-wrap: wrap; gap: var(--cds-gap-md); font-size: var(--cds-font-size-caption); color: var(--color-fg-muted); }
+  .cx-legend i { display: inline-block; width: 10px; height: 10px; border-radius: 2px; margin-right: 6px; vertical-align: -1px; }
+  .cx-controls { display: flex; flex-wrap: wrap; gap: var(--cds-gap-md); align-items: end; }
+  .cx-controls label { display: flex; flex-direction: column; gap: var(--cds-gap-xs); font-size: var(--cds-font-size-caption); color: var(--color-fg-muted); }
+  .cx-chips { display: flex; flex-wrap: wrap; gap: var(--cds-gap-sm); }
+  .cx-chip { background: var(--color-panel); border: 1px solid var(--color-border-line); border-radius: 999px; padding: 4px 12px; font-size: var(--cds-font-size-caption); font-variant-numeric: tabular-nums; }
+  .cx-chip b { font-weight: var(--cds-font-weight-medium); }
+  .cx-tablewrap { overflow-x: auto; border: 1px solid var(--color-border-line); border-radius: var(--cds-radius); max-height: 460px; overflow-y: auto; }
+  .cx-table { width: 100%; border-collapse: collapse; font-size: var(--cds-font-size-caption); font-variant-numeric: tabular-nums; }
+  .cx-table th { position: sticky; top: 0; background: var(--color-panel); text-align: left; font-weight: var(--cds-font-weight-medium); color: var(--color-fg-muted); padding: 8px 10px; border-bottom: 1px solid var(--color-border-line); white-space: nowrap; }
+  .cx-table td { padding: 7px 10px; border-bottom: 1px solid var(--color-border-line); vertical-align: top; }
+  .cx-table td.num, .cx-table th.num { text-align: right; white-space: nowrap; }
+  .cx-table.cond td { min-width: 120px; line-height: 1.4; }
+  .cx-table.cond td:first-child { min-width: 110px; font-weight: var(--cds-font-weight-medium); }
+  .cx-table.cmp td { line-height: 1.4; }
+  .cx-table.cmp td.wide { min-width: 190px; }
+  .cx-table.cmp td.wide-s { min-width: 170px; }
+  .cx-table.cmp td.wide-l { min-width: 260px; }
+  .cx-table.cmp .cmp-gap { margin-top: 6px; }
+  .cx-table.cmp td:first-child { min-width: 130px; position: sticky; left: 0; background: var(--color-bg); z-index: 1; }
+  .cx-table.cmp th:first-child { left: 0; z-index: 2; }
+  .cx-table.cmp .cmp-name { font-weight: var(--cds-font-weight-medium); font-size: var(--cds-font-size-body); margin-bottom: 4px; }
+  .cx-table.cmp .cmp-big { font-size: var(--cds-font-size-body); font-weight: var(--cds-font-weight-medium); color: var(--color-fg); }
+  .cx-table.cmp .cmp-sub { color: var(--color-fg-muted); font-size: 11px; }
+  .cx-table.cmp .cmp-tag { font-weight: var(--cds-font-weight-medium); margin-bottom: 2px; }
+  .cx-table.cmp .cmp-bar { height: 4px; background: var(--color-border-line); border-radius: 2px; margin: 4px 0 2px auto; width: 72px; overflow: hidden; }
+  .cx-table.cmp .cmp-bar i { display: block; height: 100%; background: var(--cds-chart-muted); }
+  .cx-table.cmp td.muted { color: var(--color-fg-muted); }
+  .cx-table.cmp td.ok { color: var(--color-ok); font-weight: var(--cds-font-weight-medium); }
+  .cx-pill { display: inline-block; padding: 1px 8px; border-radius: 999px; font-size: 11px; border: 1px solid var(--color-border-line); white-space: nowrap; }
+  .cx-pill.lote { color: var(--color-fg-muted); }
+  .cx-pill.casa { color: var(--color-ok); border-color: var(--color-ok); }
+  .cx-pill.chacra { color: var(--color-warn); border-color: var(--color-warn); }
+  [data-dash-source-state=refreshing] { opacity: .5; }
+  .cx details { font-size: var(--cds-font-size-caption); color: var(--color-fg-muted); }
+  .cx details li { margin: 4px 0; line-height: 1.45; }
+.cx-head h1{font-style:italic;font-weight:500;line-height:1.05}
+.cx-kpi .val{font-weight:500}
+.cx-table th{background:#141414}
+.cx-table.cmp td:first-child{background:var(--color-bg)}
+.cx-table.cmp .cmp-map{display:inline-block;margin-top:6px;font-size:11px;color:var(--series-0);text-decoration:none}
+.cx-table.cmp .cmp-map:hover{text-decoration:underline}
+.cx-table.cmp .cmp-bar i{background:var(--series-0)}
+.cx details summary{cursor:pointer;color:var(--color-fg)}
+@media (max-width:640px){.sup img{height:20px}.cx-head h1{font-size:30px}.cx-kpis{grid-template-columns:1fr 1fr}.cx-kpi{padding:12px}.cx-kpi .val{font-size:1.35rem}}
+</style>
+</head>
+<body>
+<!--CUERPO-->
+<div id="dash-root">
+<div class="msg" id="msg"><b>Cargando…</b></div>
+<div id="cx-wrap" hidden>
+<div class="cx" lang="es">
+  <header class="cx-head" id="encabezado">
+    <div class="sup"><a href="../#desarrollos">← Desarrollos</a><img src="../assets/logo-horizontal.png" alt="Coldwell Banker Zetaté"></div>
+    <h1>Comparativo de desarrollos</h1>
+    <p class="cx-take" data-read lang="es">Hay <b data-draw="t-disp" data-source="resumen" data-field="disponibles" data-row="0">—</b> lotes disponibles con precio en <b data-draw="t-n" data-source="resumen" data-field="emprendimientos" data-row="0">—</b> emprendimientos. La entrada más baja es <b data-draw="t-desde-n" data-source="resumen" data-field="desde_nombre" data-row="0">—</b>, desde <b data-draw="t-desde" data-source="resumen" data-field="desde_precio" data-row="0">—</b>, y el mayor stock está en <b data-draw="t-stock-n" data-source="resumen" data-field="mayor_stock_nombre" data-row="0">—</b>.</p>
+  </header>
+
+  <section class="cx-kpis" id="kpis">
+    <div class="cx-kpi"><span class="lbl">Disponibles con precio</span><span class="val" data-draw="k-disp" data-source="resumen" data-field="disponibles" data-row="0">—</span><span class="sub">más <span data-draw="k-cs" data-source="resumen" data-field="sin_precio" data-row="0">—</span> disponibles sin precio publicado</span></div>
+    <div class="cx-kpi"><span class="lbl">Stock en venta</span><span class="val" data-draw="k-stock" data-source="resumen" data-field="stock_usd" data-row="0">—</span><span class="sub">suma de precios de lista disponibles</span></div>
+    <div class="cx-kpi"><span class="lbl">Entrada más baja</span><span class="val" data-draw="k-desde" data-source="resumen" data-field="desde_precio" data-row="0">—</span><span class="sub" data-draw="k-desde-n" data-source="resumen" data-field="desde_nombre" data-row="0">—</span></div>
+    <div class="cx-kpi"><span class="lbl">Mayor avance de ventas</span><span class="val" data-draw="k-vend" data-source="resumen" data-field="max_vendido_pct" data-row="0">—</span><span class="sub" data-draw="k-vend-n" data-source="resumen" data-field="max_vendido_nombre" data-row="0">—</span></div>
+  </section>
+
+  <section class="cx-sec" id="comparativo">
+    <h2>Comparativo de emprendimientos</h2>
+    <p class="note">Ordenado por precio de entrada. Precio por m² y superficies sobre las unidades disponibles. Deslizá la tabla hacia el costado para ver todas las columnas.</p>
+    <div class="cx-tablewrap" style="max-height:none">
+      <table class="cx-table cmp" data-source="emprendimientos" data-row-key="id">
+        <thead><tr>
+          <th data-field="nombre">Emprendimiento</th>
+          <th class="num" data-field="entrada_usd">Entrada y cuota</th>
+          <th class="num" data-field="usd_m2_prom">USD/m²</th>
+          <th class="num" data-field="sup_desde_m2">Superficie</th>
+          <th class="num" data-field="pct_vendido">% vendido</th>
+          <th data-field="fin_tipo">Financiación</th>
+          <th data-field="zona">Zona</th>
+          <th data-field="entrega">Entrega</th>
+          <th data-field="expensas">Expensas estimadas</th>
+          <th data-field="comision">Comisión inmobiliaria</th>
+          <th data-field="amenities">Amenities y playa</th>
+          <th data-field="respaldo">Desarrollador y respaldo</th>
+        </tr></thead>
+        <tbody data-draw="cmp-tabla"></tbody>
+      </table>
+    </div>
+    <p class="note">Entrada y cuota: calculadas sobre la unidad disponible más barata de cada emprendimiento con su plan de financiación directa (en Playa Brava, una estimación de crédito Itaú). USD/m²: promedio ponderado (precio del lote ÷ superficie) y, debajo, el rango; en Pueblo Colibrí es solo el lote, sin la casa. "Sin dato" significa que el material del desarrollador no lo informa. Los que no tienen lista de precios no figuran.</p>
+  </section>
+
+  <section class="cx-sec" id="rango-precios">
+    <h2>Rango de precios disponibles</h2>
+    <p class="note">De la unidad más barata a la más cara entre las disponibles; el punto es la mediana. En Pueblo Colibrí el precio es lote + casa llave en mano.</p>
+    <div class="cx-chart" data-draw="rango" data-source="emprendimientos" style="min-height:300px"></div>
+  </section>
+
+  <section class="cx-sec" id="usd-m2">
+    <h2>Precio por m² de terreno</h2>
+    <p class="note">Promedio ponderado de los lotes disponibles (precio del lote ÷ superficie). Amalfi son chacras de unas 3 ha, por eso su valor por m² es mucho menor. En Colibrí solo cuenta el lote, sin la casa.</p>
+    <div class="cx-chart" data-draw="m2" data-source="emprendimientos" style="min-height:260px"></div>
+  </section>
+
+  <section class="cx-sec" id="avance-ventas">
+    <h2>Avance de ventas</h2>
+    <div class="cx-legend"><span><i style="background:var(--cds-chart-muted)"></i>Vendidos</span><span><i style="background:var(--color-warn)"></i>Reservados</span><span><i style="background:var(--color-ok)"></i>Disponibles</span></div>
+    <div class="cx-chart" data-draw="ventas" data-source="emprendimientos" style="min-height:280px"></div>
+    <p class="note">Sobre el total de unidades de cada lista. Punta Polo solo publica sus disponibles, sin vendidos. En Aura los 33 lotes "housing" que guarda el desarrollador cuentan como reservados.</p>
+  </section>
+
+  <section class="cx-sec" id="presupuesto">
+    <h2>Qué entra en el presupuesto de un cliente</h2>
+    <div class="cx-controls">
+      <label for="cx-max">Presupuesto máximo
+        <select id="cx-max" class="dash-select" aria-label="Presupuesto máximo">
+          <option value="200000">USD 200.000</option>
+          <option value="250000">USD 250.000</option>
+          <option value="300000">USD 300.000</option>
+          <option value="350000">USD 350.000</option>
+          <option value="400000">USD 400.000</option>
+          <option value="500000">USD 500.000</option>
+          <option value="650000">USD 650.000</option>
+          <option value="800000">USD 800.000</option>
+          <option value="1000000">USD 1.000.000</option>
+          <option value="2000000">USD 2.000.000</option>
+        </select>
+      </label>
+      <label for="cx-prod">Producto
+        <select id="cx-prod" class="dash-select" aria-label="Producto">
+          <option value="">Todos</option>
+          <option value="Lote">Lotes</option>
+          <option value="Lote + casa">Lote + casa</option>
+          <option value="Chacra">Chacras (≥ 3 ha)</option>
+        </select>
+      </label>
+    </div>
+    <p class="cx-take" style="margin:0"><b data-draw="p-n" data-source="presupuesto_resumen" data-field="lotes" data-row="0">—</b> unidades disponibles en <b data-draw="p-e" data-source="presupuesto_resumen" data-field="emprendimientos" data-row="0">—</b> emprendimientos.</p>
+    <div class="cx-chips" data-draw="p-chips" data-source="presupuesto_por_emp"></div>
+    <div class="cx-tablewrap">
+      <table class="cx-table" data-source="lotes_presupuesto" data-row-key="emprendimiento,lote">
+        <thead><tr><th data-field="nombre">Emprendimiento</th><th data-field="lote">Unidad</th><th data-field="sector">Sector / tipo</th><th class="num" data-field="superficie_m2">m²</th><th class="num" data-field="precio_usd">Precio USD</th><th class="num" data-field="usd_m2">USD/m²</th></tr></thead>
+        <tbody data-draw="p-tabla"></tbody>
+      </table>
+    </div>
+    <p class="note">Muestra hasta 150 unidades, de la más barata a la más cara. Las unidades sin precio (ej. "coming soon") no aparecen.</p>
+  </section>
+
+  <details id="notas">
+    <summary>Notas y faltantes</summary>
+    <ul id="cx-notas"></ul>
+  </details>
+</div>
+<p class="src-note" id="cx-fuente"></p>
+</div>
+</div>
+<script>
+/* ===== Común a todas las páginas: idiomas, formato, pines, ventanita, WhatsApp, selección ===== */
+const TXT = {
+  es: {
+    masterplan: "Masterplan", satelite: "Satélite", ayuda_mp: "Rueda del mouse o + / − para ampliar el plano", ayuda_mp_t: "Pellizcá para ampliar el plano",
+    hectareas: "hectáreas", en_venta: "en venta", el_proyecto: "El proyecto", ventajas: "Por qué invertir", amenities: "Amenities", ubicacion: "Ubicación", linea_recta: "Distancias aproximadas en línea recta.", ver_en_mapa: "Ver en el mapa", lotes_venta: "Lotes en venta", otros_lotes: "Otros lotes", areas_comunes: "Áreas comunes", superficie_l: "Superficie", brochure_b: "Brochure", bajar_kmz: "Descargar plano (Google Earth)", plano: "Plano",
+    desarrollos: "Desarrollos", desarrollo: "Desarrollo", edificio: "Edificio", edificios: "Edificios", barrio_dev: "Barrio en desarrollo", barrios_dev: "Barrios · lotes",
+    unidades: "Unidades", unidad: "unidad", unidades_m: "unidades", lotes: "Lotes", lote_m: "lote", lotes_m: "lotes", entrega: "Entrega", todos: "Todos",
+    desarrollos_b: "Edificios y barrios en desarrollo: unidades y lotes para invertir desde el inicio.", proximamente: "Próximamente",
+    proximamente_b: "Estamos cargando los nuevos desarrollos. Escribinos y te avisamos primero.", consultar_dev: "Consultar por este desarrollo",
+    ver_desarrollos: "Desarrollos", todos_desarrollos: "Todos los desarrollos", unidades_pronto: "Unidades disponibles a consultar.",
+    ver_mas: "Ver más", ver_menos: "Ver menos", brochure: "Más información", deslizar: "Deslizá para ver desarrollos", msg_devs: "Hola, quiero recibir información de los nuevos desarrollos de Coldwell Banker Zetaté.",
+    msg_dev: d => `Hola, me interesa el desarrollo ${d.nombre} (${d.zona}). ¿Me pasan información? ${location.origin}${raiz()}desarrollos/${d.slug}/`,
+    consultar_precio: "Consultar precio", ver_disp: "Ver disponibilidad", ocultar_disp: "Ocultar disponibilidad", agenda: "Agenda", disponible: "Disponible", sin_tarifa: "Sin tarifa", libre_dias: "Libre", libre: "Libre", ocupado: "Ocupado", alquilada: "Alquilada", reservada: "Reservada", se_libera: "Se libera",
+    libres_mes: "Libre", sin_libres: "Sin días libres este mes", todo_libre: "Todo el mes libre", dias_sem: "LMMJVSD",
+    todas: "Todas", venta: "Venta", temporada: "Temporada", alquiler: "Alquiler", terrenos: "Terrenos",
+    casa: "Casa", depto: "Departamento", terreno: "Terreno",
+    dorm: "dorm.", dormitorios: "dormitorios", dormitorio: "dormitorio", bano: "baño", banos: "baños",
+    huespedes: "huéspedes", desde: "desde", quincena: "quincena", mes: "mes", dia: "día", periodo: "período",
+    lote: "Lote", vendido: "Vendido", reservado: "Reservado", interno: "Carpeta interna", drive_b: "Drive", brochure_en: "Otros idiomas", tarifas: "Tarifas de temporada", ver_tarifas: "Ver tarifas", ocultar_tarifas: "Ocultar tarifas",
+    ver_ficha: "Ver ficha", consultar: "Consultar", guardar: "Guardar", guardada: "Guardada",
+    aprox: "Ubicación aproximada", propiedades: "Propiedades", propiedad: "propiedad", propiedades_m: "propiedades",
+    rango: "Venta desde", mantener: "Mantené apretado un pin para ver fotos",
+    mi_seleccion: "Mi selección", seleccion: "Selección", seleccion_para: "Selección para",
+    comparar: "Comparar", cerrar: "Cerrar", compartir: "Compartir", copiar: "Copiar link", copiado: "Link copiado",
+    enviar_wa: "Enviar por WhatsApp", para: "Para quién es (opcional)", para_ph: "Ej. Familia Pérez",
+    vacio: "Todavía no hay propiedades en la selección. Tocá el corazón en una propiedad para guardarla.",
+    quitar: "Quitar", todos_barrios: "Todos los barrios", ver_mapa: "Ver mapa", barrios: "Barrios",
+    precio: "Precio", superficie: "Superficie", terreno_m2: "Terreno", barrio: "Barrio", agente: "Agente",
+    pie: "Precios en dólares estadounidenses. Imagen satelital: Esri, Maxar, Earthstar Geographics.",
+    hover: "Pasá el mouse por un pin para ver fotos; click para abrir la ficha.",
+    portada_t: "Propiedades en el mapa", portada_b: "Elegí un barrio para ver cada propiedad sobre el satélite.",
+    msg: (a, p) => `Hola ${a}, me interesa esta propiedad en ${p.barrio_nombre}: ${p.titulo || TXT.es[p.tipo]} (ref. ${p.ref}). ${p.url}`,
+    msg_sel: (para, url) => `${para ? "Selección para " + para : "Te comparto una selección de propiedades"} — Coldwell Banker Zetaté: ${url}`,
+  },
+  en: {
+    masterplan: "Masterplan", satelite: "Satellite", ayuda_mp: "Scroll or + / − to zoom into the plan", ayuda_mp_t: "Pinch to zoom into the plan",
+    hectareas: "hectares", en_venta: "for sale", el_proyecto: "The project", ventajas: "Why invest", amenities: "Amenities", ubicacion: "Location", linea_recta: "Approximate straight-line distances.", ver_en_mapa: "See on the map", lotes_venta: "Lots for sale", otros_lotes: "Other lots", areas_comunes: "Common areas", superficie_l: "Size", brochure_b: "Brochure", bajar_kmz: "Download plan (Google Earth)", plano: "Plan",
+    desarrollos: "Developments", desarrollo: "Development", edificio: "Building", edificios: "Buildings", barrio_dev: "Community in development", barrios_dev: "Communities · lots",
+    unidades: "Units", unidad: "unit", unidades_m: "units", lotes: "Lots", lote_m: "lot", lotes_m: "lots", entrega: "Delivery", todos: "All",
+    desarrollos_b: "Buildings and communities under development: units and lots to invest from day one.", proximamente: "Coming soon",
+    proximamente_b: "We are loading the new developments. Message us and you'll hear first.", consultar_dev: "Ask about this development",
+    ver_desarrollos: "Developments", todos_desarrollos: "All developments", unidades_pronto: "Units available on request.",
+    ver_mas: "Read more", ver_menos: "Show less", brochure: "More information", deslizar: "Swipe to see developments", msg_devs: "Hi, I would like information about Coldwell Banker Zetaté's new developments.",
+    msg_dev: d => `Hi, I'm interested in the ${d.nombre} development (${d.zona}). Could you send me information? ${location.origin}${raiz()}desarrollos/${d.slug}/`,
+    consultar_precio: "Price on request", ver_disp: "See availability", ocultar_disp: "Hide availability", agenda: "Availability", disponible: "Available", sin_tarifa: "No rate", libre_dias: "Free", libre: "Available", ocupado: "Booked", alquilada: "Rented", reservada: "Reserved", se_libera: "Opens up",
+    libres_mes: "Available", sin_libres: "Fully booked this month", todo_libre: "Available all month", dias_sem: "MTWTFSS",
+    todas: "All", venta: "For sale", temporada: "Seasonal rent", alquiler: "Rent", terrenos: "Land",
+    casa: "House", depto: "Apartment", terreno: "Land",
+    dorm: "bd", dormitorios: "bedrooms", dormitorio: "bedroom", bano: "bath", banos: "baths",
+    huespedes: "guests", desde: "from", quincena: "fortnight", mes: "month", dia: "day", periodo: "period",
+    lote: "Lot", vendido: "Sold", reservado: "Reserved", interno: "Internal folder", drive_b: "Drive", brochure_en: "Other languages", tarifas: "Seasonal rates", ver_tarifas: "See rates", ocultar_tarifas: "Hide rates",
+    ver_ficha: "View listing", consultar: "Ask", guardar: "Save", guardada: "Saved",
+    aprox: "Approximate location", propiedades: "Properties", propiedad: "property", propiedades_m: "properties",
+    rango: "For sale from", mantener: "Press and hold a pin to see photos",
+    mi_seleccion: "My shortlist", seleccion: "Shortlist", seleccion_para: "Shortlist for",
+    comparar: "Compare", cerrar: "Close", compartir: "Share", copiar: "Copy link", copiado: "Link copied",
+    enviar_wa: "Send via WhatsApp", para: "Who is it for (optional)", para_ph: "e.g. Smith family",
+    vacio: "Your shortlist is empty. Tap the heart on a property to save it.",
+    quitar: "Remove", todos_barrios: "All neighborhoods", ver_mapa: "View map", barrios: "Neighborhoods",
+    precio: "Price", superficie: "Built area", terreno_m2: "Lot", barrio: "Neighborhood", agente: "Agent",
+    pie: "Prices in US dollars. Satellite imagery: Esri, Maxar, Earthstar Geographics.",
+    hover: "Hover a pin to see photos; click to open the listing.",
+    portada_t: "Properties on the map", portada_b: "Pick a neighborhood to see every property on the satellite map.",
+    msg: (a, p) => `Hi ${a}, I'm interested in this property in ${p.barrio_nombre}: ${p.titulo || TXT.en[p.tipo]} (ref. ${p.ref}). ${p.url}`,
+    msg_sel: (para, url) => `${para ? "Shortlist for " + para : "Here is a shortlist of properties"} — Coldwell Banker Zetaté: ${url}`,
+  },
+  pt: {
+    masterplan: "Masterplan", satelite: "Satélite", ayuda_mp: "Use a roda do mouse ou + / − para ampliar a planta", ayuda_mp_t: "Faça pinça para ampliar a planta",
+    hectareas: "hectares", en_venta: "à venda", el_proyecto: "O projeto", ventajas: "Por que investir", amenities: "Amenities", ubicacion: "Localização", linea_recta: "Distâncias aproximadas em linha reta.", ver_en_mapa: "Ver no mapa", lotes_venta: "Lotes à venda", otros_lotes: "Outros lotes", areas_comunes: "Áreas comuns", superficie_l: "Área", brochure_b: "Brochure", bajar_kmz: "Baixar planta (Google Earth)", plano: "Planta",
+    desarrollos: "Empreendimentos", desarrollo: "Empreendimento", edificio: "Edifício", edificios: "Edifícios", barrio_dev: "Condomínio em desenvolvimento", barrios_dev: "Condomínios · lotes",
+    unidades: "Unidades", unidad: "unidade", unidades_m: "unidades", lotes: "Lotes", lote_m: "lote", lotes_m: "lotes", entrega: "Entrega", todos: "Todos",
+    desarrollos_b: "Edifícios e condomínios em desenvolvimento: unidades e lotes para investir desde o início.", proximamente: "Em breve",
+    proximamente_b: "Estamos carregando os novos empreendimentos. Escreva para nós e avisamos primeiro.", consultar_dev: "Consultar este empreendimento",
+    ver_desarrollos: "Empreendimentos", todos_desarrollos: "Todos os empreendimentos", unidades_pronto: "Unidades disponíveis sob consulta.",
+    ver_mas: "Ver mais", ver_menos: "Ver menos", brochure: "Mais informações", deslizar: "Deslize para ver empreendimentos", msg_devs: "Olá, quero receber informações sobre os novos empreendimentos da Coldwell Banker Zetaté.",
+    msg_dev: d => `Olá, tenho interesse no empreendimento ${d.nombre} (${d.zona}). Podem me enviar informações? ${location.origin}${raiz()}desarrollos/${d.slug}/`,
+    consultar_precio: "Consultar preço", ver_disp: "Ver disponibilidade", ocultar_disp: "Ocultar disponibilidade", agenda: "Agenda", disponible: "Disponível", sin_tarifa: "Sem tarifa", libre_dias: "Livre", libre: "Livre", ocupado: "Ocupado", alquilada: "Alugada", reservada: "Reservada", se_libera: "Libera",
+    libres_mes: "Livre", sin_libres: "Sem dias livres este mês", todo_libre: "Mês todo livre", dias_sem: "STQQSSD",
+    todas: "Todas", venta: "Venda", temporada: "Temporada", alquiler: "Aluguel", terrenos: "Terrenos",
+    casa: "Casa", depto: "Apartamento", terreno: "Terreno",
+    dorm: "dorm.", dormitorios: "dormitórios", dormitorio: "dormitório", bano: "banheiro", banos: "banheiros",
+    huespedes: "hóspedes", desde: "a partir de", quincena: "quinzena", mes: "mês", dia: "dia", periodo: "período",
+    lote: "Lote", vendido: "Vendido", reservado: "Reservado", interno: "Pasta interna", drive_b: "Drive", brochure_en: "Outros idiomas", tarifas: "Tarifas de temporada", ver_tarifas: "Ver tarifas", ocultar_tarifas: "Ocultar tarifas",
+    ver_ficha: "Ver ficha", consultar: "Consultar", guardar: "Salvar", guardada: "Salva",
+    aprox: "Localização aproximada", propiedades: "Imóveis", propiedad: "imóvel", propiedades_m: "imóveis",
+    rango: "Venda a partir de", mantener: "Segure um pin para ver as fotos",
+    mi_seleccion: "Minha seleção", seleccion: "Seleção", seleccion_para: "Seleção para",
+    comparar: "Comparar", cerrar: "Fechar", compartir: "Compartilhar", copiar: "Copiar link", copiado: "Link copiado",
+    enviar_wa: "Enviar por WhatsApp", para: "Para quem é (opcional)", para_ph: "Ex. Família Silva",
+    vacio: "Sua seleção está vazia. Toque no coração de um imóvel para salvá-lo.",
+    quitar: "Remover", todos_barrios: "Todos os bairros", ver_mapa: "Ver mapa", barrios: "Bairros",
+    precio: "Preço", superficie: "Área construída", terreno_m2: "Terreno", barrio: "Bairro", agente: "Corretor",
+    pie: "Preços em dólares americanos. Imagem de satélite: Esri, Maxar, Earthstar Geographics.",
+    hover: "Passe o mouse sobre um pin para ver fotos; clique para abrir a ficha.",
+    portada_t: "Imóveis no mapa", portada_b: "Escolha um bairro para ver cada imóvel no mapa de satélite.",
+    msg: (a, p) => `Olá ${a}, tenho interesse neste imóvel em ${p.barrio_nombre}: ${p.titulo || TXT.pt[p.tipo]} (ref. ${p.ref}). ${p.url}`,
+    msg_sel: (para, url) => `${para ? "Seleção para " + para : "Compartilho uma seleção de imóveis"} — Coldwell Banker Zetaté: ${url}`,
+  },
+};
+const PERIODOS = {
+  en: { "1ra quincena de diciembre": "Dec 1–15", "2da quincena de diciembre": "Dec 16–31", "Fin de año": "New Year's",
+        "1ra quincena de enero": "Jan 1–15", "2da quincena de enero": "Jan 16–31", "1ra quincena de febrero": "Feb 1–15",
+        "2da quincena de febrero": "Feb 16–28", "1ra quincena de marzo": "Mar 1–15", "2da quincena de marzo": "Mar 16–31",
+        "Diciembre": "December", "Enero": "January", "Febrero": "February", "Marzo": "March", "Semana santa": "Easter week", "Por dia": "Per day" },
+  pt: { "1ra quincena de diciembre": "1ª quinzena de dezembro", "2da quincena de diciembre": "2ª quinzena de dezembro", "Fin de año": "Réveillon",
+        "1ra quincena de enero": "1ª quinzena de janeiro", "2da quincena de enero": "2ª quinzena de janeiro", "1ra quincena de febrero": "1ª quinzena de fevereiro",
+        "2da quincena de febrero": "2ª quinzena de fevereiro", "1ra quincena de marzo": "1ª quinzena de março", "2da quincena de marzo": "2ª quinzena de março",
+        "Diciembre": "Dezembro", "Enero": "Janeiro", "Febrero": "Fevereiro", "Marzo": "Março", "Semana santa": "Semana Santa", "Por dia": "Por dia" },
+};
+
+/* --- idioma --- */
+const leer = k => { try { return localStorage.getItem(k); } catch (_) { return null; } };
+const guardarLS = (k, v) => { try { localStorage.setItem(k, v); } catch (_) {} };
+let LANG = (() => {
+  const q = new URLSearchParams(location.search).get("lang");
+  if (q && TXT[q]) return q;
+  const g = leer("cbz_lang"); if (g && TXT[g]) return g;
+  const n = (navigator.language || "es").slice(0, 2);
+  return TXT[n] ? n : "es";
+})();
+const t = k => TXT[LANG][k] ?? TXT.es[k] ?? k;
+const tl = obj => (obj && (obj[LANG] || obj.es)) || "";
+const periodo = s => (PERIODOS[LANG] || {})[s] || s;
+document.documentElement.lang = LANG;
+function armarIdiomas(cont, alCambiar) {
+  cont.innerHTML = ["es", "en", "pt"].map(l => `<button type="button" data-l="${l}" aria-pressed="${l === LANG}">${l.toUpperCase()}</button>`).join("");
+  cont.querySelectorAll("button").forEach(b => b.addEventListener("click", () => {
+    LANG = b.dataset.l; guardarLS("cbz_lang", LANG); document.documentElement.lang = LANG;
+    document.querySelectorAll(".idiomas button").forEach(x => x.setAttribute("aria-pressed", String(x.dataset.l === LANG)));
+    track("idioma/" + LANG); alCambiar();
+  }));
+}
+
+/* --- formato --- */
+const esc = s => String(s ?? "").replace(/[&<>"]/g, c => ({ "&": "&amp;", "<": "&lt;", ">": "&gt;", '"': "&quot;" }[c]));
+const fmt = n => Math.round(n).toLocaleString(LANG === "en" ? "en-US" : (LANG === "pt" ? "pt-BR" : "es-UY"));
+const mon = m => m === "UYU" ? "$U" : "U$S";
+const corto = n => n >= 1e6 ? (n / 1e6).toFixed(2).replace(/\.?0+$/, "").replace(".", LANG === "en" ? "." : ",") + "M" : Math.round(n / 1e3) + "K";
+const mitad = b => b == null ? null : (b % 1 ? Math.floor(b) + "½" : b);
+function precioOp(o, conDesde = true) {
+  if (o.precio == null) return t("consultar_precio"); /* temporada marcada en la planilla, sin tarifa en Tokko */
+  const base = `${mon(o.moneda)} ${fmt(o.precio)}`;
+  if (o.tipo === "venta") return base;
+  const u = o.unidad ? ` / ${t(o.unidad)}` : "";
+  return (o.tipo === "temporada" && conDesde ? t("desde") + " " : "") + base + u;
+}
+const UNI_CORTA = {
+  es: { quincena: "quinc.", mes: "mes", dia: "día", periodo: "per." },
+  en: { quincena: "2 wks", mes: "mo", dia: "day", periodo: "per." },
+  pt: { quincena: "quinz.", mes: "mês", dia: "dia", periodo: "per." },
+};
+function precioCorto(o) {
+  if (o.precio == null) return t("consultar_precio");
+  const b = `${mon(o.moneda)} ${fmt(o.precio)}`;
+  return o.tipo === "venta" ? b : `${b} / ${UNI_CORTA[LANG][o.unidad || "mes"]}`;
+}
+function lineaSecundaria(p) {
+  if (p.tipo === "terreno") return `${t("terreno")}${p.m2_terreno ? " · " + fmt(p.m2_terreno) + " m²" : ""}`;
+  if (p.dormitorios) return `${p.dormitorios} ${p.dormitorios === 1 ? t("dormitorio") : t("dormitorios")}`;
+  return t(p.tipo);
+}
+function specs(p) {
+  const s = [];
+  if (p.tipo !== "terreno" && p.dormitorios) s.push(`${p.dormitorios} ${t("dorm")}`);
+  if (p.banos) s.push(`${mitad(p.banos)} ${p.banos === 1 ? t("bano") : t("banos")}`);
+  if (p.m2_cubiertos) s.push(`${fmt(p.m2_cubiertos)} m²`);
+  if (p.m2_terreno && (p.tipo === "terreno" || p.m2_terreno > 400)) s.push(`${t("terreno_m2")} ${fmt(p.m2_terreno)} m²`);
+  if (p.huespedes && p.ops.some(o => o.tipo === "temporada")) s.push(`${p.huespedes} ${t("huespedes")}`);
+  return s.map(x => `<span>${esc(x)}</span>`).join("");
+}
+function opPrincipal(p, filtroOp) {
+  return (filtroOp && p.ops.find(o => o.tipo === filtroOp)) || p.ops[0];
+}
+
+/* --- estadísticas (GoatCounter, si está configurado) --- */
+function track(evento) {
+  try { if (window.goatcounter && window.goatcounter.count) window.goatcounter.count({ path: evento, title: evento, event: true }); } catch (_) {}
+}
+function cargarEstadisticas(sitio) {
+  if (!sitio.goatcounter || document.querySelector("script[data-goatcounter]")) return;
+  const s = document.createElement("script");
+  s.async = true; s.src = "https://gc.zgo.at/count.js";
+  s.dataset.goatcounter = `https://${sitio.goatcounter}.goatcounter.com/count`;
+  document.head.appendChild(s);
+}
+
+/* --- WhatsApp --- */
+function linkWA(p) {
+  const nombre = (p.agente?.nombre || "").split(" ")[0];
+  const a = /coldwell/i.test(nombre) ? "" : nombre;
+  return `https://wa.me/${p.agente.wa}?text=${encodeURIComponent(TXT[LANG].msg(a, p).replace(/^(Hola|Hi|Olá) ,/, "$1,"))}`;
+}
+const ICONO_WA = '<svg viewBox="0 0 24 24" width="15" height="15" aria-hidden="true"><path fill="currentColor" d="M12 2a10 10 0 0 0-8.6 15.1L2 22l5-1.3A10 10 0 1 0 12 2Zm0 18.2a8.2 8.2 0 0 1-4.2-1.1l-.3-.2-3 .8.8-2.9-.2-.3A8.2 8.2 0 1 1 12 20.2Zm4.5-6.1c-.2-.1-1.5-.7-1.7-.8-.2-.1-.4-.1-.6.1l-.8 1c-.1.2-.3.2-.5.1a6.7 6.7 0 0 1-3.3-2.9c-.2-.4.2-.4.7-1.3.1-.2 0-.3 0-.4l-.8-1.8c-.2-.5-.4-.4-.6-.4h-.5a1 1 0 0 0-.7.3 3 3 0 0 0-.9 2.2 5.2 5.2 0 0 0 1.1 2.7 11.8 11.8 0 0 0 4.5 4c1.7.7 2.3.8 3.2.6a2.7 2.7 0 0 0 1.8-1.2 2.2 2.2 0 0 0 .1-1.3c0-.1-.2-.2-.4-.3Z"/></svg>';
+const ICONO_CAL = '<svg viewBox="0 0 24 24" width="14" height="14" aria-hidden="true"><path fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" d="M4.5 6.5h15v13h-15zM4.5 10.5h15M8.5 4v4M15.5 4v4"/></svg>';
+const tieneAgenda = p => p.ops.some(o => o.tipo === "temporada");
+const htmlBotonAgenda = (clase = "") => `<button class="b-agenda ${clase}" type="button" aria-expanded="false">${ICONO_CAL}<span>${t("ver_disp")}</span></button>`;
+/* botón Agenda: abre/cierra el calendario en `caja` (o "a confirmar" si la casa no tiene fechas en la planilla) */
+function engancharAgenda(btn, caja, p, alCambiar) {
+  if (!btn || !caja) return;
+  btn.addEventListener("click", e => {
+    e.preventDefault(); e.stopPropagation();
+    const abrir = caja.hidden;
+    caja.hidden = !abrir; btn.setAttribute("aria-expanded", String(abrir));
+    btn.querySelector("span").textContent = abrir ? t("ocultar_disp") : t("ver_disp");
+    if (abrir) {
+      armarAgenda(caja, p);
+      track("disponibilidad/" + p.ref);
+    }
+    alCambiar && alCambiar(abrir);
+  });
+  caja.addEventListener("click", e => { if (!e.target.closest("a")) e.stopPropagation(); });
+}
+const ICONO_CORAZON = '<svg viewBox="0 0 24 24" width="15" height="15" aria-hidden="true"><path fill="currentColor" d="M12 21s-7.5-4.6-9.6-9.2C.9 8.4 3 4.5 6.7 4.5c2 0 3.5 1.1 4.3 2.4.8-1.3 2.3-2.4 4.3-2.4 3.7 0 5.8 3.9 4.3 7.3C19.5 16.4 12 21 12 21Z"/></svg>';
+
+/* --- selección (favoritos, guardados en este navegador) --- */
+const FAV = {
+  lista() { try { return JSON.parse(leer("cbz_fav") || "[]"); } catch (_) { return []; } },
+  tiene(ref) { return this.lista().includes(ref); },
+  alternar(ref) {
+    const l = this.lista(); const i = l.indexOf(ref);
+    if (i >= 0) l.splice(i, 1); else l.push(ref);
+    guardarLS("cbz_fav", JSON.stringify(l)); track((i >= 0 ? "quitar/" : "guardar/") + ref);
+    document.dispatchEvent(new CustomEvent("fav")); return i < 0;
+  },
+  quitar(ref) { const l = this.lista().filter(x => x !== ref); guardarLS("cbz_fav", JSON.stringify(l)); document.dispatchEvent(new CustomEvent("fav")); },
+};
+const raiz = () => (typeof DATOS !== "undefined" && DATOS && DATOS.raiz) ? new URL(DATOS.raiz, location.href).pathname
+  : location.pathname.replace(/[^/]*\/[^/]*$/, "").replace(/\/?$/, "/");
+function urlSeleccion(refs, para) {
+  const u = new URL(location.origin + raiz() + "seleccion/");
+  u.searchParams.set("p", refs.join(","));
+  if (para) u.searchParams.set("para", para);
+  if (LANG !== "es") u.searchParams.set("lang", LANG);
+  return u.toString();
+}
+
+/* --- desarrollos --- */
+const ICONO_EDIF = '<svg viewBox="0 0 24 24" width="16" height="16" aria-hidden="true"><path fill="none" stroke="currentColor" stroke-width="1.7" stroke-linejoin="round" d="M5 21V4.5L14 3v18M14 9l5 1.5V21M3 21h18M8 7.5h3M8 11h3M8 14.5h3M8 18h3M16.5 13h.5M16.5 16.5h.5"/></svg>';
+const ICONO_LOTES = '<svg viewBox="0 0 24 24" width="16" height="16" aria-hidden="true"><path fill="none" stroke="currentColor" stroke-width="1.7" stroke-linejoin="round" d="M3.5 6.5 12 3l8.5 3.5v11L12 21l-8.5-3.5zM12 3v18M3.5 12l8.5 3.5 8.5-3.5"/></svg>';
+const iconoDev = d => d.clase === "edificio" ? ICONO_EDIF : ICONO_LOTES;
+const claseDev = d => d.clase === "edificio" ? t("edificio") : t("barrio_dev");
+function resumenDev(d) { /* cifras del proyecto cargadas por nosotros (ej. "104 hectáreas · ≈240 lotes") */
+  return (d.cifras || []).slice(0, 2).map(x => `${tl(x.valor) || x.valor} ${tl(x.nombre).split(" ")[0]}`).join(" · ");
+}
+const waDev = d => `https://wa.me/${d.wa || (DATOS.sitio || {}).whatsapp_general}?text=${encodeURIComponent(TXT[LANG].msg_dev(d))}`;
+
+/* --- mapa base --- */
+function mapaBase(id) {
+  const mapa = L.map(id, { zoomSnap: 0.25, zoomControl: false, attributionControl: true, maxZoom: 19 });
+  L.tileLayer("https://server.arcgisonline.com/ArcGIS/rest/services/World_Imagery/MapServer/tile/{z}/{y}/{x}", {
+    maxNativeZoom: 18, maxZoom: 19, attribution: "Esri, Maxar, Earthstar Geographics",
+  }).addTo(mapa);
+  mapa.attributionControl.setPrefix(false);
+  mapa.setView([-34.86, -54.75], 11); /* vista inicial: sin esto los pines no existen hasta encuadrar */
+  L.control.zoom({ position: "bottomright" }).addTo(mapa);
+  return mapa;
+}
+const tactil = window.matchMedia("(hover: none)").matches;
+const movil = () => window.matchMedia("(max-width:899px)").matches;
+
+/* --- etiquetas sin superponerse --- */
+function acomodarEtiquetas(items, prioridad) {
+  const vis = items.filter(it => it.visible && it.pinEl());
+  vis.forEach(it => it.pinEl().classList.remove("sin-tag"));
+  const medidas = vis.map(it => ({ it, r: it.pinEl().querySelector(".tag").getBoundingClientRect() }));
+  medidas.sort((a, b) => prioridad(b.it) - prioridad(a.it));
+  const puestas = [];
+  for (const m of medidas) {
+    const r = m.r, pad = 3;
+    const choca = puestas.some(q => !(r.right + pad < q.left || r.left - pad > q.right || r.bottom + pad < q.top || r.top - pad > q.bottom));
+    if (choca) m.it.pinEl().classList.add("sin-tag"); else puestas.push(r);
+  }
+}
+
+/* --- ventanita con carrusel --- */
+function htmlVista(p, filtroOp) {
+  const f = p.fotos || [];
+  const ops = p.ops.map(o => `<div class="op op-${o.tipo}"><span class="op-n">${t(o.tipo)}</span><span class="precio">${esc(precioOp(o))}</span></div>`).join("");
+  const temp = p.ops.find(o => o.tipo === "temporada" && o.periodos && o.periodos.length > 1);
+  const tarifas = temp && !tieneAgenda(p) ? `<details class="tarifas"><summary>${t("ver_tarifas")}</summary><table>${temp.periodos.map(x =>
+    `<tr><td>${esc(periodo(x.periodo))}</td><td>${mon(x.moneda)} ${fmt(x.precio)}</td></tr>`).join("")}</table></details>` : "";
+  const fav = FAV.tiene(p.ref);
+  return `<div class="prev">
+    ${f.length ? `<div class="carr">
+      <div class="pista-f" tabindex="0" aria-label="Fotos">${f.map((s, k) =>
+        `<img src="${esc(s)}" alt="" ${k > 1 ? 'loading="lazy"' : ""} draggable="false">`).join("")}</div>
+      ${f.length > 1 ? `<button class="flecha ant" type="button" aria-label="‹" disabled>‹</button>
+      <button class="flecha sig" type="button" aria-label="›">›</button>
+      <span class="cont">1 / ${f.length}</span>` : ""}
+      <span class="chip-tipo">${esc(p.lote ? t("lote") + " " + p.lote : t(p.tipo))}</span>
+    </div>` : ""}
+    <div class="cuerpo">
+      ${ops}
+      <span class="specs">${specs(p)}</span>
+      ${p.aprox ? `<span class="aprox">${t("aprox")}</span>` : ""}
+      ${tieneAgenda(p) ? htmlBotonAgenda() + `<div class="agenda" hidden><div class="per"></div><div class="cal"></div></div>` : ""}
+      ${tarifas}
+      <div class="acciones">
+        <a class="b-ficha" href="${esc(p.url)}" target="_blank" rel="noopener" data-ev="ficha">${t("ver_ficha")} ↗</a>
+        <button class="b-fav" type="button" aria-pressed="${fav}" aria-label="${fav ? t("guardada") : t("guardar")}" title="${fav ? t("guardada") : t("guardar")}">${ICONO_CORAZON}</button>
+      </div>
+    </div></div>`;
+}
+function armarVista(raizEl, p) {
+  const pista = raizEl.querySelector(".pista-f");
+  if (pista) {
+    const n = pista.children.length;
+    const ant = raizEl.querySelector(".ant"), sig = raizEl.querySelector(".sig"), cont = raizEl.querySelector(".cont");
+    const idx = () => Math.round(pista.scrollLeft / pista.clientWidth);
+    const pintar = () => { const k = idx(); if (cont) cont.textContent = `${k + 1} / ${n}`; if (ant) ant.disabled = k === 0; if (sig) sig.disabled = k === n - 1; };
+    const ir = d => pista.scrollTo({ left: (idx() + d) * pista.clientWidth, behavior: "smooth" });
+    ant?.addEventListener("click", e => { e.stopPropagation(); ir(-1); });
+    sig?.addEventListener("click", e => { e.stopPropagation(); ir(1); });
+    pista.addEventListener("scroll", () => requestAnimationFrame(pintar), { passive: true });
+    pista.addEventListener("keydown", e => { if (e.key === "ArrowRight") ir(1); if (e.key === "ArrowLeft") ir(-1); });
+    L.DomEvent.disableScrollPropagation(pista);
+  }
+  raizEl.querySelectorAll("[data-ev]").forEach(a => a.addEventListener("click", () => track(a.dataset.ev + "/" + p.ref)));
+  const bf = raizEl.querySelector(".b-fav");
+  bf?.addEventListener("click", e => {
+    e.stopPropagation();
+    const on = FAV.alternar(p.ref);
+    bf.setAttribute("aria-pressed", String(on)); bf.title = on ? t("guardada") : t("guardar");
+  });
+  const det = raizEl.querySelector(".tarifas:not(.agenda)");
+  if (det) { det.addEventListener("toggle", () => det.querySelector("summary").textContent = det.open ? t("ocultar_tarifas") : t("ver_tarifas")); L.DomEvent.disableScrollPropagation(det); }
+  const ag = raizEl.querySelector(".agenda");
+  engancharAgenda(raizEl.querySelector(".b-agenda"), ag, p, abierta => {
+    raizEl.querySelector(".prev")?.classList.toggle("con-agenda", abierta);
+    raizEl.dispatchEvent(new CustomEvent("crece", { bubbles: true }));
+  });
+  if (ag) { L.DomEvent.disableScrollPropagation(ag); L.DomEvent.disableClickPropagation(ag); }
+}
+
+/* --- agenda de disponibilidad ---
+   Por defecto la casa está libre en los períodos con precio en Tokko (1ra quincena de enero, Fin de año…).
+   Lo que se carga en "Ocupado" de la planilla se tacha. Días sin tarifa = sin precio (gris). */
+const iso = d => `${d.getFullYear()}-${String(d.getMonth() + 1).padStart(2, "0")}-${String(d.getDate()).padStart(2, "0")}`;
+const MESES_N = { diciembre: 11, enero: 0, febrero: 1, marzo: 2, abril: 3, noviembre: 10 };
+function anioTemporada() { const h = new Date(); return h.getMonth() <= 3 ? h.getFullYear() - 1 : h.getFullYear(); } /* dic de este año → mar del que viene */
+function pascua(y) { /* domingo de Pascua (algoritmo de Gauss/Meeus) */
+  const a = y % 19, b = Math.floor(y / 100), c = y % 100, d = Math.floor(b / 4), e = b % 4, f = Math.floor((b + 8) / 25),
+    g = Math.floor((b - f + 1) / 3), h = (19 * a + b - d - g + 15) % 30, i = Math.floor(c / 4), k = c % 4,
+    l = (32 + 2 * e + 2 * i - h - k) % 7, m = Math.floor((a + 11 * h + 22 * l) / 451), mes = Math.floor((h + l - 7 * m + 114) / 31);
+  return new Date(y, mes - 1, ((h + l - 7 * m + 114) % 31) + 1, 12);
+}
+function rangoPeriodo(nombre) { /* [desde, hasta, prioridad] o null si no es un período de fechas (ej. "Por dia") */
+  const t = nombre.toLowerCase(), Y = anioTemporada(), D = (m, d) => new Date(m === 11 || m === 10 ? Y : Y + 1, m, d, 12);
+  if (t.includes("fin de a")) return [D(11, 26), D(0, 2), 3];
+  if (t.includes("santa") || t.includes("turismo")) { const p = pascua(Y + 1); const lu = new Date(p); lu.setDate(p.getDate() - 6); return [lu, p, 3]; }
+  const k = Object.keys(MESES_N).find(m => t.includes(m));
+  if (k == null) return null;
+  const m = MESES_N[k], fin = new Date(m === 11 || m === 10 ? Y : Y + 1, m + 1, 0).getDate();
+  if (t.includes("1ra") || t.includes("primera")) return [D(m, 1), D(m, 15), 2];
+  if (t.includes("2da") || t.includes("segunda")) return [D(m, 16), D(m, fin), 2];
+  return [D(m, 1), D(m, fin), 1];
+}
+function diasOcupados(p) {
+  const s = new Set();
+  for (const [a, b] of p.ocupado || []) {
+    const d = new Date(a + "T12:00"), fin = new Date(b + "T12:00");
+    for (; d <= fin; d.setDate(d.getDate() + 1)) s.add(iso(d));
+  }
+  return s;
+}
+function datosAgenda(p) {
+  if (p._ag) return p._ag;
+  const temp = p.ops.find(o => o.tipo === "temporada");
+  /* agenda propia (hoja "Agenda"): períodos, precios y estado salen de ahí; si la casa no tiene, Tokko + "Ocupado" */
+  const fuente = p.agenda && p.agenda.length ? p.agenda : ((temp && temp.periodos) || [{ periodo: "", precio: temp.precio, moneda: temp.moneda }]);
+  const per = fuente.map(x => ({ ...x, r: rangoPeriodo(x.periodo || "") }));
+  const precioDia = new Map(); /* iso → período (gana el más específico: Fin de año > quincena > mes) */
+  for (const x of per) {
+    if (!x.r) continue;
+    for (const d = new Date(x.r[0]); d <= x.r[1]; d.setDate(d.getDate() + 1)) {
+      const k = iso(d), y = precioDia.get(k);
+      if (!y || y.r[2] < x.r[2]) precioDia.set(k, x);
+    }
+  }
+  const occ = diasOcupados(p), hoy = new Date(); hoy.setHours(0, 0, 0, 0);
+  for (const x of per) { /* alquilada / reservada = días ocupados, salvo los que la planilla marca como "libre" */
+    if (!x.r || !x.estado || x.estado === "disponible") continue;
+    for (const d = new Date(x.r[0]); d <= x.r[1]; d.setDate(d.getDate() + 1)) occ.add(iso(d));
+  }
+  for (const x of per) for (const [a, b] of x.libre || []) { /* solo dentro de su propio período */
+    if (!x.r) continue;
+    for (const d = new Date(a + "T12:00"), fin = new Date(b + "T12:00"); d <= fin; d.setDate(d.getDate() + 1))
+      if (d >= x.r[0] && d <= x.r[1]) occ.delete(iso(d));
+  }
+  /* hoja "Ocupación" (la carga la página interna /agenda/): días exactos; "libre" libera días de un período tomado */
+  const estDia = new Map();
+  for (const z of p.ocupacion || []) for (const d = new Date(z.d + "T12:00"), fin = new Date(z.h + "T12:00"); d <= fin; d.setDate(d.getDate() + 1)) {
+    const k = iso(d);
+    if (z.e === "libre") { occ.delete(k); estDia.delete(k); } else { occ.add(k); estDia.set(k, z.e); }
+  }
+  for (const x of per) { /* período entero tomado día por día = se muestra como alquilado / reservado, con su precio */
+    if (!x.r || (x.estado && x.estado !== "disponible") || !estDia.size) continue;
+    let todo = true, res = false;
+    for (const d = new Date(x.r[0]); d <= x.r[1]; d.setDate(d.getDate() + 1)) { const e = estDia.get(iso(d)); if (!e) { todo = false; break; } if (e === "reservada") res = true; }
+    if (todo) x.estado = res ? "reservada" : "alquilada";
+  }
+  const conFechas = per.filter(x => x.r);
+  /* meses a mostrar: de dic a mar de la temporada (o lo que cubran las tarifas / ocupados) */
+  const Y = anioTemporada();
+  let desde = new Date(Y, 11, 1), hasta = new Date(Y + 1, 2, 1);
+  for (const x of conFechas) { if (x.r[0] < desde) desde = new Date(x.r[0].getFullYear(), x.r[0].getMonth(), 1); if (x.r[1] > hasta) hasta = new Date(x.r[1].getFullYear(), x.r[1].getMonth(), 1); }
+  for (const [, b] of p.ocupado || []) { const f = new Date(b + "T12:00"); if (f > hasta) hasta = new Date(f.getFullYear(), f.getMonth(), 1); }
+  for (const z of p.ocupacion || []) { const f = new Date(z.h + "T12:00"); if (f > hasta && z.e !== "libre") hasta = new Date(f.getFullYear(), f.getMonth(), 1); }
+  const primero = new Date(hoy.getFullYear(), hoy.getMonth(), 1);
+  if (desde < primero) desde = primero;
+  const meses = [];
+  for (const d = new Date(desde); d <= hasta && meses.length < 18; d.setMonth(d.getMonth() + 1)) meses.push(new Date(d));
+  if (!meses.length) meses.push(primero);
+  return (p._ag = { per, precioDia, occ, sinTarifas: !conFechas.length, meses, hoy: iso(hoy) });
+}
+const dm = k => `${+k.slice(8)}/${+k.slice(5, 7)}`;
+function rangosFechas(keys) { /* ["2027-01-01",…] → "1/1–8/1, 20/1–31/1" */
+  const r = [];
+  for (const k of keys) { const u = r[r.length - 1], prev = u && new Date(u[1] + "T12:00"); if (prev) prev.setDate(prev.getDate() + 1);
+    if (u && iso(prev) === k) u[1] = k; else r.push([k, k]); }
+  return r.map(([a, b]) => a === b ? dm(a) : `${dm(a)}–${dm(b)}`).join(", ");
+}
+function armarAgenda(caja, p) {
+  const A = datosAgenda(p);
+  const tomada = x => x.estado === "alquilada" || x.estado === "reservada";
+  /* períodos ya pasados se ocultan, salvo los alquilados de la agenda propia: se ve a cuánto se alquiló */
+  const filas = A.per.filter(x => !x.r || iso(x.r[1]) >= A.hoy || tomada(x)).map(x => {
+    let estado = "", cls = "";
+    if (x.r) {
+      const pasado = iso(x.r[1]) < A.hoy;
+      const dias = []; for (const d = new Date(x.r[0]); d <= x.r[1]; d.setDate(d.getDate() + 1)) { const k = iso(d); if (k >= A.hoy) dias.push(k); }
+      const libres = dias.filter(k => !A.occ.has(k));
+      if (pasado) { estado = t(x.estado); cls = "oc pas"; }
+      else if (libres.length === dias.length) { estado = t("disponible"); cls = "li"; }
+      else if (!libres.length) { estado = tomada(x) ? t(x.estado) : t("ocupado"); cls = "oc"; }
+      else { estado = `${t(tomada(x) ? "se_libera" : "libre_dias")} ${rangosFechas(libres)}`; cls = "pa"; }
+    }
+    const precio = x.precio ? `${mon(x.moneda)} ${fmt(x.precio)}` : "";
+    return x.periodo ? `<tr class="${cls}"><td>${esc(periodo(x.periodo))}</td><td>${precio}</td><td>${esc(estado)}</td></tr>` : "";
+  }).join("");
+  caja.querySelector(".per").innerHTML = filas ? `<table class="tabla-disp">${filas}</table>` : "";
+  const cal = caja.querySelector(".cal");
+  if (cal._k == null) { const i = A.meses.findIndex(d => [...A.precioDia.keys()].some(k => k.startsWith(iso(d).slice(0, 7)))); cal._k = Math.max(0, i); }
+  armarCalendario(cal, p);
+}
+function armarCalendario(el, p) {
+  const A = datosAgenda(p);
+  const d0 = A.meses[el._k], y = d0.getFullYear(), m = d0.getMonth();
+  const n = new Date(y, m + 1, 0).getDate(), hueco = (new Date(y, m, 1).getDay() + 6) % 7;
+  let celdas = "", hayTarifa = false;
+  for (let i = 0; i < hueco; i++) celdas += "<span></span>";
+  for (let d = 1; d <= n; d++) {
+    const k = iso(new Date(y, m, d)), pasado = k < A.hoy, oc = A.occ.has(k), x = A.precioDia.get(k);
+    const conTarifa = A.sinTarifas || !!x; if (x) hayTarifa = true;
+    const cls = oc ? "oc" : conTarifa ? "li" : "st";
+    const tit = x ? `${periodo(x.periodo)}${x.precio ? ` · ${mon(x.moneda)} ${fmt(x.precio)}` : ""}` : "";
+    celdas += `<span class="d ${cls}${pasado ? " pas" : ""}${k === A.hoy ? " hoy" : ""}"${tit ? ` title="${esc(tit)}"` : ""}>${d}</span>`;
+  }
+  const nombre = new Intl.DateTimeFormat(LANG === "en" ? "en-US" : LANG, { month: "long", year: "numeric" }).format(d0).replace(/^./, c => c.toUpperCase());
+  el.innerHTML = `<div class="cal-cab">
+      <button type="button" class="cal-ant" aria-label="‹" ${el._k === 0 ? "disabled" : ""}>‹</button>
+      <span>${esc(nombre)}</span>
+      <button type="button" class="cal-sig" aria-label="›" ${el._k === A.meses.length - 1 ? "disabled" : ""}>›</button></div>
+    <div class="cal-grid">${[...t("dias_sem")].map(x => `<b>${x}</b>`).join("")}${celdas}</div>
+    <div class="cal-pie"><span class="cal-ley"><i class="li"></i>${t("disponible")} <i class="oc"></i>${t("ocupado")}${!A.sinTarifas ? ` <i class="st"></i>${t("sin_tarifa")}` : ""}</span></div>`;
+  el.querySelector(".cal-ant").addEventListener("click", e => { e.preventDefault(); e.stopPropagation(); el._k--; armarCalendario(el, p); });
+  el.querySelector(".cal-sig").addEventListener("click", e => { e.preventDefault(); e.stopPropagation(); el._k++; armarCalendario(el, p); });
+}
+
+/* --- pin --- */
+function htmlPin(p, filtroOp) {
+  const o = opPrincipal(p, filtroOp);
+  return `<a class="pin ${o.tipo}${p.tipo === "terreno" ? " es-terreno" : ""}" href="${esc(p.url)}" target="_blank" rel="noopener" aria-label="${esc(precioOp(o))}, ${esc(lineaSecundaria(p))}">
+    <span class="dot"></span><span class="tag"><b>${esc(precioCorto(o))}</b><span>${esc(lineaSecundaria(p))}</span></span></a>`;
+}
+
+/* --- modo interno (solo equipo) ---
+   Engranaje discreto en una esquina → contraseña → se habilitan funciones internas (ej. botón a la carpeta de Drive del desarrollo).
+   Los datos internos viajan cifrados en interno.dat (AES-GCM, clave derivada de la contraseña con PBKDF2): sin la contraseña
+   no hay forma de leerlos desde el código de la página. Se descifra en el navegador y queda en INTERNO.datos.
+   Las páginas escuchan el evento "interno" para volver a dibujarse al entrar o salir. */
+const INTERNO = {
+  datos: null,
+  activo() { return !!this.datos; },
+  dev(slug) { return ((this.datos || {}).desarrollos || {})[slug] || {}; },
+  token() { return (this.datos || {})._tk || ""; }, /* llave para la App web de la planilla (página /agenda/) */
+};
+(function () {
+  const K = "cbz_interno";
+  const sesion = { get: () => { try { return sessionStorage.getItem(K); } catch (_) { return null; } }, set: v => { try { sessionStorage.setItem(K, v); } catch (_) {} }, del: () => { try { sessionStorage.removeItem(K); } catch (_) {} } };
+  try { INTERNO.datos = JSON.parse(sesion.get() || leer(K) || "null"); } catch (_) { INTERNO.datos = null; }
+  const b64 = s => Uint8Array.from(atob(s), c => c.charCodeAt(0));
+  const a64 = u => btoa(String.fromCharCode(...new Uint8Array(u)));
+  const bajar = async () => { const r = await fetch(raiz() + "interno.dat", { cache: "no-cache" }); if (!r.ok) throw new Error("sin-archivo"); return r.json(); };
+  const abrir = async (j, llave) => JSON.parse(new TextDecoder().decode(await crypto.subtle.decrypt({ name: "AES-GCM", iv: b64(j.n) }, llave, b64(j.c))));
+  /* la llave derivada (no la contraseña) queda guardada junto a los datos (_k, con su sal _s): así, cuando el build publica
+     un interno.dat nuevo (ej. precios actualizados), la página lo abre sola sin volver a pedir la contraseña */
+  async function descifrar(clave) {
+    const j = await bajar();
+    const base = await crypto.subtle.importKey("raw", new TextEncoder().encode(clave), "PBKDF2", false, ["deriveKey"]);
+    const llave = await crypto.subtle.deriveKey({ name: "PBKDF2", salt: b64(j.s), iterations: j.it, hash: "SHA-256" }, base, { name: "AES-GCM", length: 256 }, true, ["decrypt"]);
+    const d = await abrir(j, llave);
+    return Object.assign(d, { _k: a64(await crypto.subtle.exportKey("raw", llave)), _s: j.s, _n: j.n });
+  }
+  const guardar = (d, recordar) => { const s = JSON.stringify(d); sesion.set(s); if (recordar) guardarLS(K, s); };
+  async function refrescar() {
+    const d = INTERNO.datos;
+    if (!d || !d._k || !(window.crypto && crypto.subtle)) return;
+    try {
+      const j = await bajar();
+      if (j.n === d._n || j.s !== d._s) return; /* sin cambios, o cambió la contraseña (hay que volver a entrar) */
+      const llave = await crypto.subtle.importKey("raw", b64(d._k), "AES-GCM", false, ["decrypt"]);
+      const nuevo = Object.assign(await abrir(j, llave), { _k: d._k, _s: d._s, _n: j.n, _tk: d._tk });
+      INTERNO.datos = nuevo; guardar(nuevo, !!leer(K)); avisar();
+    } catch (_) {}
+  }
+  const avisar = () => document.dispatchEvent(new CustomEvent("interno"));
+  setTimeout(refrescar, 400);
+  const css = document.createElement("style");
+  css.textContent = `
+  #cbz-int{position:fixed;left:max(10px,env(safe-area-inset-left,0px));bottom:calc(10px + env(safe-area-inset-bottom,0px));z-index:5000;width:30px;height:30px;border-radius:50%;border:1px solid rgba(255,255,255,.22);background:rgba(10,10,10,.72);color:#fff;opacity:.45;display:grid;place-items:center;padding:0;cursor:pointer;-webkit-backdrop-filter:blur(6px);backdrop-filter:blur(6px);transition:opacity .2s}
+  #cbz-int:hover,#cbz-int:focus-visible{opacity:1}
+  #cbz-int.on{opacity:1;color:#c8b28a;border-color:#c8b28a}
+  #cbz-int-m{position:fixed;inset:0;z-index:5001;background:rgba(0,0,0,.6);display:grid;place-items:center;padding:20px}
+  #cbz-int-m form,#cbz-int-m .c{background:#111;border:1px solid rgba(255,255,255,.14);border-radius:14px;padding:22px 20px 18px;width:min(320px,100%);color:#f3f1ec;font:14px/1.4 "Hanken Grotesk",system-ui,sans-serif;box-sizing:border-box}
+  #cbz-int-m h3{margin:0 0 4px;font:italic 500 22px "Bodoni Moda",Georgia,serif}
+  #cbz-int-m p{margin:0 0 14px;color:#9b978f;font-size:12.5px}
+  #cbz-int-m input[type=password]{width:100%;box-sizing:border-box;background:#000;border:1px solid rgba(255,255,255,.25);border-radius:8px;color:#fff;font:inherit;font-size:16px;padding:10px 12px}
+  #cbz-int-m input[type=password]:focus{outline:none;border-color:#c8b28a}
+  #cbz-int-m label{display:flex;gap:8px;align-items:center;margin:10px 0 0;color:#9b978f;font-size:12.5px}
+  #cbz-int-m .err{color:#ff7b7b;font-size:12.5px;min-height:18px;margin:8px 0 0}
+  #cbz-int-m .fila{display:flex;gap:8px;margin-top:10px}
+  #cbz-int-m button{flex:1;font:600 13px "Hanken Grotesk",system-ui,sans-serif;padding:10px;border-radius:8px;border:1px solid rgba(255,255,255,.25);background:transparent;color:#fff;cursor:pointer}
+  #cbz-int-m a.ag{display:block;text-align:center;margin:0 0 6px;padding:10px;border-radius:8px;border:1px solid #c8b28a;color:#c8b28a;font-weight:600;font-size:13px;text-decoration:none}
+  #cbz-int-m button.pri{background:#c8b28a;border-color:#c8b28a;color:#111}`;
+  document.head.appendChild(css);
+  const eng = document.createElement("button");
+  eng.id = "cbz-int"; eng.type = "button";
+  eng.innerHTML = '<svg viewBox="0 0 24 24" width="16" height="16" aria-hidden="true"><path fill="none" stroke="currentColor" stroke-width="1.6" stroke-linejoin="round" d="M12 8.5a3.5 3.5 0 1 0 0 7 3.5 3.5 0 0 0 0-7ZM10.3 3h3.4l.5 2.4 1.7.7 2.1-1.3 2.4 2.4-1.3 2.1.7 1.7 2.4.5v3.4l-2.4.5-.7 1.7 1.3 2.1-2.4 2.4-2.1-1.3-1.7.7-.5 2.4h-3.4l-.5-2.4-1.7-.7-2.1 1.3-2.4-2.4 1.3-2.1-.7-1.7L3 13.7v-3.4l2.4-.5.7-1.7-1.3-2.1 2.4-2.4 2.1 1.3 1.7-.7z"/></svg>';
+  const estado = () => { eng.classList.toggle("on", INTERNO.activo()); eng.setAttribute("aria-label", INTERNO.activo() ? "Modo interno activo" : "Acceso interno"); eng.title = eng.getAttribute("aria-label"); };
+  estado();
+  document.body.appendChild(eng);
+  function cerrar() { const m = document.getElementById("cbz-int-m"); if (m) m.remove(); eng.focus(); }
+  function modal(html) {
+    cerrar();
+    const m = document.createElement("div");
+    m.id = "cbz-int-m"; m.innerHTML = html;
+    m.addEventListener("click", e => { if (e.target === m) cerrar(); });
+    m.addEventListener("keydown", e => { if (e.key === "Escape") cerrar(); });
+    document.body.appendChild(m);
+    return m;
+  }
+  eng.addEventListener("click", () => {
+    if (INTERNO.activo()) {
+      const m = modal('<div class="c" role="dialog" aria-modal="true"><h3>Modo interno</h3><p>Activo: ves las funciones solo para el equipo.</p><a class="ag" href="' + raiz() + 'agenda/">Agenda de temporada →</a><a class="ag" href="' + raiz() + 'comparativo/">Comparativo de desarrollos →</a><div class="fila"><button type="button" data-x>Cerrar</button><button type="button" class="pri" data-salir>Salir del modo interno</button></div></div>');
+      m.querySelector("[data-x]").onclick = cerrar;
+      m.querySelector("[data-salir]").onclick = () => { INTERNO.datos = null; sesion.del(); try { localStorage.removeItem(K); } catch (_) {} estado(); cerrar(); avisar(); };
+      return;
+    }
+    const m = modal('<form role="dialog" aria-modal="true" autocomplete="off"><h3>Acceso interno</h3><p>Solo para el equipo de Coldwell Banker Zetaté.</p><input type="password" name="clave" placeholder="Contraseña" autocomplete="current-password" required><label><input type="checkbox" name="recordar"> Recordar en este equipo</label><div class="err" role="alert"></div><div class="fila"><button type="button" data-x>Cancelar</button><button type="submit" class="pri">Entrar</button></div></form>');
+    const f = m.querySelector("form"), err = f.querySelector(".err"), inp = f.clave;
+    inp.focus();
+    m.querySelector("[data-x]").onclick = cerrar;
+    f.addEventListener("submit", async e => {
+      e.preventDefault();
+      const ok = f.querySelector(".pri"); ok.disabled = true; err.textContent = "";
+      try {
+        if (!(window.crypto && crypto.subtle)) throw new Error("sin-crypto");
+        const datos = await descifrar(inp.value);
+        const h = await crypto.subtle.digest("SHA-256", new TextEncoder().encode("cbz-agenda:" + inp.value));
+        datos._tk = [...new Uint8Array(h)].map(x => x.toString(16).padStart(2, "0")).join("");
+        INTERNO.datos = datos;
+        guardar(datos, f.recordar.checked);
+        estado(); cerrar(); avisar();
+      } catch (x) {
+        err.textContent = x.message === "sin-archivo" ? "Todavía no hay datos internos publicados."
+          : x.message === "sin-crypto" ? "Este navegador no permite el acceso (hace falta https)." : "Contraseña incorrecta.";
+        ok.disabled = false; inp.select();
+      }
+    });
+  });
+})();
+
+
+</script>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/d3/7.8.5/d3.min.js"></script>
+<script>
+const DATOS = {"modo":"comparativo","raiz":"../","sitio":{"whatsapp_general":"5491169763297","goatcounter":"cbzetate","disponibilidad":"1cD8bPlBN6QM7Jkx7X32x-qTNdkhy2t5YNK_ssvsxTUQ","agenda_app":"https://script.google.com/macros/s/AKfycbwnnwE1yEN62AsIocr0wkTlOMtYGaXlH6gu2C0fSVpMMX_seabb3RuufZoWqLYKEHAjFA/exec","precios_planilla":"1oSHDCO-h4A6w5szYhlnBkrRPWyFIrhg4qhtaiIGlLB8"},"planilla":"1oSHDCO-h4A6w5szYhlnBkrRPWyFIrhg4qhtaiIGlLB8","devs":["agreste","amalfi","aura","dunas","playa-brava","pueblo-colibri","punta-polo"]};
+const APP = (DATOS.sitio || {}).agenda_app || "";
+const DEVS = DATOS.devs || [];
+const PLANILLA = DATOS.planilla || "";
+
+/* ---- datos: hoja Lotes + Emprendimientos → lo mismo que usaba el dashboard de Bauti (todo calculado) ---- */
+/* números de la planilla: llegan como número; si alguien escribió texto ("USD 321.693", "0,3", "30%") se interpreta */
+function num(v) {
+  if (typeof v === "number") return isFinite(v) ? v : null;
+  let s = String(v ?? "").trim();
+  if (!s) return null;
+  const pct = /%$/.test(s);
+  s = s.replace(/[^\d.,-]/g, "");
+  if (/^-?\d{1,3}(\.\d{3})+(,\d+)?$/.test(s)) s = s.replace(/\./g, "");   // 321.693 / 1.234,5
+  s = s.replace(",", ".");
+  const n = parseFloat(s);
+  return isNaN(n) ? null : pct ? n / 100 : n;
+}
+const txt = v => (v === null || v === undefined ? "" : String(v).trim());
+const ESTADOS = { disponible: "Disponible", reservado: "Reservado", reservada: "Reservado", vendido: "Vendido", vendida: "Vendido", consultar: "Consultar" };
+function armar(r) {
+  const lotes = (r.lotes || []).map(l => {
+    const m2 = num(l.superficie_m2), p = num(l.precio_usd), pl = num(l.precio_lote_usd);
+    const base = pl != null ? pl : p;
+    return { emprendimiento: txt(l.emprendimiento), lote: txt(l.lote), sector: txt(l.sector), superficie_m2: m2,
+      estado: ESTADOS[txt(l.estado).toLowerCase()] || "Consultar", precio_usd: p, precio_lote_usd: pl, precio_casa_usd: num(l.precio_casa_usd),
+      usd_m2: base != null && m2 ? Math.round(base / m2) : null, nota: txt(l.nota) };
+  });
+  const emprendimientos = (r.emprendimientos || []).map(e0 => {
+    const e = {}; for (const k in e0) e[k] = typeof e0[k] === "string" ? e0[k].trim() : e0[k];
+    const ls = lotes.filter(l => l.emprendimiento === e.id);
+    const d = ls.filter(l => l.estado === "Disponible"), dp = d.filter(l => l.precio_usd != null);
+    const res = ls.filter(l => l.estado === "Reservado").length, cons = ls.filter(l => l.estado === "Consultar").length;
+    const tot = num(e.unidades_totales) || ls.length;
+    const sinV = /^(s[ií]|x|true|1)$/i.test(txt(e.sin_vendidos));
+    const vend = sinV ? null : num(e.unidades_totales) ? Math.max(0, tot - d.length - res - cons) : ls.filter(l => l.estado === "Vendido").length;
+    const pr = dp.map(l => l.precio_usd).sort((a, b) => a - b);
+    const conM2 = dp.filter(l => l.superficie_m2);
+    const m2s = d.map(l => l.superficie_m2).filter(Boolean), um = dp.map(l => l.usd_m2).filter(v => v != null);
+    const barata = dp.slice().sort((a, b) => a.precio_usd - b.precio_usd)[0];
+    const ep = num(e.entrada_pct), cp = num(e.cuota_pct);
+    return Object.assign(e, {
+      lotes_totales: tot, disponibles: d.length, disponibles_con_precio: dp.length, vendidos: vend, reservados: res,
+      pct_vendido: vend == null || !tot ? null : Math.round(1000 * vend / tot) / 10,
+      precio_desde: pr.length ? pr[0] : null, precio_mediana: pr.length ? pr[Math.floor(pr.length / 2)] : null, precio_hasta: pr.length ? pr[pr.length - 1] : null,
+      stock_usd: d3.sum(pr),
+      usd_m2_prom: conM2.length ? Math.round(d3.sum(conM2, l => l.precio_lote_usd ?? l.precio_usd) / d3.sum(conM2, l => l.superficie_m2)) : null,
+      usd_m2_min: um.length ? d3.min(um) : null, usd_m2_max: um.length ? d3.max(um) : null,
+      sup_desde_m2: m2s.length ? d3.min(m2s) : null, sup_hasta_m2: m2s.length ? d3.max(m2s) : null,
+      unidad_entrada: barata ? barata.lote : null,
+      entrada_usd: barata && ep ? Math.round(barata.precio_usd * ep) : null,
+      cuota_usd: barata && ep && cp ? Math.round(barata.precio_usd * cp) : null,
+      entrada_nota: txt(e.entrada_nota) || (ep ? "" : "Sin dato"), cuota_nota: txt(e.cuota_nota),
+    });
+  });
+  return { emprendimientos, lotes };
+}
+</script>
+<script>
+  // Mismo "runtime" mínimo que traía el dashboard; los datos llegan después, desde la planilla.
+  (function () {
+    const raw = { emprendimientos: [], lotes: [] };
+    const calcs = {}, draws = [], onDatas = [];
+    let params = { presupuesto: 400000, producto: '' };
+    const val = (id) => (id in raw ? raw[id] : id in calcs ? calcs[id].fn(...calcs[id].inputs.map(val)) : null);
+    function runAll() {
+      onDatas.forEach((fn) => { try { fn(); } catch (e) { console.error(e); } });
+      draws.forEach(([name, fn]) => document.querySelectorAll('[data-draw="' + name + '"]').forEach((el) => { try { fn(el); } catch (e) { console.error(name, e); } }));
+    }
+    window.dash = {
+      colors: ['var(--series-0)'],
+      data: (id) => ({ status: 'ok', data: val(id), message: null, refreshing: false, truncated: false, meta: null }),
+      calc: (id, def) => { calcs[id] = def; },
+      loader: () => {}, setLink: () => {}, refresh: () => {},
+      draw: (name, fn) => { if (typeof fn === 'function') draws.push([name, fn]); else runAll(); },
+      onData: (fn) => { onDatas.push(fn); },
+      params: () => ({ ...params }),
+      setParams: (p) => { params = { ...params, ...p }; runAll(); },
+      resetParams: () => { params = { presupuesto: 400000, producto: '' }; runAll(); },
+    };
+    window.__cxSet = (d) => { raw.emprendimientos = d.emprendimientos; raw.lotes = d.lotes; runAll(); };
+    let w = window.innerWidth;
+    window.addEventListener('resize', () => { if (Math.abs(window.innerWidth - w) > 20) { w = window.innerWidth; runAll(); } });
+  })();
+</script>
+<script>
+  (function () {
+    const loc = d3.formatLocale({ decimal: ',', thousands: '.', grouping: [3], currency: ['USD ', ''] });
+    window.cxFmt = {
+      usd: (v) => (v == null ? '—' : 'USD ' + loc.format(',.0f')(v)),
+      k: (v) => (v == null ? '—' : v >= 1e6 ? 'USD ' + loc.format(',.2~f')(v / 1e6) + ' M' : 'USD ' + loc.format(',.0f')(v / 1e3) + 'k'),
+      n: (v) => (v == null ? '—' : loc.format(',.0f')(v)),
+      pct: (v) => (v == null ? '—' : loc.format(',.0f')(v) + '%'),
+    };
+  })();
+
+  dash.calc('resumen', {
+    title: 'Resumen general',
+    description: 'Totales de unidades disponibles, stock y entrada más baja entre todos los emprendimientos.',
+    inputs: ['emprendimientos'],
+    fn: (emprendimientos) => {
+      const conP = emprendimientos.filter((e) => e.precio_desde != null);
+      const desde = conP.slice().sort((a, b) => a.precio_desde - b.precio_desde)[0] || {};
+      const stock = conP.slice().sort((a, b) => b.stock_usd - a.stock_usd)[0] || {};
+      const vend = emprendimientos.filter((e) => e.pct_vendido != null).sort((a, b) => b.pct_vendido - a.pct_vendido)[0] || {};
+      return [{
+        disponibles: d3.sum(emprendimientos, (e) => e.disponibles_con_precio),
+        sin_precio: d3.sum(emprendimientos, (e) => e.disponibles - e.disponibles_con_precio),
+        emprendimientos: emprendimientos.length,
+        stock_usd: d3.sum(emprendimientos, (e) => e.stock_usd),
+        desde_precio: desde.precio_desde ?? null,
+        desde_nombre: desde.nombre ?? null,
+        mayor_stock_nombre: stock.nombre ?? null,
+        max_vendido_pct: vend.pct_vendido ?? null,
+        max_vendido_nombre: vend.nombre ?? null,
+      }];
+    },
+  });
+
+  dash.calc('lotes_presupuesto', {
+    title: 'Unidades dentro del presupuesto',
+    description: 'Unidades disponibles con precio hasta el presupuesto elegido, filtradas por producto, de la más barata a la más cara (máximo 150).',
+    inputs: ['lotes', 'emprendimientos'],
+    fn: (lotes, emprendimientos) => {
+      const p = dash.params();
+      const max = Number(p.presupuesto) || 400000;
+      const prod = p.producto || '';
+      const byId = new Map(emprendimientos.map((e) => [e.id, e]));
+      return lotes
+        .filter((l) => l.estado === 'Disponible' && l.precio_usd != null && l.precio_usd <= max)
+        .filter((l) => {
+          const e = byId.get(l.emprendimiento) || {};
+          if (!prod) return true;
+          if (prod === 'Chacra') return e.producto === 'Chacra' || /Polo/.test(l.sector || '');
+          if (prod === 'Lote + casa') return e.producto === 'Lote + casa';
+          return e.producto !== 'Lote + casa' && e.producto !== 'Chacra';
+        })
+        .sort((a, b) => a.precio_usd - b.precio_usd)
+        .map((l) => ({ emprendimiento: l.emprendimiento, nombre: (byId.get(l.emprendimiento) || {}).nombre, lote: l.lote, sector: l.sector, superficie_m2: l.superficie_m2, precio_usd: l.precio_usd, usd_m2: l.usd_m2 }));
+    },
+  });
+
+  dash.calc('presupuesto_por_emp', {
+    title: 'Unidades en presupuesto por emprendimiento',
+    description: 'Cuántas unidades disponibles entran en el presupuesto en cada emprendimiento y desde qué precio.',
+    inputs: ['lotes', 'emprendimientos'],
+    fn: (lotes, emprendimientos) => {
+      const p = dash.params();
+      const max = Number(p.presupuesto) || 400000;
+      const prod = p.producto || '';
+      return emprendimientos.map((e) => {
+        const L = lotes.filter((l) => l.emprendimiento === e.id && l.estado === 'Disponible' && l.precio_usd != null && l.precio_usd <= max)
+          .filter((l) => !prod || (prod === 'Chacra' ? (e.producto === 'Chacra' || /Polo/.test(l.sector || '')) : prod === 'Lote + casa' ? e.producto === 'Lote + casa' : (e.producto !== 'Lote + casa' && e.producto !== 'Chacra')));
+        return { id: e.id, nombre: e.nombre, lotes: L.length, desde: L.length ? d3.min(L, (l) => l.precio_usd) : null };
+      }).filter((r) => r.lotes > 0).sort((a, b) => b.lotes - a.lotes);
+    },
+  });
+
+  dash.calc('presupuesto_resumen', {
+    title: 'Total en presupuesto',
+    description: 'Total de unidades dentro del presupuesto y en cuántos emprendimientos.',
+    inputs: ['presupuesto_por_emp'],
+    fn: (porEmp) => [{ lotes: d3.sum(porEmp || [], (r) => r.lotes), emprendimientos: (porEmp || []).length }],
+  });
+
+  // Controls: listen only
+  document.querySelectorAll('#cx-max').forEach((el) => el.addEventListener('change', () => dash.setParams({ presupuesto: Number(el.value) })));
+  document.querySelectorAll('#cx-prod').forEach((el) => el.addEventListener('change', () => dash.setParams({ producto: el.value })));
+  dash.onData(() => {
+    const p = dash.params();
+    document.querySelectorAll('#cx-max').forEach((el) => { if (document.activeElement !== el) el.value = String(p.presupuesto ?? 400000); });
+    document.querySelectorAll('#cx-prod').forEach((el) => { if (document.activeElement !== el) el.value = p.producto ?? ''; });
+  });
+
+  // Simple text drawings from the summary calc
+  const cxText = (name, src, field, fmt) => dash.draw(name, (el) => {
+    const r = dash.data(src);
+    const row = r.status === 'ok' && r.data && r.data[0];
+    el.textContent = row && row[field] != null ? fmt(row[field]) : '—';
+  });
+  const F = window.cxFmt;
+  cxText('t-disp', 'resumen', 'disponibles', F.n);
+  cxText('t-n', 'resumen', 'emprendimientos', F.n);
+  cxText('t-desde-n', 'resumen', 'desde_nombre', String);
+  cxText('t-desde', 'resumen', 'desde_precio', F.usd);
+  cxText('t-stock-n', 'resumen', 'mayor_stock_nombre', String);
+  cxText('k-disp', 'resumen', 'disponibles', F.n);
+  cxText('k-cs', 'resumen', 'sin_precio', F.n);
+  cxText('k-stock', 'resumen', 'stock_usd', F.k);
+  cxText('k-desde', 'resumen', 'desde_precio', F.usd);
+  cxText('k-desde-n', 'resumen', 'desde_nombre', String);
+  cxText('k-vend', 'resumen', 'max_vendido_pct', F.pct);
+  cxText('k-vend-n', 'resumen', 'max_vendido_nombre', String);
+  cxText('p-n', 'presupuesto_resumen', 'lotes', F.n);
+  cxText('p-e', 'presupuesto_resumen', 'emprendimientos', F.n);
+
+  // Shared tooltip helper
+  window.cxTip = (box) => {
+    let t = box.querySelector('.cx-tip');
+    if (!t) { t = document.createElement('div'); t.className = 'cx-tip'; t.hidden = true; box.appendChild(t); }
+    return {
+      show(ev, lines) {
+        t.replaceChildren(...lines.map(([a, b], i) => { const d = document.createElement('div'); if (b == null) { d.textContent = a; d.style.fontWeight = '600'; } else { const s = document.createElement('span'); s.textContent = a + ' '; d.append(s, document.createTextNode(b)); } return d; }));
+        t.hidden = false;
+        const r = box.getBoundingClientRect();
+        let x = ev.clientX - r.left + 12, y = ev.clientY - r.top + 12;
+        const w = t.offsetWidth;
+        if (x + w > r.width) x = Math.max(0, ev.clientX - r.left - w - 12);
+        t.style.left = x + 'px'; t.style.top = y + 'px';
+      },
+      hide() { t.hidden = true; },
+    };
+  };
+
+  function cxLabelWidth(svg, labels, cls) {
+    const g = svg.append('g');
+    let w = 0;
+    labels.forEach((l) => { const t = g.append('text').attr('class', cls).text(l); w = Math.max(w, t.node().getComputedTextLength()); });
+    g.remove();
+    return w;
+  }
+
+  // Price range chart
+  dash.draw('rango', (el) => {
+    const r = dash.data('emprendimientos');
+    el.replaceChildren();
+    if (r.status !== 'ok') { el.textContent = r.status === 'error' ? 'No se pudo cargar' : '—'; return; }
+    const rows = r.data.slice().sort((a, b) => (a.precio_desde ?? 1e12) - (b.precio_desde ?? 1e12));
+    const W = el.clientWidth || 600, rowH = 34, H = rows.length * rowH + 30;
+    const svg = d3.select(el).append('svg').attr('viewBox', `0 0 ${W} ${H}`).attr('height', H).attr('role', 'img').attr('aria-label', 'Rango de precios disponibles por emprendimiento');
+    const lw = Math.min(W * 0.4, cxLabelWidth(svg, rows.map((d) => d.nombre), 'name') + 12);
+    const max = d3.max(rows, (d) => d.precio_hasta) || 1;
+    const min = d3.min(rows, (d) => d.precio_desde) || 140000;
+    const x = d3.scaleLog().domain([Math.min(140000, min * 0.9), max * 1.05]).range([lw, W - 10]);
+    const ticks = [50000, 100000, 150000, 250000, 400000, 600000, 1000000, 2000000].filter((t) => t <= max * 1.05 && t >= x.domain()[0]);
+    const fmtT = (v) => (v >= 1e6 ? (v / 1e6) + ' M' : v / 1e3 + 'k');
+    svg.append('g').attr('class', 'grid').selectAll('line').data(ticks).join('line').attr('x1', x).attr('x2', x).attr('y1', 0).attr('y2', H - 22);
+    svg.append('g').attr('class', 'axis').attr('transform', `translate(0,${H - 22})`).call(d3.axisBottom(x).tickValues(ticks).tickFormat(fmtT).tickSize(0)).call((g) => g.select('.domain').remove());
+    const tip = window.cxTip(el);
+    const g = svg.append('g').selectAll('g').data(rows).join('g').attr('transform', (d, i) => `translate(0,${i * rowH + rowH / 2})`);
+    g.append('text').attr('class', 'name').attr('x', 0).attr('dy', '0.35em').text((d) => d.nombre);
+    const has = g.filter((d) => d.precio_desde != null);
+    has.append('line').attr('x1', (d) => x(d.precio_desde)).attr('x2', (d) => x(d.precio_hasta)).attr('stroke-width', 8).attr('stroke-linecap', 'round').style('stroke', dash.colors[0]).style('opacity', 0.35);
+    has.append('circle').attr('cx', (d) => x(d.precio_mediana)).attr('r', 6).style('fill', dash.colors[0]);
+    g.filter((d) => d.precio_desde == null).append('text').attr('x', lw).attr('dy', '0.35em').text('Sin lista de precios');
+    g.append('rect').attr('x', 0).attr('y', -rowH / 2).attr('width', W).attr('height', rowH).style('fill', 'transparent')
+      .on('pointermove', (ev, d) => tip.show(ev, d.precio_desde == null ? [[d.nombre], ['', 'Sin precios publicados']] : [[d.nombre], ['Desde', window.cxFmt.usd(d.precio_desde)], ['Mediana', window.cxFmt.usd(d.precio_mediana)], ['Hasta', window.cxFmt.usd(d.precio_hasta)], ['Con precio', window.cxFmt.n(d.disponibles_con_precio) + ' unidades']]))
+      .on('pointerleave', () => tip.hide());
+  });
+
+  // USD/m2 bars
+  dash.draw('m2', (el) => {
+    const r = dash.data('emprendimientos');
+    el.replaceChildren();
+    if (r.status !== 'ok') { el.textContent = r.status === 'error' ? 'No se pudo cargar' : '—'; return; }
+    const rows = r.data.filter((d) => d.usd_m2_prom != null).sort((a, b) => b.usd_m2_prom - a.usd_m2_prom);
+    const W = el.clientWidth || 600, rowH = 30, H = rows.length * rowH + 6;
+    const svg = d3.select(el).append('svg').attr('viewBox', `0 0 ${W} ${H}`).attr('height', H).attr('role', 'img').attr('aria-label', 'Precio promedio por metro cuadrado de terreno');
+    const lw = Math.min(W * 0.4, cxLabelWidth(svg, rows.map((d) => d.nombre), 'name') + 12);
+    const vw = cxLabelWidth(svg, rows.map((d) => 'USD ' + d.usd_m2_prom), '') + 8;
+    const x = d3.scaleLinear().domain([0, d3.max(rows, (d) => d.usd_m2_prom)]).range([lw, W - vw]);
+    const tip = window.cxTip(el);
+    const g = svg.selectAll('g.r').data(rows).join('g').attr('class', 'r').attr('transform', (d, i) => `translate(0,${i * rowH})`);
+    g.append('text').attr('class', 'name').attr('x', 0).attr('y', rowH / 2).attr('dy', '0.35em').text((d) => d.nombre);
+    g.append('rect').attr('x', lw).attr('y', 6).attr('height', rowH - 12).attr('rx', 3).attr('width', (d) => Math.max(1, x(d.usd_m2_prom) - lw)).style('fill', dash.colors[0]);
+    g.append('text').attr('x', (d) => x(d.usd_m2_prom) + 6).attr('y', rowH / 2).attr('dy', '0.35em').text((d) => 'USD ' + d.usd_m2_prom);
+    g.append('rect').attr('width', W).attr('height', rowH).style('fill', 'transparent')
+      .on('pointermove', (ev, d) => tip.show(ev, [[d.nombre], ['USD/m² promedio', 'USD ' + d.usd_m2_prom], ['Lote típico', d.lote_tipico]]))
+      .on('pointerleave', () => tip.hide());
+  });
+
+  // Sales progress stacked bars
+  dash.draw('ventas', (el) => {
+    const r = dash.data('emprendimientos');
+    el.replaceChildren();
+    if (r.status !== 'ok') { el.textContent = r.status === 'error' ? 'No se pudo cargar' : '—'; return; }
+    const rows = r.data.slice().sort((a, b) => (b.pct_vendido ?? -1) - (a.pct_vendido ?? -1));
+    const W = el.clientWidth || 600, rowH = 32, H = rows.length * rowH + 4;
+    const svg = d3.select(el).append('svg').attr('viewBox', `0 0 ${W} ${H}`).attr('height', H).attr('role', 'img').attr('aria-label', 'Vendidos, reservados y disponibles por emprendimiento');
+    const lw = Math.min(W * 0.4, cxLabelWidth(svg, rows.map((d) => d.nombre), 'name') + 12);
+    const rw = cxLabelWidth(svg, ['100% vendido'], '') + 10;
+    const x = d3.scaleLinear().domain([0, 1]).range([lw, W - rw]);
+    const tip = window.cxTip(el);
+    const g = svg.selectAll('g.r').data(rows).join('g').attr('class', 'r').attr('transform', (d, i) => `translate(0,${i * rowH})`);
+    g.append('text').attr('class', 'name').attr('y', rowH / 2).attr('dy', '0.35em').text((d) => d.nombre);
+    g.each(function (d) {
+      const tot = d.lotes_totales || 1;
+      const parts = [[d.vendidos || 0, 'var(--cds-chart-muted)'], [d.reservados || 0, 'var(--color-warn)'], [d.disponibles || 0, 'var(--color-ok)']];
+      let acc = 0;
+      const sel = d3.select(this);
+      parts.forEach(([v, c]) => { const w = (v / tot) * (x(1) - lw); sel.append('rect').attr('x', lw + acc).attr('y', 7).attr('height', rowH - 14).attr('width', Math.max(0, w)).style('fill', c); acc += w; });
+      sel.append('text').attr('x', x(1) + 6).attr('y', rowH / 2).attr('dy', '0.35em').text(d.pct_vendido == null ? 's/d vendidos' : window.cxFmt.pct(d.pct_vendido) + ' vendido');
+    });
+    g.append('rect').attr('width', W).attr('height', rowH).style('fill', 'transparent')
+      .on('pointermove', (ev, d) => tip.show(ev, [[d.nombre + ' · ' + window.cxFmt.n(d.lotes_totales) + ' unidades' + (d.total_nota ? ' (' + d.total_nota + ')' : '')], ['Vendidos', d.vendidos == null ? 's/d' : window.cxFmt.n(d.vendidos)], ['Reservados', window.cxFmt.n(d.reservados)], ['Disponibles', window.cxFmt.n(d.disponibles)]]))
+      .on('pointerleave', () => tip.hide());
+  });
+
+  // Budget chips
+  dash.draw('p-chips', (el) => {
+    const r = dash.data('presupuesto_por_emp');
+    if (r.status !== 'ok' || !r.data) { el.replaceChildren(); return; }
+    el.replaceChildren(...r.data.map((d) => { const s = document.createElement('span'); s.className = 'cx-chip'; const b = document.createElement('b'); b.textContent = d.nombre; s.append(b, document.createTextNode(' · ' + d.lotes + ' · desde ' + window.cxFmt.k(d.desde))); return s; }));
+  });
+
+  // Budget table
+  dash.draw('p-tabla', (el) => {
+    const r = dash.data('lotes_presupuesto');
+    if (r.status !== 'ok' || !r.data) { el.replaceChildren(); return; }
+    const rows = r.data.slice(0, 150);
+    d3.select(el).selectAll('tr').data(rows, (d) => d.emprendimiento + '|' + d.lote).join('tr')
+      .attr('data-key', (d) => encodeURIComponent(d.emprendimiento) + ',' + encodeURIComponent(d.lote))
+      .each(function (d) {
+        const cells = [d.nombre, d.lote, d.sector || '—', window.cxFmt.n(d.superficie_m2), window.cxFmt.n(d.precio_usd), d.usd_m2 == null ? '—' : window.cxFmt.n(d.usd_m2)];
+        d3.select(this).selectAll('td').data(cells).join('td').attr('class', (c, i) => (i >= 3 ? 'num' : null)).text((c) => c);
+      });
+  });
+
+  // Comparison table
+  dash.draw('cmp-tabla', (el) => {
+    const r = dash.data('emprendimientos');
+    if (r.status !== 'ok') { el.replaceChildren(); return; }
+    const F = window.cxFmt;
+    const sup = (v) => (v == null ? null : v >= 10000 ? (v / 10000).toLocaleString('es-UY', { maximumFractionDigits: 1 }) + ' ha' : F.n(v) + ' m²');
+    const rows = r.data.filter((d) => d.precio_desde != null).sort((a, b) => (a.precio_desde ?? 1e12) - (b.precio_desde ?? 1e12));
+    d3.select(el).selectAll('tr').data(rows, (d) => d.id).join('tr').attr('data-key', (d) => encodeURIComponent(d.id))
+      .each(function (d) {
+        const tr = d3.select(this).html(null);
+        const c0 = tr.append('td');
+        c0.append('div').attr('class', 'cmp-name').text(d.nombre);
+        if (DEVS.includes(d.id)) c0.append('a').attr('class', 'cmp-map').attr('href', '../desarrollos/' + d.id + '/').text('Ver desarrollo →');
+        c0.append('span').attr('class', 'cx-pill ' + (d.producto === 'Lote + casa' ? 'casa' : d.producto === 'Chacra' ? 'chacra' : 'lote')).text(d.producto);
+        const ce = tr.append('td').attr('class', 'num wide-s');
+        if (d.entrada_usd == null) ce.append('div').attr('class', 'cmp-sub').text(d.entrada_nota || 'Sin dato');
+        else {
+          ce.append('div').attr('class', 'cmp-big').text(F.usd(d.entrada_usd));
+          ce.append('div').attr('class', 'cmp-sub').text(d.entrada_nota);
+          if (d.cuota_usd != null) { ce.append('div').attr('class', 'cmp-big cmp-gap').text(F.usd(d.cuota_usd) + ' /mes'); ce.append('div').attr('class', 'cmp-sub').text(d.cuota_nota); }
+          ce.append('div').attr('class', 'cmp-sub cmp-gap').text('Unidad ' + d.unidad_entrada + ' · ' + F.usd(d.precio_desde));
+        }
+        const c1 = tr.append('td').attr('class', 'num');
+        c1.append('div').attr('class', 'cmp-big').text(d.usd_m2_prom == null ? '—' : 'USD ' + F.n(d.usd_m2_prom));
+        if (d.usd_m2_min != null) c1.append('div').attr('class', 'cmp-sub').text(F.n(d.usd_m2_min) + ' – ' + F.n(d.usd_m2_max));
+        const c2 = tr.append('td').attr('class', 'num');
+        c2.append('div').text(d.sup_desde_m2 == null ? '—' : sup(d.sup_desde_m2) + ' – ' + sup(d.sup_hasta_m2));
+        if (d.sup_nota) c2.append('div').attr('class', 'cmp-sub').text(d.sup_nota);
+        const c3 = tr.append('td').attr('class', 'num');
+        if (d.pct_vendido == null) c3.append('span').attr('class', 'cmp-sub').text('Sin dato');
+        else {
+          c3.append('div').attr('class', 'cmp-big').text(F.pct(d.pct_vendido));
+          const bar = c3.append('div').attr('class', 'cmp-bar');
+          bar.append('i').style('width', Math.min(100, d.pct_vendido) + '%');
+          c3.append('div').attr('class', 'cmp-sub').text(F.n(d.disponibles) + ' disp. de ' + F.n(d.lotes_totales));
+        }
+        const c4 = tr.append('td').attr('class', 'wide');
+        c4.append('div').attr('class', 'cmp-tag').text(d.fin_tipo || 'Sin dato');
+        c4.append('div').attr('class', 'cmp-sub').text(d.fin_forma || '');
+        tr.append('td').text(d.zona);
+        tr.append('td').attr('class', 'wide').text(d.entrega);
+        tr.append('td').attr('class', 'wide' + (/^Sin dato/.test(d.expensas || '') ? ' muted' : '')).text(d.expensas || 'Sin dato');
+        tr.append('td').attr('class', /confirmar|no definido/i.test(d.comision || '') ? 'muted' : 'ok').text(d.comision || 'Sin dato');
+        const ca = tr.append('td').attr('class', 'wide-l');
+        ca.append('div').text(d.amenities || 'Sin dato');
+        ca.append('div').attr('class', 'cmp-sub cmp-gap').text(d.playa || '');
+        tr.append('td').attr('class', 'wide-l' + (/^Sin dato/.test(d.respaldo || '') ? ' muted' : '')).text(d.respaldo || 'Sin dato');
+      });
+  });
+</script>
+<script>
+const $ = id => document.getElementById(id);
+const escH = s => String(s).replace(/[&<>"]/g, c => ({ "&": "&amp;", "<": "&lt;", ">": "&gt;", '"': "&quot;" })[c]);
+function mensaje(t, s) { $("cx-wrap").hidden = true; $("cx-fuente").textContent = ""; $("msg").hidden = false; $("msg").innerHTML = `<b>${t}</b>${s ? `<span>${s}</span>` : ""}`; }
+async function iniciar() {
+  if (!INTERNO.activo()) return mensaje("Solo para el equipo.", "Entrá con el engranaje de abajo a la izquierda.");
+  if (!INTERNO.token()) return mensaje("Volvé a entrar.", "Tocá el engranaje → Salir, y entrá de nuevo con la contraseña.");
+  if (!APP) return mensaje("Falta conectar la planilla.", "Hay que publicar el script de la planilla como App web (sitio.json → agenda_app).");
+  if ($("cx-wrap").hidden) mensaje("Cargando…");
+  try {
+    const r = await fetch(APP, { method: "POST", headers: { "Content-Type": "text/plain;charset=utf-8" }, body: JSON.stringify({ accion: "comparativo", tk: INTERNO.token() }) });
+    const j = await r.json();
+    if (j.error) throw new Error(j.error === "clave" ? "La planilla no reconoce la contraseña (revisá CLAVE en Propiedades del script)."
+      : /desconocida/.test(j.error) ? "Falta actualizar el script de la planilla (pegar la versión nueva de planilla/Codigo.gs y publicar una versión nueva de la App web)." : j.error);
+    const d = armar(j);
+    if (!d.emprendimientos.length) throw new Error("La planilla de precios no tiene emprendimientos cargados.");
+    $("msg").hidden = true; $("cx-wrap").hidden = false;
+    $("cx-notas").innerHTML = (j.notas || []).map(n => `<li>${escH(n)}</li>`).join("");
+    $("notas").hidden = !(j.notas || []).length;
+    const listas = d.emprendimientos.filter(e => e.lista).map(e => `${escH(e.nombre)}: ${escH(e.lista)}`).join(" · ");
+    $("cx-fuente").innerHTML = `Datos en vivo de la planilla privada <a href="https://docs.google.com/spreadsheets/d/${PLANILLA}/edit" target="_blank" rel="noopener">Precios desarrollos (interno)</a>: lo que se cambia ahí se ve al recargar. Precios en USD; sujetos a cambios del desarrollador.${listas ? "<br>" + listas : ""}`;
+    window.__cxSet(d);
+  } catch (e) {
+    mensaje("No se pudo cargar.", escH(e.message || "Error de conexión."));
+  }
+}
+document.addEventListener("interno", iniciar);
+iniciar();
+</script>
+
+</body>
+</html>

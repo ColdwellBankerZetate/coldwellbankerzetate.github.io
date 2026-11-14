@@ -531,7 +531,7 @@ const INTERNO = {
   #cbz-int-m .err{color:#ff7b7b;font-size:12.5px;min-height:18px;margin:8px 0 0}
   #cbz-int-m .fila{display:flex;gap:8px;margin-top:10px}
   #cbz-int-m button{flex:1;font:600 13px "Hanken Grotesk",system-ui,sans-serif;padding:10px;border-radius:8px;border:1px solid rgba(255,255,255,.25);background:transparent;color:#fff;cursor:pointer}
-  #cbz-int-m a.ag{display:block;text-align:center;margin:0 0 4px;padding:10px;border-radius:8px;border:1px solid #c8b28a;color:#c8b28a;font-weight:600;font-size:13px;text-decoration:none}
+  #cbz-int-m a.ag{display:block;text-align:center;margin:0 0 6px;padding:10px;border-radius:8px;border:1px solid #c8b28a;color:#c8b28a;font-weight:600;font-size:13px;text-decoration:none}
   #cbz-int-m button.pri{background:#c8b28a;border-color:#c8b28a;color:#111}`;
   document.head.appendChild(css);
   const eng = document.createElement("button");
@@ -552,7 +552,7 @@ const INTERNO = {
   }
   eng.addEventListener("click", () => {
     if (INTERNO.activo()) {
-      const m = modal('<div class="c" role="dialog" aria-modal="true"><h3>Modo interno</h3><p>Activo: ves las funciones solo para el equipo.</p><a class="ag" href="' + raiz() + 'agenda/">Agenda de temporada →</a><div class="fila"><button type="button" data-x>Cerrar</button><button type="button" class="pri" data-salir>Salir del modo interno</button></div></div>');
+      const m = modal('<div class="c" role="dialog" aria-modal="true"><h3>Modo interno</h3><p>Activo: ves las funciones solo para el equipo.</p><a class="ag" href="' + raiz() + 'agenda/">Agenda de temporada →</a><a class="ag" href="' + raiz() + 'comparativo/">Comparativo de desarrollos →</a><div class="fila"><button type="button" data-x>Cerrar</button><button type="button" class="pri" data-salir>Salir del modo interno</button></div></div>');
       m.querySelector("[data-x]").onclick = cerrar;
       m.querySelector("[data-salir]").onclick = () => { INTERNO.datos = null; sesion.del(); try { localStorage.removeItem(K); } catch (_) {} estado(); cerrar(); avisar(); };
       return;
