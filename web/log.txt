@@ -1,0 +1,16 @@
+  https://www.elnido.uy/: Page.goto: Timeout 60000ms exceeded.
+Call log:
+  - navigating to "https://www.elnido.uy/", waiting until "networkidle"
+
+el-nido: 01 https://www.elnido.uy/ — El Nido - Naturaleza y lujo en un solo lugar. (3551 caracteres)
+el-nido: 02 https://www.elnido.uy/el-barrio — El Nido - El barrio (5193 caracteres)
+el-nido: 03 https://www.elnido.uy/wavegarden — El Nido - Wavegarden (1758 caracteres)
+el-nido: 04 https://www.elnido.uy/beach-club — El Nido - Beach Club (1862 caracteres)
+el-nido: 05 https://www.elnido.uy/documentacion — El Nido - Documentos (708 caracteres)
+el-nido: 06 https://www.elnido.uy/experiencia-360 — El Nido - Experiencia 360 (121 caracteres)
+el-nido: 07 https://www.elnido.uy/reserva-tu-lote — El Nido - Reserva tu lote (641 caracteres)
+el-nido: 08 https://www.elnido.uy/experiencia-360/nuestro-disfrute — Experiencia 360 - Nuestro disfrute (31 caracteres)
+el-nido: 09 https://www.elnido.uy/experiencia-360/nuestro-bosque — Experiencia 360 - Nuestro bosque (31 caracteres)
+el-nido: 10 https://www.elnido.uy/experiencia-360/nuestra-playa — Experiencia 360 - Nuestra playa (31 caracteres)
+el-nido: 11 https://www.elnido.uy/experiencia-360/nuestro-parador — Experiencia 360 - Nuestro parador (31 caracteres)
+el-nido: 11 páginas, 152 recursos

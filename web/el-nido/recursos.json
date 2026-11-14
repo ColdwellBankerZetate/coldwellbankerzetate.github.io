@@ -1,0 +1,762 @@
+{
+ "https://cdn.prod.website-files.com/67475fe52d93a89750e90880/6750ab306c9942f374644749_hero-intro-3.avif": {
+  "archivo": "8214df1175bf.avif",
+  "tipo": "image/avif",
+  "bytes": 115967
+ },
+ "https://cdn.prod.website-files.com/67475fe52d93a89750e90880/css/el-nido-staging.webflow.shared.a6471a586.min.css": {
+  "archivo": "cb00878c16ed.css",
+  "tipo": "text/css",
+  "bytes": 101598
+ },
+ "https://cdn.prod.website-files.com/67475fe52d93a89750e90880/6750ab32e46ec497c679e46c_img-wavegarden-1.avif": {
+  "archivo": "e6aee2ae224b.avif",
+  "tipo": "image/avif",
+  "bytes": 208545
+ },
+ "https://cdn.prod.website-files.com/67475fe52d93a89750e90880/6750ab307f8dbee26a700824_hero-el-nido.avif": {
+  "archivo": "4e72292ceda3.avif",
+  "tipo": "image/avif",
+  "bytes": 168487
+ },
+ "https://cdn.prod.website-files.com/67475fe52d93a89750e90880/6750ab2f61419521d2d4d95c_hero-intro-2.avif": {
+  "archivo": "ac5717054127.avif",
+  "tipo": "image/avif",
+  "bytes": 81862
+ },
+ "https://cdn.prod.website-files.com/67475fe52d93a89750e90880/6750ab31b5b80ab1eb42b1b8_img-el-barrio-1.avif": {
+  "archivo": "08e3d07c792a.avif",
+  "tipo": "image/avif",
+  "bytes": 310162
+ },
+ "https://cdn.prod.website-files.com/67475fe52d93a89750e90880/6750ab2f1cc59467e7f63cc8_amenities-deporte.avif": {
+  "archivo": "316dcc5b9477.avif",
+  "tipo": "image/avif",
+  "bytes": 119447
+ },
+ "https://cdn.prod.website-files.com/67475fe52d93a89750e90880/6750ab2f10d7b20f4b7ffd12_amenities-gimnasio.avif": {
+  "archivo": "e3ab48438cfa.avif",
+  "tipo": "image/avif",
+  "bytes": 34373
+ },
+ "https://cdn.prod.website-files.com/67475fe52d93a89750e90880/6750ab2ff72bc1f346d27959_amenities-wavegarden.avif": {
+  "archivo": "c2d6a8b5cdbb.avif",
+  "tipo": "image/avif",
+  "bytes": 150525
+ },
+ "https://cdn.prod.website-files.com/67475fe52d93a89750e90880/6750ab30721301fa57eadcf5_amenities-senderismo.avif": {
+  "archivo": "4e283a7147f4.avif",
+  "tipo": "image/avif",
+  "bytes": 116111
+ },
+ "https://fonts.googleapis.com/css?family=Faculty+Glyphic:300,400,500,600,700%7CGolos+Text:300,400,500,600,700": {
+  "archivo": "f77d67793f62.css",
+  "tipo": "text/css",
+  "bytes": 6395
+ },
+ "https://cdn.prod.website-files.com/67475fe52d93a89750e90880/6750ab2fb597aab53d949fef_amenities-eventos.avif": {
+  "archivo": "59377f455d8d.avif",
+  "tipo": "image/avif",
+  "bytes": 104207
+ },
+ "https://cdn.prod.website-files.com/67475fe52d93a89750e90880/6750ab319400f39fa3ae15b4_img-home-1.avif": {
+  "archivo": "0f2a6d545fdd.avif",
+  "tipo": "image/avif",
+  "bytes": 129857
+ },
+ "https://cdn.prod.website-files.com/67475fe52d93a89750e90880/6750ab31dd39f01b5fdad490_img-feature-4.avif": {
+  "archivo": "c6c3cad34afd.avif",
+  "tipo": "image/avif",
+  "bytes": 314214
+ },
+ "https://cdn.prod.website-files.com/67475fe52d93a89750e90880/6750ab303d94108b99f0eadb_amenities-piscinas.avif": {
+  "archivo": "06a915105cd7.avif",
+  "tipo": "image/avif",
+  "bytes": 202410
+ },
+ "https://cdn.prod.website-files.com/67475fe52d93a89750e90880/6750ab3052cd748dc1c84f40_amenities-beach-club.avif": {
+  "archivo": "00ffdf2f7436.avif",
+  "tipo": "image/avif",
+  "bytes": 317506
+ },
+ "https://cdn.prod.website-files.com/67475fe52d93a89750e90880/67532239023300799132318b_hero-intro-4%20(1).avif": {
+  "archivo": "23810efb5852.avif",
+  "tipo": "image/avif",
+  "bytes": 193415
+ },
+ "https://cdn.prod.website-files.com/67475fe52d93a89750e90880/67584b97ad25330370655ca0_img-ubicacion.avif": {
+  "archivo": "933c9037088f.avif",
+  "tipo": "image/avif",
+  "bytes": 168956
+ },
+ "https://cdn.prod.website-files.com/67475fe52d93a89750e90880/6750ab306e1c4cb05d1d3f8e_amenities-laguna-interior.avif": {
+  "archivo": "174715728705.avif",
+  "tipo": "image/avif",
+  "bytes": 178273
+ },
+ "https://cdn.prod.website-files.com/67475fe52d93a89750e90880/6750ab306c9942f3746446d1_amenities-seguridad.avif": {
+  "archivo": "3483416fb33c.avif",
+  "tipo": "image/avif",
+  "bytes": 155806
+ },
+ "https://fonts.gstatic.com/s/golostext/v7/q5uCsoe9Lv5t7Meb31EcExN8hA.woff2": {
+  "archivo": "83cb19f9b7b0.woff2",
+  "tipo": "font/woff2",
+  "bytes": 37916
+ },
+ "https://fonts.gstatic.com/s/facultyglyphic/v4/RrQIbot2-iBvI2mYSyKIrcgoBuQ4HO2E.woff2": {
+  "archivo": "0fbe7024f7df.woff2",
+  "tipo": "font/woff2",
+  "bytes": 19512
+ },
+ "https://forms.hsforms.com/embed/v3/counters.gif?key=collected-forms-embed-js-form-bind&count=2": {
+  "archivo": "b9f5153560dc.gif",
+  "tipo": "image/gif",
+  "bytes": 35
+ },
+ "https://www.google.com/pagead/1p-user-list/16813218544/?random=1794681784827&cv=11&fst=1794679200000&bg=ffffff&guid=ON&async=1&en=gtag.config&gtm=45be6bb1h1v9212825474za208zb9201720628zd9201720628xecxf1&gcd=13l3l3l3l1l1&dma=0&tag_exp=115938465~115938468~118897920~118897930~120213116~120385423~120412528~120420414~120469145~120469153~121191155~121246026~121246034~123988485&u_w=1440&u_h=900&url=https%3A%2F%2Fwww.elnido.uy%2F&rcb=17&frm=0&tiba=El%20Nido%20-%20Naturaleza%20y%20lujo%20en%20un%20solo%20lugar.&did=dZGVlNj%2CdYWYxNW%2CdZTQ1Zm&gdid=dZGVlNj.dYWYxNW.dZTQ1Zm&hn=www.googleadservices.com&npa=0&pscdl=noapi&auid=122199793.1794681784&uaa=x86&uab=64&uafvl=HeadlessChrome%3B159.0.8154.6%7CNot%252FA)Brand%3B8.0.0.0%7CChromium%3B159.0.8154.6&uamb=0&uam=&uap=Linux&uapv=&uaw=0&data=event%3Dgtag.config&ept=9&rfmt=3&fmt=3&is_vtc=1&cid=CAQS0wEAogo4dRUBlZT5Bi3jT__5P7Psd6JeeTGf8oKgggwLt-nGnIu7s6iljGFNESyPQQ_RVyMnyWwEnIA3TcEcHQDv1Y-wp0TekhrLCRAJ8XXUGXWdw9Wr2_BrU47uCaTBe6Lod6_AuIGyfy9KmuYcybFX6dxTNrlxpVHdz0FhySNQKWK5VhthAwuthdAQddaGx-XUlgz-G106i8vPa1990vPiuK-TRAcE9l0-xDMiVM0aAPGHf-BZxK7ETax0JCa5dlA9MdMZgkfd5f30pG1ZTKkf3L7I&random=528441161&rmt_tld=0&ipr=y": {
+  "archivo": "38df72d985c7.gif",
+  "tipo": "image/gif",
+  "bytes": 42
+ },
+ "https://track.hubspot.com/__ptq.gif?k=1&sd=1440x900&cd=24-bit&cs=UTF-8&ln=es-uy&bfp=eb8eabd8d764f8c80e838e15c069dd09&v=1.1&a=48441824&pu=https%3A%2F%2Fwww.elnido.uy%2F&t=El+Nido+-+Naturaleza+y+lujo+en+un+solo+lugar.&cts=1794681784910&vi=75a779d6d1789d1fe112b72222c3c5b1&nc=true&u=248689368.75a779d6d1789d1fe112b72222c3c5b1.1794681784908.1794681784908.1794681784908.1&b=248689368.1.1794681784908&cc=15": {
+  "archivo": "f0cf2c747d52.gif",
+  "tipo": "image/gif",
+  "bytes": 45
+ },
+ "https://challenges.cloudflare.com/cdn-cgi/challenge-platform/h/b/ci/a5a828e0cbaef9b8/1794681784836/CgImV0gIlNNYSfEw30XOHrGQOseSpXT3fEG4lwXluDUCsx5VYxs2SDle-XrAV4BeU0AdQOBw835ZJ-m6-JMC_r3v3rgncVyClBFNgA-5tRUmEst7uYyEk2MJj-EySQHJE3NLqh4depjeQrBdVqefGVeEu22Z7teonEq9IzA7sisw4QEQa_z7EbkqbT3Ldp58pC-I61q_mkdUU38U5imeWLOchAEli-NSNKoHDkjMLNRemB5i1sDe10HS0jOyrCD2mCjNh2Pc9WbGGWZ9PURlP5YRJbsrUqN0vdb1CeC_61E2114FrBcVmEVwbjsif0gD_CksxgeimeW2lHQx-8HIN05R6ZNI9-SQT42ReI4nCKThAZQ0dD64mFaG7EeMXLsF1bI1CL2twptx_BH8ZpG-zN7EtQydwtsqFtosuDyNMPFrwQcPHt7fM8j413Dg63J6k2kmBQgDtP3JoZiEU640ub-Lg8Kf3TKiX6NJpWuAe5UDd0s_1FQbjc3uGKNxdgn9axAjYzl7hQ0ndhbFjYDmmoKhIr6D8pZia61k6bF8AWaIORU6HPV1lj8YSpjQmpIT3ZFn7puI6NuXVfyY1Zz0d4U": {
+  "archivo": "850c50ab134e.png",
+  "tipo": "image/png",
+  "bytes": 1184
+ },
+ "https://challenges.cloudflare.com/cdn-cgi/challenge-platform/h/b/ci/a5a8292c3f93f9b8/1794681796833/Cvpux0bYDYiGIAoNlj5nVbn1hsofhQynXa-bBZbXF26wC3cFrTXUvKtcaVIGiE30qKPVyMMqcFO3Z210iOkIaXb2f_ktoFpHcdO_z1287w2qMd8Z6S1DZaBISpz-1VOhduHe6lHt-FWk2MgJ8FbQvuF11h-UY1-6b9R7u82o6kiRNlF7WgBBOhfRuSaLdRj_r8OY5K6627_09jtcHt1j7M4K7SYjsYSlX1XB5SEAfl88saBSRRGSuqQ5QImBopatDLTuG1cgmx-HIUQ4Ns0fQKl-U4uxejSjxC51lNwMScWSmjEik-_ZQNFAT726k1z8UHY7qIERV3_8s5hYWKWwedmoEyBR3cA1CGu2NUP6xMF6XsBoQF5apet45PkegAnXf7CC6A6oSv1zLIZ4jNElRRkzLQ-czTjUvyi5-kVaxYDahX4s2-C5_5ECNsGXwuczHBG1_L4OACFx4bYfOfXwYHzqCgZfEWLjLaNtsJpfiPtUJHVqvXSGbWIlLdlt_n300p49SpO_Pq4ACiakX1MA1Imtx4CSP_yhtth5dMjpheFWBygjuVuZfTmaK7x0UxCCs6Lou94QfCAtf0SvcNKgqx4j": {
+  "archivo": "4d1586a1dd85.png",
+  "tipo": "image/png",
+  "bytes": 148
+ },
+ "https://challenges.cloudflare.com/cdn-cgi/challenge-platform/h/b/ci/a5a829759ae1f9b8/1794681808562/CrxSRcpuVdQwrgeLI5IHDkLhJFKf34gfl6jtfDrsjlmHNSYcwOs1h4TDVzBb_xgEMshfbUDDZP4k9zSgggtLd6VnIRBrl2eTfBEID4SoGMwUhaXk5Vd_NAUyg35pMbiGvTET8va_-dW7cOrLZmKNWnw9qeAjDwSbGynQwgbAZ08bAZFxq0R2g2mMWmVsUdXKmdICaaSUEZ_d8ji15gQ39YXbJEEoKAg2Djee5cXCd_wfeuGaz2pRQBKqCT8iOnpY1PoWBJuoNAQsDMzTM7QPNBSc3YR8tHO-PJ2ZRLTVryS7AT_d4EQjw9vbm4kEpqIIe_vAkSYHwBOcUCbo9lDm7m9AV81z3a3Ak1w4jogBj3yxG2W6wxnUv-F_yd4J8lyQwAJjUYfztQIpf1nXi8C7mAU6AX-k1FxUXLwWYTGdwN88meqrjJPucnf5A6cF6NBwp68lxsiJdQHVddASrKFub5QZtnjMmXTh5WAhqvIOBZl7ma3fx2Adow3LgjJPy8r_2-rV8SjY5dWbQuxMTO2oSlr4Kpg0adu9AIIc40OzXv6TEqePSD3AdhrlG1a38GHhvvJRLdPGjvZxcS8DJHJ8LeG_Kr0": {
+  "archivo": "21e52f896df1.png",
+  "tipo": "image/png",
+  "bytes": 170
+ },
+ "https://challenges.cloudflare.com/cdn-cgi/challenge-platform/h/b/ci/a5a829c04887f9b8/1794681820539/CqtIwv39qWm5n_GQXZGn5I7ijR8MU40YeHvo2dnEPIGHmjWUJxcxFhcnX_S-UTvab6X2J5QB36Of2jEmJy5eIkndvG5DTR7NH_RyzSI3dBC4AfJ7xykjgWeN162HeP4vq1E0UPkuo2_FHKTI23vldOjZhP83pV660sKemjZHLVbXrShVwwGF9OA8m0TB6pV3XeCLJ8pO81y1h9dNbdqOOYjxkIn78nyoloI3SkJbULG9Apc53A6tHzZ58nmyU8E5VpQX2ZTRNNAe4TGeu1IACJCK8kA5vCKT6lTOzKMnA5rmlbNcjTBZyB0Z865K_8EWlI3x5XLSAofkQ6hhcPvHveOoPalaeALKf36Uh7XpgVXT9GUvuRtUSoxmsm3ksA4-TqS2yaDgPPa27iWrK3a5MQNCI30DClX70UV-cbTE6Os2AF4WnsHjkdbnOBTqzepuqfDKGn8EnFZfJKMjLh-BtRevVT59FJoLa-KmMbopwnjSHOdX8iy9sPFLEh7uOUXBNFS7eUD7FPv9B4QLAxrE9Iiag6MxAFVS-3XGNOAxxj-XMRu7O6qZyb_YpxJzCaItYTbs22JcyWRzqKP7wxwb-Q": {
+  "archivo": "74576a614e53.png",
+  "tipo": "image/png",
+  "bytes": 4106
+ },
+ "https://challenges.cloudflare.com/cdn-cgi/challenge-platform/h/b/ci/a5a82a0a689cf9b8/1794681832498/CpIhHWQWD3yUNnqjEhVJtalTYnKsrkxfk1e9t7mWsCqmzauHso8yhTuZJGItG9bnU4XwZKkbmccSmATkaDXsfbWUEOpfRK61umat3IwGa42WFKMzrXW1fcbRjh9j_IUNFu2oPDU40Q0rneHLMNWZ2oYDt6EgoJkzUBi7_Fua8OyIiR5GXyTXVasQGEcYCqRXF_zLTOPwDF0XwG3_4uEtFQPDcEsYqJtgJhvLB_5JyWWv4DfW7S3AsWCi3yfg6kbw3c1ViscAbO4yQcXi-rxmYXS4raJpCtdOeur8OKuuHPRxOsSJd2t5OuIifqcNqfn854FxBrTmJUFo2L8CRS0NfqVr32x0vQ1JGyzD188FuE95FGy4_h4WBgzDIn5ntCbGb3swqbZUmsJ82Yla4M5WjU2blEQvXXfDXG3-XIDKxleMvHU1sIg5fq7RCEtmrdm82SuVbgirbHOibbdkyNm-pN9YWs6tUBxE9bQzO_h4REvSiOxyaTxigDNzYezu-5hXZc2O--7gvgUQFLtQpLMZ3-bamSnYw3ew-60K-82sT1oupnaSd3pUh4awKk-EV8fupFPaS8v63fWLfbTJmlBNL-Q": {
+  "archivo": "0d3786fa877f.png",
+  "tipo": "image/png",
+  "bytes": 305
+ },
+ "https://cdn.prod.website-files.com/67475fe52d93a89750e90880/6750ab3252cd748dc1c85038_img-home-wavegarden-2.avif": {
+  "archivo": "966d8877fc8c.avif",
+  "tipo": "image/avif",
+  "bytes": 180518
+ },
+ "https://cdn.prod.website-files.com/67475fe52d93a89750e90880/6750ab317141c79dc22ad0f5_img-form.avif": {
+  "archivo": "dd58136c1dd5.avif",
+  "tipo": "image/avif",
+  "bytes": 71472
+ },
+ "https://challenges.cloudflare.com/cdn-cgi/challenge-platform/h/b/ci/a5a82a569d95f9b8/1794681844599/CjDD40ELQ6Srleiz2ySSAJQuV311tksptQRaoQT7juwTjGYXqIhhm3NdI4L_K6V4TAiNaWhaS_6Tlte88g5ej0OdeSuoj7c0ma12oPkDCzHIMMspgTiMYybmBJZvQPWkuOgB-xTHNr5FlSZiRNNSNbAbKaXmWi1k9U2LgBo-URMVZDYPSjW-7eTxnFdBf0xbJUqujx-aEWaQkCUMcGQtocMaS0Prlt1J4rVhGp6_98hBTDwwKQgGMKWZzsXBeFqTGQ7QufaoBh8xjOhQsynsKrPZJKugholaeF0zEFt2qvPbKCZIBUTNmCxLvUr868WnhfX52_Qk3WV6PEj6-aerOB2MbFlpAiA2pvxoM-WdIgolaFlfkcylodvngfezbtLvUu3hQgx8-vmwcF8hbA8CkivxSX3BpRIhmYwLu5JIl7SbtqrjLR0rQZspXS52upvBg6B3VuaapHIYs8xXBLyk-6FQ9TdLQuMUG7SM4QxOsquceEKzaWVFAdhs_p65G3xRiWIqT4D8O8jxQUFDF3L_of0VgNOK0sWoYq8QVPyjBZJKQ1zpGyUZhr0EoJK4eAXpxFooyxbZaFV2-beGPfbCzA": {
+  "archivo": "6df80e1c1abc.png",
+  "tipo": "image/png",
+  "bytes": 3446
+ },
+ "https://cdn.prod.website-files.com/67475fe52d93a89750e90880/6750ab30db3ab6b97421f26b_hero-el-barrio.avif": {
+  "archivo": "8928be852c4b.avif",
+  "tipo": "image/avif",
+  "bytes": 285244
+ },
+ "https://cdn.prod.website-files.com/67475fe52d93a89750e90880/6750ab32f90bdd949bc6fd85_img-masterplan.avif": {
+  "archivo": "01600a73575e.avif",
+  "tipo": "image/avif",
+  "bytes": 127995
+ },
+ "https://cdn.prod.website-files.com/67475fe52d93a89750e90880/6750ab302faf9a90e1fa8ab2_img-el-barrio-3.avif": {
+  "archivo": "aff98b23105c.avif",
+  "tipo": "image/avif",
+  "bytes": 197511
+ },
+ "https://cdn.prod.website-files.com/67475fe52d93a89750e90880/6750ab30ea7ec4ccbc154299_img-beach-club-1.avif": {
+  "archivo": "3f7ff040efa1.avif",
+  "tipo": "image/avif",
+  "bytes": 182980
+ },
+ "https://cdn.prod.website-files.com/67475fe52d93a89750e90880/6750ab31da604fd5b7d10c19_img-feature-6.avif": {
+  "archivo": "64f1feae00e7.avif",
+  "tipo": "image/avif",
+  "bytes": 198397
+ },
+ "https://track.hubspot.com/__ptq.gif?k=1&sd=1440x900&cd=24-bit&cs=UTF-8&ln=es-uy&v=1.1&a=48441824&pu=https%3A%2F%2Fwww.elnido.uy%2Fel-barrio&t=El+Nido+-+El+barrio&cts=1794681853530&vi=75a779d6d1789d1fe112b72222c3c5b1&nc=false&u=248689368.75a779d6d1789d1fe112b72222c3c5b1.1794681784908.1794681784908.1794681784908.1&b=248689368.2.1794681784908&cc=15": {
+  "archivo": "28527085f68c.gif",
+  "tipo": "image/gif",
+  "bytes": 45
+ },
+ "https://www.google.com/pagead/1p-user-list/16813218544/?random=1794681853623&cv=11&fst=1794679200000&bg=ffffff&guid=ON&async=1&en=gtag.config&gtm=45892e6bc0h2v9212825474za20czb9201720628zd9201720628xecxf4&gcd=13l3l3l3l1l1&dma=0&tag_exp=115938465~115938468~118897920~118897930~120213116~120385423~120412528~120420416~120469145~120469153~121191155~121246026~121246034~123785232~123988486&u_w=1440&u_h=900&url=https%3A%2F%2Fwww.elnido.uy%2Fel-barrio&rcb=10&frm=0&tiba=El%20Nido%20-%20El%20barrio&did=dZGVlNj%2CdYWYxNW%2CdZTQ1Zm&gdid=dZGVlNj.dYWYxNW.dZTQ1Zm.dNzQzZD&hn=www.googleadservices.com&npa=0&pscdl=noapi&auid=122199793.1794681784&uaa=x86&uab=64&uafvl=HeadlessChrome%3B159.0.8154.6%7CNot%252FA)Brand%3B8.0.0.0%7CChromium%3B159.0.8154.6&uamb=0&uam=&uap=Linux&uapv=&uaw=0&gtb=2&data=event%3Dgtag.config&gap.gtb=2&ept=9&rfmt=3&fmt=3&is_vtc=1&cid=CAQS4QEAogo4dVS_RzwA4yUFIWeFMIy-kfP1kM8ijvtOvPt4f9PeO5tgFhlJ2rHm32h9tWrupY9Im9kUJMmMmIUdqkqByMSttJsagS8OeWveq3xycW6dUskO6F48AFCtdLJTAF7tm8dGgDtwp7eelZIS8TI_Om33kk42Nr9db7P0MsvtA_pLulQofYtvCWjbdVPm6q0qxqqNsbtHyS8mjhXPEjq_jioxiT8S3wSayJ_qUkXDvcsAaBzdUHkO0G8Dp-c1dp0Go2U5IsuBOgRzAa8riGrB_wU2qJjCf84k59F6KXCWhm4&random=495550239&rmt_tld=0&ipr=y": {
+  "archivo": "4005186f0e09.gif",
+  "tipo": "image/gif",
+  "bytes": 42
+ },
+ "https://cdn.prod.website-files.com/67475fe52d93a89750e90880/6750ab313f33bb6e6ece5164_img-feature-1.avif": {
+  "archivo": "fe665b333d56.avif",
+  "tipo": "image/avif",
+  "bytes": 246988
+ },
+ "https://cdn.prod.website-files.com/67475fe52d93a89750e90880/6750ab30b0a239505bd4ad58_img-feature-3.avif": {
+  "archivo": "2e84e572292c.avif",
+  "tipo": "image/avif",
+  "bytes": 189200
+ },
+ "https://cdn.prod.website-files.com/67475fe52d93a89750e90880/67f82f62648116330da9a01e_image%20(1).avif": {
+  "archivo": "6085e1b9b49a.avif",
+  "tipo": "image/avif",
+  "bytes": 111300
+ },
+ "https://cdn.prod.website-files.com/67475fe52d93a89750e90880%2F67520d9525969433d7fbd500_wavegarden2-poster-00001.jpg": {
+  "archivo": "df31a249b2fe.jpg",
+  "tipo": "image/jpeg",
+  "bytes": 30944
+ },
+ "https://cdn.prod.website-files.com/67475fe52d93a89750e90880/674dcb6c6731faaf63096562_wavegarden.svg": {
+  "archivo": "cbbd633a4eb3.svg",
+  "tipo": "image/svg+xml",
+  "bytes": 49490
+ },
+ "https://cdn.prod.website-files.com/67475fe52d93a89750e90880/674dc914020b87f84cbc46dd_wavegarden.avif": {
+  "archivo": "315b05d8bdcd.avif",
+  "tipo": "image/avif",
+  "bytes": 170433
+ },
+ "https://cdn.prod.website-files.com/67475fe52d93a89750e90880/6750ab32a01f8b950ba24d83_img-wavegarden-3.avif": {
+  "archivo": "ef30f61156a8.avif",
+  "tipo": "image/avif",
+  "bytes": 213593
+ },
+ "https://track.hubspot.com/__ptq.gif?k=1&sd=1440x900&cd=24-bit&cs=UTF-8&ln=es-uy&v=1.1&a=48441824&pu=https%3A%2F%2Fwww.elnido.uy%2Fwavegarden&t=El+Nido+-+Wavegarden&cts=1794681867595&vi=75a779d6d1789d1fe112b72222c3c5b1&nc=false&u=248689368.75a779d6d1789d1fe112b72222c3c5b1.1794681784908.1794681784908.1794681784908.1&b=248689368.3.1794681784908&cc=15": {
+  "archivo": "bb39f19abe8f.gif",
+  "tipo": "image/gif",
+  "bytes": 45
+ },
+ "https://cdn.prod.website-files.com/67475fe52d93a89750e90880/6750ab329400f39fa3ae1710_img-wavegarden-2.avif": {
+  "archivo": "5f92e15ee763.avif",
+  "tipo": "image/avif",
+  "bytes": 108069
+ },
+ "https://www.google.com/pagead/1p-user-list/16813218544/?random=1794681867686&cv=11&fst=1794679200000&bg=ffffff&guid=ON&async=1&en=gtag.config&gtm=45892e6bc0h2v9212825474za20czb9201720628zd9201720628xecxf4&gcd=13l3l3l3l1l1&dma=0&tag_exp=115938465~115938468~118897920~118897930~120213116~120385422~120412526~120420416~120469145~120469153~121191155~121246026~121246034~123988486&u_w=1440&u_h=900&url=https%3A%2F%2Fwww.elnido.uy%2Fwavegarden&rcb=13&frm=0&tiba=El%20Nido%20-%20Wavegarden&did=dZGVlNj%2CdYWYxNW%2CdZTQ1Zm&gdid=dZGVlNj.dYWYxNW.dZTQ1Zm.dNzQzZD&hn=www.googleadservices.com&npa=0&pscdl=noapi&auid=122199793.1794681784&uaa=x86&uab=64&uafvl=HeadlessChrome%3B159.0.8154.6%7CNot%252FA)Brand%3B8.0.0.0%7CChromium%3B159.0.8154.6&uamb=0&uam=&uap=Linux&uapv=&uaw=0&gtb=2&data=event%3Dgtag.config&gap.gtb=2&ept=9&rfmt=3&fmt=3&is_vtc=1&cid=CAQS4QEAogo4dZm-OEOhW5RSc-Im5u1qBF2E7Wdsx01PyENwD1hEuTbj7E4YT5evqJEaL-vcNpuWWzBShqcmWz2Tarr2RyAmIqjp_SqF8_yjgaB0PUJKR-yGoaxyqpsXTiwE7ZDfy0e7VMkGqFZbu9mNX_8bD2Z55xCSq3gUzOk0_fBQkAJpv3tiQlUBHcv0JDSEloLUAmVzivtjI4BRij7T0adI46HCDsqkRMJOFUZ4VWD9CMLTxaWhNEHWaKOZpitteJ1atkYEAXiGOyIyiudrSgUHGPja1mrERNY_XmO85gjgEW4&random=3890292664&rmt_tld=0&ipr=y": {
+  "archivo": "66444e36464d.gif",
+  "tipo": "image/gif",
+  "bytes": 42
+ },
+ "https://cdn.prod.website-files.com/67475fe52d93a89750e90880/6750ab30c38bf49219dba353_hero-intro-1.avif": {
+  "archivo": "df7865cf17ef.avif",
+  "tipo": "image/avif",
+  "bytes": 196346
+ },
+ "https://cdn.prod.website-files.com/67475fe52d93a89750e90880/6750e4202fae30299b0ccd4e_img-carrousel-7.avif": {
+  "archivo": "69d2e0f50f3b.avif",
+  "tipo": "image/avif",
+  "bytes": 145358
+ },
+ "https://cdn.prod.website-files.com/67475fe52d93a89750e90880/6750e4203e42e1b6bcaad62e_img-carrousel-4.avif": {
+  "archivo": "af18f4898782.avif",
+  "tipo": "image/avif",
+  "bytes": 164574
+ },
+ "https://cdn.prod.website-files.com/67475fe52d93a89750e90880/6750e4208f29caca0034230d_img-carrousel-6.avif": {
+  "archivo": "a4481fcfef44.avif",
+  "tipo": "image/avif",
+  "bytes": 150844
+ },
+ "https://cdn.prod.website-files.com/67475fe52d93a89750e90880/6750e4202fb57c4103c7ebe4_img-carrousel-1.avif": {
+  "archivo": "f1166bae6847.avif",
+  "tipo": "image/avif",
+  "bytes": 155782
+ },
+ "https://cdn.prod.website-files.com/67475fe52d93a89750e90880/6750e420dc14fa7c24c2183a_img-carrousel-2.avif": {
+  "archivo": "3b40b445210d.avif",
+  "tipo": "image/avif",
+  "bytes": 171259
+ },
+ "https://cdn.prod.website-files.com/67475fe52d93a89750e90880/6750e420dc6b5509b9d935be_img-carrousel-5.avif": {
+  "archivo": "6c5caec8765f.avif",
+  "tipo": "image/avif",
+  "bytes": 152217
+ },
+ "https://cdn.prod.website-files.com/67475fe52d93a89750e90880/6750e42077c88ef743b98ac9_img-carrousel-10.avif": {
+  "archivo": "dd60ebfcf1b7.avif",
+  "tipo": "image/avif",
+  "bytes": 177083
+ },
+ "https://cdn.prod.website-files.com/67475fe52d93a89750e90880/6750e420dc14fa7c24c217f9_img-carrousel-8.avif": {
+  "archivo": "9ef3c39d78ab.avif",
+  "tipo": "image/avif",
+  "bytes": 116304
+ },
+ "https://cdn.prod.website-files.com/67475fe52d93a89750e90880/6750e420ba13badcd6c87693_img-carrousel-3.avif": {
+  "archivo": "c8688fce8113.avif",
+  "tipo": "image/avif",
+  "bytes": 160350
+ },
+ "https://cdn.prod.website-files.com/67475fe52d93a89750e90880/6750e42176edc9514516e4a5_img-carrousel-9.avif": {
+  "archivo": "fbdc470970da.avif",
+  "tipo": "image/avif",
+  "bytes": 204391
+ },
+ "https://cdn.prod.website-files.com/67475fe52d93a89750e90880/6750ab31b5b80ab1eb42b0f2_img-beach-club-2.avif": {
+  "archivo": "185ca0f03fc4.avif",
+  "tipo": "image/avif",
+  "bytes": 280505
+ },
+ "https://cdn.prod.website-files.com/67475fe52d93a89750e90880/6750ab313a7eda7dfd6dd74d_img-feature-5.avif": {
+  "archivo": "bdffd70b5fd4.avif",
+  "tipo": "image/avif",
+  "bytes": 208576
+ },
+ "https://cdn.prod.website-files.com/67475fe52d93a89750e90880/67531adac40978db79d8b99a_img-beach-club-1.avif": {
+  "archivo": "4c50f06243f7.avif",
+  "tipo": "image/avif",
+  "bytes": 179095
+ },
+ "https://track.hubspot.com/__ptq.gif?k=1&sd=1440x900&cd=24-bit&cs=UTF-8&ln=es-uy&v=1.1&a=48441824&pu=https%3A%2F%2Fwww.elnido.uy%2Fbeach-club&t=El+Nido+-+Beach+Club&cts=1794681896091&vi=75a779d6d1789d1fe112b72222c3c5b1&nc=false&u=248689368.75a779d6d1789d1fe112b72222c3c5b1.1794681784908.1794681784908.1794681784908.1&b=248689368.4.1794681784908&cc=15": {
+  "archivo": "0e3929592348.gif",
+  "tipo": "image/gif",
+  "bytes": 45
+ },
+ "https://www.google.com/pagead/1p-user-list/16813218544/?random=1794681896204&cv=11&fst=1794679200000&bg=ffffff&guid=ON&async=1&en=gtag.config&gtm=45892e6bc0h2v9212825474za20czb9201720628zd9201720628xecxf4&gcd=13l3l3l3l1l1&dma=0&tag_exp=115938465~115938469~118897920~118897930~120213116~120385422~120412528~120420414~120469145~120469153~121191155~121246026~121246034~123988485&u_w=1440&u_h=900&url=https%3A%2F%2Fwww.elnido.uy%2Fbeach-club&rcb=4&frm=0&tiba=El%20Nido%20-%20Beach%20Club&did=dZGVlNj%2CdYWYxNW%2CdZTQ1Zm&gdid=dZGVlNj.dYWYxNW.dZTQ1Zm.dNzQzZD&hn=www.googleadservices.com&npa=0&pscdl=noapi&auid=122199793.1794681784&uaa=x86&uab=64&uafvl=HeadlessChrome%3B159.0.8154.6%7CNot%252FA)Brand%3B8.0.0.0%7CChromium%3B159.0.8154.6&uamb=0&uam=&uap=Linux&uapv=&uaw=0&gtb=2&data=event%3Dgtag.config&gap.gtb=2&ept=9&rfmt=3&fmt=3&is_vtc=1&cid=CAQS4QEAogo4dT9cGC9jA4dT0y5uaQfIQXWlO2Mi8KWfkIQn7c7gMpNNf3POcBRcq1WID8X3j7IeEVCGT2egx1LWeIqKDu2NRRDxmpspYm5v-dVy8ylZsuMhQI0BodkY0Ylqujt4Fc8UlW2CE1ERYHqlU-4Bc0yaDpMf_Nmrr9ag4x6PfwMKeolnTqpfzR82B-Gb5x_2rWqtnhCxWCjPRvJP1ZGn72LTT7RpaQuq0EIo4F_ZSNopy5NueheP5oCkSaNNcv6VR7NTF-CZVaEZkUNdiCpiYNHPsuMGSMiEuiAu40JL6LE&random=1063200246&rmt_tld=0&ipr=y": {
+  "archivo": "020053d4c296.gif",
+  "tipo": "image/gif",
+  "bytes": 42
+ },
+ "https://cdn.prod.website-files.com/67475fe52d93a89750e90880/6750ae25a6d2c677f6575e78_beach%20club%20hero%20mobile.avif": {
+  "archivo": "154cedfa8373.avif",
+  "tipo": "image/avif",
+  "bytes": 126163
+ },
+ "https://cdn.prod.website-files.com/67475fe52d93a89750e90880/6750ab324af5e4ee69c2426c_img-pdf.avif": {
+  "archivo": "7d4365878695.avif",
+  "tipo": "image/avif",
+  "bytes": 99077
+ },
+ "https://cdn.prod.website-files.com/67475fe52d93a89750e90880/6750ab31a98dc501ec68b8de_img-brochure.avif": {
+  "archivo": "132f0094ebf8.avif",
+  "tipo": "image/avif",
+  "bytes": 138676
+ },
+ "https://track.hubspot.com/__ptq.gif?k=1&sd=1440x900&cd=24-bit&cs=UTF-8&ln=es-uy&v=1.1&a=48441824&pu=https%3A%2F%2Fwww.elnido.uy%2Fdocumentacion&t=El+Nido+-+Documentos&cts=1794681910339&vi=75a779d6d1789d1fe112b72222c3c5b1&nc=false&u=248689368.75a779d6d1789d1fe112b72222c3c5b1.1794681784908.1794681784908.1794681784908.1&b=248689368.5.1794681784908&cc=15": {
+  "archivo": "c7ea175fac12.gif",
+  "tipo": "image/gif",
+  "bytes": 45
+ },
+ "https://www.google.com/pagead/1p-user-list/16813218544/?random=1794681910446&cv=11&fst=1794679200000&bg=ffffff&guid=ON&async=1&en=gtag.config&gtm=45892e6bc0h2v9212825474za20czb9201720628zd9201720628xecxf4&gcd=13l3l3l3l1l1&dma=0&tag_exp=100940092~115938466~115938469~118897920~118897930~120213116~120385423~120412528~120420414~120469145~120469153~121191155~121246026~121246034&u_w=1440&u_h=900&url=https%3A%2F%2Fwww.elnido.uy%2Fdocumentacion&rcb=16&frm=0&tiba=El%20Nido%20-%20Documentos&did=dZGVlNj%2CdYWYxNW%2CdZTQ1Zm&gdid=dZGVlNj.dYWYxNW.dZTQ1Zm.dNzQzZD&hn=www.googleadservices.com&npa=0&pscdl=noapi&auid=122199793.1794681784&uaa=x86&uab=64&uafvl=HeadlessChrome%3B159.0.8154.6%7CNot%252FA)Brand%3B8.0.0.0%7CChromium%3B159.0.8154.6&uamb=0&uam=&uap=Linux&uapv=&uaw=0&gtb=2&data=event%3Dgtag.config&gap.gtb=2&ept=9&rfmt=3&fmt=3&is_vtc=1&cid=CAQS4QEAogo4dax9R8XZ6hsjD7peVLa0ghI0ivJXOUfgLaCl7rQ3YdMV-VRjpwUbOltLx16_pIBnsu4xyTdiUif6hvFe-QblOrLeuuj3CIbcmXRTpMH37232wqPH-O38t58paN2EaQ5WPVI8HkcZWYIuXJMs_Gn7SQrASI5DijsujnFSaqxPrCW-Cup6WmOmPCvudwGFtGyHNdS8py7_RBGtM7N0mQSv5cawXqiyC-OqavjhcbnQfv9ZYi4Rdp8USkbHuUiHikPdx1ex9I0ELWXNbZoV8f68UEvTXPEPXCUwe963KYo&random=3665379253&rmt_tld=0&ipr=y": {
+  "archivo": "77c589f95b4b.gif",
+  "tipo": "image/gif",
+  "bytes": 42
+ },
+ "https://cdn.jsdelivr.net/npm/swiper@11/swiper-bundle.min.css": {
+  "archivo": "ad3413e19877.css",
+  "tipo": "text/css",
+  "bytes": 18454
+ },
+ "https://cdn.prod.website-files.com/677be34d804a87d0355e1322/677e7e07cbbfa4d85cba7dc4_nuestro%20disfrute.avif": {
+  "archivo": "b47f705a630b.avif",
+  "tipo": "image/avif",
+  "bytes": 129857
+ },
+ "https://cdn.prod.website-files.com/677be34d804a87d0355e1322/677e7e1c278cf714f4894d73_nuestra%20playa.avif": {
+  "archivo": "556bc5cebe4b.avif",
+  "tipo": "image/avif",
+  "bytes": 160350
+ },
+ "https://cdn.prod.website-files.com/677be34d804a87d0355e1322/677e7dfdb3dbbe98615c240a_nuestro%20parador.avif": {
+  "archivo": "731264832600.avif",
+  "tipo": "image/avif",
+  "bytes": 168487
+ },
+ "https://cdn.prod.website-files.com/677be34d804a87d0355e1322/677e7e10b30152c331bf5c1b_nuestro%20bosque.avif": {
+  "archivo": "bce85073ee7d.avif",
+  "tipo": "image/avif",
+  "bytes": 314214
+ },
+ "https://cdn.prod.website-files.com/67475fe52d93a89750e90880/677c384842228d3cd86e2819_background%402x.avif": {
+  "archivo": "3580a456a075.avif",
+  "tipo": "image/avif",
+  "bytes": 11091
+ },
+ "https://track.hubspot.com/__ptq.gif?k=1&sd=1440x900&cd=24-bit&cs=UTF-8&ln=es-uy&v=1.1&a=48441824&pu=https%3A%2F%2Fwww.elnido.uy%2Fexperiencia-360&t=El+Nido+-+Experiencia+360&cts=1794681923675&vi=75a779d6d1789d1fe112b72222c3c5b1&nc=false&u=248689368.75a779d6d1789d1fe112b72222c3c5b1.1794681784908.1794681784908.1794681784908.1&b=248689368.6.1794681784908&cc=15": {
+  "archivo": "1fc609d3d6a0.gif",
+  "tipo": "image/gif",
+  "bytes": 45
+ },
+ "https://www.google.com/pagead/1p-user-list/16813218544/?random=1794681923784&cv=11&fst=1794679200000&bg=ffffff&guid=ON&async=1&en=gtag.config&gtm=45892e6bc0h2v9212825474za20czb9201720628zd9201720628xecxf4&gcd=13l3l3l3l1l1&dma=0&tag_exp=100940090~115616985~115938466~115938468~118897920~118897930~119860442~120213116~120385423~120412528~120420414~120469145~120469153~121191155~121246026~121246034&u_w=1440&u_h=900&url=https%3A%2F%2Fwww.elnido.uy%2Fexperiencia-360&rcb=9&frm=0&tiba=El%20Nido%20-%20Experiencia%20360&did=dZGVlNj%2CdYWYxNW%2CdZTQ1Zm&gdid=dZGVlNj.dYWYxNW.dZTQ1Zm.dNzQzZD&hn=www.googleadservices.com&npa=0&pscdl=noapi&auid=122199793.1794681784&uaa=x86&uab=64&uafvl=HeadlessChrome%3B159.0.8154.6%7CNot%252FA)Brand%3B8.0.0.0%7CChromium%3B159.0.8154.6&uamb=0&uam=&uap=Linux&uapv=&uaw=0&gtb=2&data=event%3Dgtag.config&gap.gtb=2&ept=9&rfmt=3&fmt=3&is_vtc=1&cid=CAQS4QEAogo4dRqd34lnErj11TwtTKbMmXhek5nfRzejXkdzLCHopfAqPZJvwtHfJNnVRFuV6zbdMQMnek-sPqPYWT5FNbne13a0-52CMdRG9qBG2HAf4CnVZwv1mwhln5mplck9z47ZLEvGUtlpldu0Of8WnLjQk2obthNz9oByc2yA2-sWqN3wLApCHXrIDTcwpjsXxQ5vVF6ELgbj5kL7LAqTD4iLI9Tdevd1hv7RXo_RsPhXTcMHMPao4n1zhy2G72YDpBIbQiYJbwBsOjdQmmtvCb96sBjrjmIR3E9vonU4ZbI&random=141514132&rmt_tld=0&ipr=y": {
+  "archivo": "c7f4493a3c99.gif",
+  "tipo": "image/gif",
+  "bytes": 42
+ },
+ "https://track.hubspot.com/__ptq.gif?k=1&sd=1440x900&cd=24-bit&cs=UTF-8&ln=es-uy&v=1.1&a=48441824&pu=https%3A%2F%2Fwww.elnido.uy%2Freserva-tu-lote&t=El+Nido+-+Reserva+tu+lote&cts=1794681936929&vi=75a779d6d1789d1fe112b72222c3c5b1&nc=false&u=248689368.75a779d6d1789d1fe112b72222c3c5b1.1794681784908.1794681784908.1794681784908.1&b=248689368.7.1794681784908&cc=15": {
+  "archivo": "65bc83f1b466.gif",
+  "tipo": "image/gif",
+  "bytes": 45
+ },
+ "https://www.google.com/pagead/1p-user-list/16813218544/?random=1794681937039&cv=11&fst=1794679200000&bg=ffffff&guid=ON&async=1&en=gtag.config&gtm=45892e6bc0h2v9212825474za20czb9201720628zd9201720628xecxf4&gcd=13l3l3l3l1l1&dma=0&tag_exp=115938465~115938469~118897920~118897930~119863601~120213116~120385422~120412526~120420416~120469145~120469153~121191155~121246026~121246034~123988485~123988488&u_w=1440&u_h=900&url=https%3A%2F%2Fwww.elnido.uy%2Freserva-tu-lote&rcb=5&frm=0&tiba=El%20Nido%20-%20Reserva%20tu%20lote&did=dZGVlNj%2CdYWYxNW%2CdZTQ1Zm&gdid=dZGVlNj.dYWYxNW.dZTQ1Zm.dNzQzZD&hn=www.googleadservices.com&npa=0&pscdl=noapi&auid=122199793.1794681784&uaa=x86&uab=64&uafvl=HeadlessChrome%3B159.0.8154.6%7CNot%252FA)Brand%3B8.0.0.0%7CChromium%3B159.0.8154.6&uamb=0&uam=&uap=Linux&uapv=&uaw=0&gtb=2&data=event%3Dgtag.config&gap.gtb=2&ept=9&rfmt=3&fmt=3&is_vtc=1&cid=CAQS4QEAogo4dfgN_iosKNFRaAKGaBng8DGOsc38hjWk4LQP8APcoiWVqsgeDRPTKE6kJBhQEGoFPad1x1BD5YUlsD_Ca0oj3_TZlAW5ALFJDIxTdPcD5D82pzEu2DeAzp-zir8ObwCn4mT0DXjaZdYdC6CGBwdRQLW6ozfr84frz0Uu5-WXRA0tC6FFTG3qMpS1JxqbkC3VJwmQzecUhZyP56NLVfFR5oKqwFGo1SNRKKvoiloOPvVXsjmeMkD-03D9YDqMManrl3t9ktM5IuG4tTGXsUmKW47maPyl70ZFHAdrxi0&random=1158705604&rmt_tld=0&ipr=y": {
+  "archivo": "447e4b5b745d.gif",
+  "tipo": "image/gif",
+  "bytes": 42
+ },
+ "https://track.hubspot.com/__ptq.gif?k=1&sd=1440x900&cd=24-bit&cs=UTF-8&ln=es-uy&v=1.1&a=48441824&pu=https%3A%2F%2Fwww.elnido.uy%2Fexperiencia-360%2Fnuestro-disfrute&t=Experiencia+360+-+Nuestro+disfrute&cts=1794681950216&vi=75a779d6d1789d1fe112b72222c3c5b1&nc=false&u=248689368.75a779d6d1789d1fe112b72222c3c5b1.1794681784908.1794681784908.1794681784908.1&b=248689368.8.1794681784908&cc=15": {
+  "archivo": "6e67d1247038.gif",
+  "tipo": "image/gif",
+  "bytes": 45
+ },
+ "https://www.google.com/pagead/1p-user-list/16813218544/?random=1794681950318&cv=11&fst=1794679200000&bg=ffffff&guid=ON&async=1&en=gtag.config&gtm=45892e6bc0h2v9212825474za20czb9201720628zd9201720628xecxf4&gcd=13l3l3l3l1l1&dma=0&tag_exp=100940091~115616985~115938465~115938468~118897920~118897930~120213116~120385423~120412526~120420416~120469145~120469153~121191155~121246026~121246034&u_w=1440&u_h=900&url=https%3A%2F%2Fwww.elnido.uy%2Fexperiencia-360%2Fnuestro-disfrute&rcb=8&frm=0&tiba=Experiencia%20360%20-%20Nuestro%20disfrute&did=dZGVlNj%2CdYWYxNW%2CdZTQ1Zm&gdid=dZGVlNj.dYWYxNW.dZTQ1Zm.dNzQzZD&hn=www.googleadservices.com&npa=0&pscdl=noapi&auid=122199793.1794681784&uaa=x86&uab=64&uafvl=HeadlessChrome%3B159.0.8154.6%7CNot%252FA)Brand%3B8.0.0.0%7CChromium%3B159.0.8154.6&uamb=0&uam=&uap=Linux&uapv=&uaw=0&gtb=2&data=event%3Dgtag.config&gap.gtb=2&ept=9&rfmt=3&fmt=3&is_vtc=1&cid=CAQS4QEAogo4dXl_WIxK8tnk5RTuAyEU8tyVi2WNgC_EJKNt2XLeDXO2-mqvvmCxXyTK2KQNujH5dlBhe7Z_NCl4A5yk51lVX4KaCSGbhlv2ff0WoK9_bLZDdXT1ciEthaTuX5q9yP8UuwB4WNzGrSpJqypYOS1Kv5ZN4FvFnAQZfpvBvmSfscUbd-5KDWaS6Xu0zsafLmPFPyrH3Z7lKlzycnP7NM0s5fLk9lxxI0VdWPE6JIIVaVJlU37-RAXvELoIKz7PXsMuDP3KmSJ-5WDsypLsDGOxcNaraXxWbIaBa5J1Nrk&random=2916355364&rmt_tld=0&ipr=y": {
+  "archivo": "8407bd32fe5a.gif",
+  "tipo": "image/gif",
+  "bytes": 42
+ },
+ "https://fonts.googleapis.com/css2?family=Lato:wght@300;400;700&display=swap": {
+  "archivo": "7f8b179605c7.css",
+  "tipo": "text/css",
+  "bytes": 2470
+ },
+ "https://fonts.gstatic.com/s/lato/v25/S6uyw4BMUTPHjx4wXg.woff2": {
+  "archivo": "702e3b8ce946.woff2",
+  "tipo": "font/woff2",
+  "bytes": 23580
+ },
+ "https://storage.googleapis.com/bigdatahomes/frontend-static/public/trash-white-icon.svg": {
+  "archivo": "b90b9da614ed.svg",
+  "tipo": "image/svg+xml",
+  "bytes": 1995
+ },
+ "https://storage.googleapis.com/bigdatahomes/frontend-static/public/cardboard.png": {
+  "archivo": "308187591c02.png",
+  "tipo": "image/png",
+  "bytes": 5772
+ },
+ "https://storage.googleapis.com/bigdatahomes/frontend-static/public/floor-plan-icon.png": {
+  "archivo": "d823a456e30f.png",
+  "tipo": "image/png",
+  "bytes": 2378
+ },
+ "https://fonts.gstatic.com/s/lato/v25/S6u9w4BMUTPHh6UVSwiPGQ.woff2": {
+  "archivo": "b0cd9a1eee41.woff2",
+  "tipo": "font/woff2",
+  "bytes": 23040
+ },
+ "https://app.cloudpano.com/public/panolens/textures/transition/transition3.png": {
+  "archivo": "de963ae53831.png",
+  "tipo": "image/png",
+  "bytes": 104112
+ },
+ "https://cloudflarestream.com/2e52553a02831186dead663a322df936/audio/131/init.mp4?p=eyJ0eXBlIjoiaW5pdCIsInZpZGVvSUQiOiIyZTUyNTUzYTAyODMxMTg2ZGVhZDY2M2EzMjJkZjkzNiIsIm93bmVySUQiOjMwNTQ5OTM5LCJjcmVhdG9ySUQiOiIiLCJzdG9yYWdlUHJvdmlkZXIiOjQsInRyYWNrIjoiMzI3YWExNDIzNzkzMzJlMzFmMzY0ZTdlYzVkNDgzN2EiLCJyZW5kaXRpb24iOiI5NDc5NDI0MDAiLCJtdXhpbmciOiIxMDAzNDM5NTIwIn0&s=wqXCncOIAgQqJhTDuFUhP8OYw6E8w5hewqc9wrrDl8Kdw53Dp8KIwrPCpWfDuMO9OsK1": {
+  "archivo": "c3ac6f01bc14.mp4",
+  "tipo": "video/mp4",
+  "bytes": 761
+ },
+ "https://cloudflarestream.com/2e52553a02831186dead663a322df936/video/1080/init.mp4?p=eyJ0eXBlIjoiaW5pdCIsInZpZGVvSUQiOiIyZTUyNTUzYTAyODMxMTg2ZGVhZDY2M2EzMjJkZjkzNiIsIm93bmVySUQiOjMwNTQ5OTM5LCJjcmVhdG9ySUQiOiIiLCJzdG9yYWdlUHJvdmlkZXIiOjQsInRyYWNrIjoiYWU5OTkyNjc1MjQ2YThhMTE0Njc0YmFjYmI5YWRmMTQiLCJyZW5kaXRpb24iOiI5NDc5NDI1MDkiLCJtdXhpbmciOiIxMDAzNDM5NjI5In0&s=w6vCl0laJsK5w69ow48ywrjCj1vCucOswol6LWAfBkBjP8KPTAvCjMO8SWvDiA": {
+  "archivo": "01cdb96b4453.mp4",
+  "tipo": "video/mp4",
+  "bytes": 828
+ },
+ "https://cloudflarestream.com/2e52553a02831186dead663a322df936/audio/131/seg_1.mp4?p=eyJ0eXBlIjoic2VnbWVudCIsInZpZGVvSUQiOiIyZTUyNTUzYTAyODMxMTg2ZGVhZDY2M2EzMjJkZjkzNiIsIm93bmVySUQiOjMwNTQ5OTM5LCJjcmVhdG9ySUQiOiIiLCJzZWdtZW50RHVyYXRpb25TZWNzIjo0LjAwMzU1NTU1NTU1NTU1Niwic3RvcmFnZVByb3ZpZGVyIjo0LCJ0cmFjayI6IjMyN2FhMTQyMzc5MzMyZTMxZjM2NGU3ZWM1ZDQ4MzdhIiwicmVuZGl0aW9uIjoiOTQ3OTQyNDAwIiwibXV4aW5nIjoiMTAwMzQzOTUyMCJ9&s=w4JJew0Lw5HDryHCo0RQw5fDkcKqGcKoPsONKMKyCHFEwpYAK8KOGXYOVE4": {
+  "archivo": "b768b09c8bc6.mp4",
+  "tipo": "video/mp4",
+  "bytes": 65626
+ },
+ "https://cloudflarestream.com/2e52553a02831186dead663a322df936/video/1080/seg_1.mp4?p=eyJ0eXBlIjoic2VnbWVudCIsInZpZGVvSUQiOiIyZTUyNTUzYTAyODMxMTg2ZGVhZDY2M2EzMjJkZjkzNiIsIm93bmVySUQiOjMwNTQ5OTM5LCJjcmVhdG9ySUQiOiIiLCJzZWdtZW50RHVyYXRpb25TZWNzIjo0LCJzdG9yYWdlUHJvdmlkZXIiOjQsInRyYWNrIjoiYWU5OTkyNjc1MjQ2YThhMTE0Njc0YmFjYmI5YWRmMTQiLCJyZW5kaXRpb24iOiI5NDc5NDI1MDkiLCJtdXhpbmciOiIxMDAzNDM5NjI5In0&s=w4M2V8Kbwo7DtlMfZMKfw73DoHQtw5hzRkDCisOsH8OrfcOrw4AjC8OaaHMJwq0": {
+  "archivo": "3fa8d893ac6a.mp4",
+  "tipo": "video/mp4",
+  "bytes": 913895
+ },
+ "https://cloudflarestream.com/2e52553a02831186dead663a322df936/audio/131/seg_2.mp4?p=eyJ0eXBlIjoic2VnbWVudCIsInZpZGVvSUQiOiIyZTUyNTUzYTAyODMxMTg2ZGVhZDY2M2EzMjJkZjkzNiIsIm93bmVySUQiOjMwNTQ5OTM5LCJjcmVhdG9ySUQiOiIiLCJzZWdtZW50RHVyYXRpb25TZWNzIjo0LjAwMzU1NTU1NTU1NTU1Niwic3RvcmFnZVByb3ZpZGVyIjo0LCJ0cmFjayI6IjMyN2FhMTQyMzc5MzMyZTMxZjM2NGU3ZWM1ZDQ4MzdhIiwicmVuZGl0aW9uIjoiOTQ3OTQyNDAwIiwibXV4aW5nIjoiMTAwMzQzOTUyMCJ9&s=w4JJew0Lw5HDryHCo0RQw5fDkcKqGcKoPsONKMKyCHFEwpYAK8KOGXYOVE4": {
+  "archivo": "f176e321cee8.mp4",
+  "tipo": "video/mp4",
+  "bytes": 65088
+ },
+ "https://cloudflarestream.com/2e52553a02831186dead663a322df936/video/1080/seg_2.mp4?p=eyJ0eXBlIjoic2VnbWVudCIsInZpZGVvSUQiOiIyZTUyNTUzYTAyODMxMTg2ZGVhZDY2M2EzMjJkZjkzNiIsIm93bmVySUQiOjMwNTQ5OTM5LCJjcmVhdG9ySUQiOiIiLCJzZWdtZW50RHVyYXRpb25TZWNzIjo0LCJzdG9yYWdlUHJvdmlkZXIiOjQsInRyYWNrIjoiYWU5OTkyNjc1MjQ2YThhMTE0Njc0YmFjYmI5YWRmMTQiLCJyZW5kaXRpb24iOiI5NDc5NDI1MDkiLCJtdXhpbmciOiIxMDAzNDM5NjI5In0&s=w4M2V8Kbwo7DtlMfZMKfw73DoHQtw5hzRkDCisOsH8OrfcOrw4AjC8OaaHMJwq0": {
+  "archivo": "52ae28f3dfde.mp4",
+  "tipo": "video/mp4",
+  "bytes": 953377
+ },
+ "https://cloudflarestream.com/2e52553a02831186dead663a322df936/audio/131/seg_3.mp4?p=eyJ0eXBlIjoic2VnbWVudCIsInZpZGVvSUQiOiIyZTUyNTUzYTAyODMxMTg2ZGVhZDY2M2EzMjJkZjkzNiIsIm93bmVySUQiOjMwNTQ5OTM5LCJjcmVhdG9ySUQiOiIiLCJzZWdtZW50RHVyYXRpb25TZWNzIjo0LjAwMzU1NTU1NTU1NTU1Niwic3RvcmFnZVByb3ZpZGVyIjo0LCJ0cmFjayI6IjMyN2FhMTQyMzc5MzMyZTMxZjM2NGU3ZWM1ZDQ4MzdhIiwicmVuZGl0aW9uIjoiOTQ3OTQyNDAwIiwibXV4aW5nIjoiMTAwMzQzOTUyMCJ9&s=w4JJew0Lw5HDryHCo0RQw5fDkcKqGcKoPsONKMKyCHFEwpYAK8KOGXYOVE4": {
+  "archivo": "11c406740981.mp4",
+  "tipo": "video/mp4",
+  "bytes": 65086
+ },
+ "https://cloudflarestream.com/2e52553a02831186dead663a322df936/audio/131/seg_4.mp4?p=eyJ0eXBlIjoic2VnbWVudCIsInZpZGVvSUQiOiIyZTUyNTUzYTAyODMxMTg2ZGVhZDY2M2EzMjJkZjkzNiIsIm93bmVySUQiOjMwNTQ5OTM5LCJjcmVhdG9ySUQiOiIiLCJzZWdtZW50RHVyYXRpb25TZWNzIjo0LjAwMzU1NTU1NTU1NTU1Niwic3RvcmFnZVByb3ZpZGVyIjo0LCJ0cmFjayI6IjMyN2FhMTQyMzc5MzMyZTMxZjM2NGU3ZWM1ZDQ4MzdhIiwicmVuZGl0aW9uIjoiOTQ3OTQyNDAwIiwibXV4aW5nIjoiMTAwMzQzOTUyMCJ9&s=w4JJew0Lw5HDryHCo0RQw5fDkcKqGcKoPsONKMKyCHFEwpYAK8KOGXYOVE4": {
+  "archivo": "2a24f2bfb46f.mp4",
+  "tipo": "video/mp4",
+  "bytes": 65095
+ },
+ "https://cloudflarestream.com/2e52553a02831186dead663a322df936/video/1080/seg_3.mp4?p=eyJ0eXBlIjoic2VnbWVudCIsInZpZGVvSUQiOiIyZTUyNTUzYTAyODMxMTg2ZGVhZDY2M2EzMjJkZjkzNiIsIm93bmVySUQiOjMwNTQ5OTM5LCJjcmVhdG9ySUQiOiIiLCJzZWdtZW50RHVyYXRpb25TZWNzIjo0LCJzdG9yYWdlUHJvdmlkZXIiOjQsInRyYWNrIjoiYWU5OTkyNjc1MjQ2YThhMTE0Njc0YmFjYmI5YWRmMTQiLCJyZW5kaXRpb24iOiI5NDc5NDI1MDkiLCJtdXhpbmciOiIxMDAzNDM5NjI5In0&s=w4M2V8Kbwo7DtlMfZMKfw73DoHQtw5hzRkDCisOsH8OrfcOrw4AjC8OaaHMJwq0": {
+  "archivo": "95b0ecdced48.mp4",
+  "tipo": "video/mp4",
+  "bytes": 990837
+ },
+ "https://cloudflarestream.com/2e52553a02831186dead663a322df936/video/1080/seg_4.mp4?p=eyJ0eXBlIjoic2VnbWVudCIsInZpZGVvSUQiOiIyZTUyNTUzYTAyODMxMTg2ZGVhZDY2M2EzMjJkZjkzNiIsIm93bmVySUQiOjMwNTQ5OTM5LCJjcmVhdG9ySUQiOiIiLCJzZWdtZW50RHVyYXRpb25TZWNzIjo0LCJzdG9yYWdlUHJvdmlkZXIiOjQsInRyYWNrIjoiYWU5OTkyNjc1MjQ2YThhMTE0Njc0YmFjYmI5YWRmMTQiLCJyZW5kaXRpb24iOiI5NDc5NDI1MDkiLCJtdXhpbmciOiIxMDAzNDM5NjI5In0&s=w4M2V8Kbwo7DtlMfZMKfw73DoHQtw5hzRkDCisOsH8OrfcOrw4AjC8OaaHMJwq0": {
+  "archivo": "76366edc0bb2.mp4",
+  "tipo": "video/mp4",
+  "bytes": 865994
+ },
+ "https://cloudflarestream.com/2e52553a02831186dead663a322df936/audio/131/seg_5.mp4?p=eyJ0eXBlIjoic2VnbWVudCIsInZpZGVvSUQiOiIyZTUyNTUzYTAyODMxMTg2ZGVhZDY2M2EzMjJkZjkzNiIsIm93bmVySUQiOjMwNTQ5OTM5LCJjcmVhdG9ySUQiOiIiLCJzZWdtZW50RHVyYXRpb25TZWNzIjo0LjAwMzU1NTU1NTU1NTU1Niwic3RvcmFnZVByb3ZpZGVyIjo0LCJ0cmFjayI6IjMyN2FhMTQyMzc5MzMyZTMxZjM2NGU3ZWM1ZDQ4MzdhIiwicmVuZGl0aW9uIjoiOTQ3OTQyNDAwIiwibXV4aW5nIjoiMTAwMzQzOTUyMCJ9&s=w4JJew0Lw5HDryHCo0RQw5fDkcKqGcKoPsONKMKyCHFEwpYAK8KOGXYOVE4": {
+  "archivo": "7a7971940fce.mp4",
+  "tipo": "video/mp4",
+  "bytes": 65118
+ },
+ "https://storage.googleapis.com/bigdatahomes/frontend-static/public/ic_mouse-scroll.svg": {
+  "archivo": "664be724220d.svg",
+  "tipo": "image/svg+xml",
+  "bytes": 3107
+ },
+ "https://cloudflarestream.com/2e52553a02831186dead663a322df936/audio/131/seg_6.mp4?p=eyJ0eXBlIjoic2VnbWVudCIsInZpZGVvSUQiOiIyZTUyNTUzYTAyODMxMTg2ZGVhZDY2M2EzMjJkZjkzNiIsIm93bmVySUQiOjMwNTQ5OTM5LCJjcmVhdG9ySUQiOiIiLCJzZWdtZW50RHVyYXRpb25TZWNzIjo0LjAwMzU1NTU1NTU1NTU1Niwic3RvcmFnZVByb3ZpZGVyIjo0LCJ0cmFjayI6IjMyN2FhMTQyMzc5MzMyZTMxZjM2NGU3ZWM1ZDQ4MzdhIiwicmVuZGl0aW9uIjoiOTQ3OTQyNDAwIiwibXV4aW5nIjoiMTAwMzQzOTUyMCJ9&s=w4JJew0Lw5HDryHCo0RQw5fDkcKqGcKoPsONKMKyCHFEwpYAK8KOGXYOVE4": {
+  "archivo": "af5af51860b1.mp4",
+  "tipo": "video/mp4",
+  "bytes": 23633
+ },
+ "https://cloudflarestream.com/2e52553a02831186dead663a322df936/video/1080/seg_5.mp4?p=eyJ0eXBlIjoic2VnbWVudCIsInZpZGVvSUQiOiIyZTUyNTUzYTAyODMxMTg2ZGVhZDY2M2EzMjJkZjkzNiIsIm93bmVySUQiOjMwNTQ5OTM5LCJjcmVhdG9ySUQiOiIiLCJzZWdtZW50RHVyYXRpb25TZWNzIjo0LCJzdG9yYWdlUHJvdmlkZXIiOjQsInRyYWNrIjoiYWU5OTkyNjc1MjQ2YThhMTE0Njc0YmFjYmI5YWRmMTQiLCJyZW5kaXRpb24iOiI5NDc5NDI1MDkiLCJtdXhpbmciOiIxMDAzNDM5NjI5In0&s=w4M2V8Kbwo7DtlMfZMKfw73DoHQtw5hzRkDCisOsH8OrfcOrw4AjC8OaaHMJwq0": {
+  "archivo": "b136421ca257.mp4",
+  "tipo": "video/mp4",
+  "bytes": 775386
+ },
+ "https://cloudflarestream.com/2e52553a02831186dead663a322df936/video/1080/seg_6.mp4?p=eyJ0eXBlIjoic2VnbWVudCIsInZpZGVvSUQiOiIyZTUyNTUzYTAyODMxMTg2ZGVhZDY2M2EzMjJkZjkzNiIsIm93bmVySUQiOjMwNTQ5OTM5LCJjcmVhdG9ySUQiOiIiLCJzZWdtZW50RHVyYXRpb25TZWNzIjo0LCJzdG9yYWdlUHJvdmlkZXIiOjQsInRyYWNrIjoiYWU5OTkyNjc1MjQ2YThhMTE0Njc0YmFjYmI5YWRmMTQiLCJyZW5kaXRpb24iOiI5NDc5NDI1MDkiLCJtdXhpbmciOiIxMDAzNDM5NjI5In0&s=w4M2V8Kbwo7DtlMfZMKfw73DoHQtw5hzRkDCisOsH8OrfcOrw4AjC8OaaHMJwq0": {
+  "archivo": "d12ac173cabc.mp4",
+  "tipo": "video/mp4",
+  "bytes": 289912
+ },
+ "https://track.hubspot.com/__ptq.gif?k=1&sd=1440x900&cd=24-bit&cs=UTF-8&ln=es-uy&v=1.1&a=48441824&pu=https%3A%2F%2Fwww.elnido.uy%2Fexperiencia-360%2Fnuestro-bosque&t=Experiencia+360+-+Nuestro+bosque&cts=1794681969872&vi=75a779d6d1789d1fe112b72222c3c5b1&nc=false&u=248689368.75a779d6d1789d1fe112b72222c3c5b1.1794681784908.1794681784908.1794681784908.1&b=248689368.9.1794681784908&cc=15": {
+  "archivo": "b59b5732afa5.gif",
+  "tipo": "image/gif",
+  "bytes": 45
+ },
+ "https://www.google.com/pagead/1p-user-list/16813218544/?random=1794681969965&cv=11&fst=1794679200000&bg=ffffff&guid=ON&async=1&en=gtag.config&gtm=45892e6bc0h2v9212825474za20czb9201720628zd9201720628xecxf4&gcd=13l3l3l3l1l1&dma=0&tag_exp=115616985~115938466~115938468~118897920~118897930~119404697~120213116~120385422~120412526~120420414~120469145~120469153~121191155~121246026~121246034~123988488&u_w=1440&u_h=900&url=https%3A%2F%2Fwww.elnido.uy%2Fexperiencia-360%2Fnuestro-bosque&rcb=1&frm=0&tiba=Experiencia%20360%20-%20Nuestro%20bosque&did=dZGVlNj%2CdYWYxNW%2CdZTQ1Zm&gdid=dZGVlNj.dYWYxNW.dZTQ1Zm.dNzQzZD&hn=www.googleadservices.com&npa=0&pscdl=noapi&auid=122199793.1794681784&uaa=x86&uab=64&uafvl=HeadlessChrome%3B159.0.8154.6%7CNot%252FA)Brand%3B8.0.0.0%7CChromium%3B159.0.8154.6&uamb=0&uam=&uap=Linux&uapv=&uaw=0&gtb=2&data=event%3Dgtag.config&gap.gtb=2&ept=9&rfmt=3&fmt=3&is_vtc=1&cid=CAQS4QEAogo4dUoPhc4naGVNCCaplRAINh-N7qYYNADND7aOOHZaYelt82owZAxGkDa6wX4_-ZSikm3xVtRdT8QWietnuZcffQwFyzvXVdWxCOOd7mqaSep10Lkg-1R6HIr494bKIqp0txNs9OkdJynpCL2eh83DC0IWNMBP1P0iMy4C0u8wYljE9wCVJ1AT58MyaofmkroKmKR_PuzvLrSrcGGobepeqFqUfGWgpiEE2OrBpJsWrHTNrH_3V6QaH8HJO51kY1iK_16f28prkt-nSzKLMozrzT7MJViKWkJ53rwHbqQ&random=3801625451&rmt_tld=0&ipr=y": {
+  "archivo": "e995728fe6bd.gif",
+  "tipo": "image/gif",
+  "bytes": 42
+ },
+ "https://cloudflarestream.com/152686af0746b5619f282218b9b988b3/audio/131/init.mp4?p=eyJ0eXBlIjoiaW5pdCIsInZpZGVvSUQiOiIxNTI2ODZhZjA3NDZiNTYxOWYyODIyMThiOWI5ODhiMyIsIm93bmVySUQiOjMwNTQ5OTM5LCJjcmVhdG9ySUQiOiIiLCJzdG9yYWdlUHJvdmlkZXIiOjQsInRyYWNrIjoiNWU1OTA1Nzc3ZWNhNzBkY2VhZmYxODA3MmI2NmM2NGUiLCJyZW5kaXRpb24iOiI5NDc5NDAwNjIiLCJtdXhpbmciOiIxMDAzNDM3MTgyIn0&s=wrDDnWoHdTkgeQBKwq_DksOnfSZaw5MPbMKUBHsrATZsCjVGB8K_wrU": {
+  "archivo": "fa6131f1226c.mp4",
+  "tipo": "video/mp4",
+  "bytes": 761
+ },
+ "https://cloudflarestream.com/152686af0746b5619f282218b9b988b3/video/1080/init.mp4?p=eyJ0eXBlIjoiaW5pdCIsInZpZGVvSUQiOiIxNTI2ODZhZjA3NDZiNTYxOWYyODIyMThiOWI5ODhiMyIsIm93bmVySUQiOjMwNTQ5OTM5LCJjcmVhdG9ySUQiOiIiLCJzdG9yYWdlUHJvdmlkZXIiOjQsInRyYWNrIjoiYjg4NWRiYTJhOWI1ZDQzNTczMWJmY2ZmYWY1M2NiNTEiLCJyZW5kaXRpb24iOiI5NDc5NDAwOTciLCJtdXhpbmciOiIxMDAzNDM3MjE3In0&s=wqbDqMOYwofClzzDmsKiw6XCrwDDkxAGwrHCmyooMRLDo8OkwpTCjiZWw7lWBjLDi8OI": {
+  "archivo": "cf87765eb20e.mp4",
+  "tipo": "video/mp4",
+  "bytes": 828
+ },
+ "https://cloudflarestream.com/152686af0746b5619f282218b9b988b3/audio/131/seg_1.mp4?p=eyJ0eXBlIjoic2VnbWVudCIsInZpZGVvSUQiOiIxNTI2ODZhZjA3NDZiNTYxOWYyODIyMThiOWI5ODhiMyIsIm93bmVySUQiOjMwNTQ5OTM5LCJjcmVhdG9ySUQiOiIiLCJzZWdtZW50RHVyYXRpb25TZWNzIjo0LjAwMzU1NTU1NTU1NTU1Niwic3RvcmFnZVByb3ZpZGVyIjo0LCJ0cmFjayI6IjVlNTkwNTc3N2VjYTcwZGNlYWZmMTgwNzJiNjZjNjRlIiwicmVuZGl0aW9uIjoiOTQ3OTQwMDYyIiwibXV4aW5nIjoiMTAwMzQzNzE4MiJ9&s=w4nCiGhnA8Ksw6fDjsOjwp7Dh8Ohw6DCkMKJwqbClMKIC3oSG8KKV8KHw6jDusKAwpfDgwB2": {
+  "archivo": "b197e2b9a733.mp4",
+  "tipo": "video/mp4",
+  "bytes": 65612
+ },
+ "https://cloudflarestream.com/152686af0746b5619f282218b9b988b3/video/1080/seg_1.mp4?p=eyJ0eXBlIjoic2VnbWVudCIsInZpZGVvSUQiOiIxNTI2ODZhZjA3NDZiNTYxOWYyODIyMThiOWI5ODhiMyIsIm93bmVySUQiOjMwNTQ5OTM5LCJjcmVhdG9ySUQiOiIiLCJzZWdtZW50RHVyYXRpb25TZWNzIjo0LCJzdG9yYWdlUHJvdmlkZXIiOjQsInRyYWNrIjoiYjg4NWRiYTJhOWI1ZDQzNTczMWJmY2ZmYWY1M2NiNTEiLCJyZW5kaXRpb24iOiI5NDc5NDAwOTciLCJtdXhpbmciOiIxMDAzNDM3MjE3In0&s=w7Zkw6gxSizDi8ObZsOEcFFUwq7DtcKHwobDtAYwUcO1w7dXZEk_w7JewpLDoMKG": {
+  "archivo": "70c525047654.mp4",
+  "tipo": "video/mp4",
+  "bytes": 1822873
+ },
+ "https://cloudflarestream.com/152686af0746b5619f282218b9b988b3/audio/131/seg_2.mp4?p=eyJ0eXBlIjoic2VnbWVudCIsInZpZGVvSUQiOiIxNTI2ODZhZjA3NDZiNTYxOWYyODIyMThiOWI5ODhiMyIsIm93bmVySUQiOjMwNTQ5OTM5LCJjcmVhdG9ySUQiOiIiLCJzZWdtZW50RHVyYXRpb25TZWNzIjo0LjAwMzU1NTU1NTU1NTU1Niwic3RvcmFnZVByb3ZpZGVyIjo0LCJ0cmFjayI6IjVlNTkwNTc3N2VjYTcwZGNlYWZmMTgwNzJiNjZjNjRlIiwicmVuZGl0aW9uIjoiOTQ3OTQwMDYyIiwibXV4aW5nIjoiMTAwMzQzNzE4MiJ9&s=w4nCiGhnA8Ksw6fDjsOjwp7Dh8Ohw6DCkMKJwqbClMKIC3oSG8KKV8KHw6jDusKAwpfDgwB2": {
+  "archivo": "1b3f96fc852e.mp4",
+  "tipo": "video/mp4",
+  "bytes": 65089
+ },
+ "https://cloudflarestream.com/152686af0746b5619f282218b9b988b3/video/1080/seg_2.mp4?p=eyJ0eXBlIjoic2VnbWVudCIsInZpZGVvSUQiOiIxNTI2ODZhZjA3NDZiNTYxOWYyODIyMThiOWI5ODhiMyIsIm93bmVySUQiOjMwNTQ5OTM5LCJjcmVhdG9ySUQiOiIiLCJzZWdtZW50RHVyYXRpb25TZWNzIjo0LCJzdG9yYWdlUHJvdmlkZXIiOjQsInRyYWNrIjoiYjg4NWRiYTJhOWI1ZDQzNTczMWJmY2ZmYWY1M2NiNTEiLCJyZW5kaXRpb24iOiI5NDc5NDAwOTciLCJtdXhpbmciOiIxMDAzNDM3MjE3In0&s=w7Zkw6gxSizDi8ObZsOEcFFUwq7DtcKHwobDtAYwUcO1w7dXZEk_w7JewpLDoMKG": {
+  "archivo": "297b88a803da.mp4",
+  "tipo": "video/mp4",
+  "bytes": 1784402
+ },
+ "https://cloudflarestream.com/152686af0746b5619f282218b9b988b3/audio/131/seg_3.mp4?p=eyJ0eXBlIjoic2VnbWVudCIsInZpZGVvSUQiOiIxNTI2ODZhZjA3NDZiNTYxOWYyODIyMThiOWI5ODhiMyIsIm93bmVySUQiOjMwNTQ5OTM5LCJjcmVhdG9ySUQiOiIiLCJzZWdtZW50RHVyYXRpb25TZWNzIjo0LjAwMzU1NTU1NTU1NTU1Niwic3RvcmFnZVByb3ZpZGVyIjo0LCJ0cmFjayI6IjVlNTkwNTc3N2VjYTcwZGNlYWZmMTgwNzJiNjZjNjRlIiwicmVuZGl0aW9uIjoiOTQ3OTQwMDYyIiwibXV4aW5nIjoiMTAwMzQzNzE4MiJ9&s=w4nCiGhnA8Ksw6fDjsOjwp7Dh8Ohw6DCkMKJwqbClMKIC3oSG8KKV8KHw6jDusKAwpfDgwB2": {
+  "archivo": "0de4f1fd45d9.mp4",
+  "tipo": "video/mp4",
+  "bytes": 65120
+ },
+ "https://cloudflarestream.com/152686af0746b5619f282218b9b988b3/video/1080/seg_3.mp4?p=eyJ0eXBlIjoic2VnbWVudCIsInZpZGVvSUQiOiIxNTI2ODZhZjA3NDZiNTYxOWYyODIyMThiOWI5ODhiMyIsIm93bmVySUQiOjMwNTQ5OTM5LCJjcmVhdG9ySUQiOiIiLCJzZWdtZW50RHVyYXRpb25TZWNzIjo0LCJzdG9yYWdlUHJvdmlkZXIiOjQsInRyYWNrIjoiYjg4NWRiYTJhOWI1ZDQzNTczMWJmY2ZmYWY1M2NiNTEiLCJyZW5kaXRpb24iOiI5NDc5NDAwOTciLCJtdXhpbmciOiIxMDAzNDM3MjE3In0&s=w7Zkw6gxSizDi8ObZsOEcFFUwq7DtcKHwobDtAYwUcO1w7dXZEk_w7JewpLDoMKG": {
+  "archivo": "56acd817b343.mp4",
+  "tipo": "video/mp4",
+  "bytes": 1755971
+ },
+ "https://cloudflarestream.com/152686af0746b5619f282218b9b988b3/audio/131/seg_4.mp4?p=eyJ0eXBlIjoic2VnbWVudCIsInZpZGVvSUQiOiIxNTI2ODZhZjA3NDZiNTYxOWYyODIyMThiOWI5ODhiMyIsIm93bmVySUQiOjMwNTQ5OTM5LCJjcmVhdG9ySUQiOiIiLCJzZWdtZW50RHVyYXRpb25TZWNzIjo0LjAwMzU1NTU1NTU1NTU1Niwic3RvcmFnZVByb3ZpZGVyIjo0LCJ0cmFjayI6IjVlNTkwNTc3N2VjYTcwZGNlYWZmMTgwNzJiNjZjNjRlIiwicmVuZGl0aW9uIjoiOTQ3OTQwMDYyIiwibXV4aW5nIjoiMTAwMzQzNzE4MiJ9&s=w4nCiGhnA8Ksw6fDjsOjwp7Dh8Ohw6DCkMKJwqbClMKIC3oSG8KKV8KHw6jDusKAwpfDgwB2": {
+  "archivo": "d2b449c6c4a4.mp4",
+  "tipo": "video/mp4",
+  "bytes": 65091
+ },
+ "https://cloudflarestream.com/152686af0746b5619f282218b9b988b3/audio/131/seg_5.mp4?p=eyJ0eXBlIjoic2VnbWVudCIsInZpZGVvSUQiOiIxNTI2ODZhZjA3NDZiNTYxOWYyODIyMThiOWI5ODhiMyIsIm93bmVySUQiOjMwNTQ5OTM5LCJjcmVhdG9ySUQiOiIiLCJzZWdtZW50RHVyYXRpb25TZWNzIjo0LjAwMzU1NTU1NTU1NTU1Niwic3RvcmFnZVByb3ZpZGVyIjo0LCJ0cmFjayI6IjVlNTkwNTc3N2VjYTcwZGNlYWZmMTgwNzJiNjZjNjRlIiwicmVuZGl0aW9uIjoiOTQ3OTQwMDYyIiwibXV4aW5nIjoiMTAwMzQzNzE4MiJ9&s=w4nCiGhnA8Ksw6fDjsOjwp7Dh8Ohw6DCkMKJwqbClMKIC3oSG8KKV8KHw6jDusKAwpfDgwB2": {
+  "archivo": "11b1cf4ee036.mp4",
+  "tipo": "video/mp4",
+  "bytes": 64952
+ },
+ "https://cloudflarestream.com/152686af0746b5619f282218b9b988b3/video/1080/seg_4.mp4?p=eyJ0eXBlIjoic2VnbWVudCIsInZpZGVvSUQiOiIxNTI2ODZhZjA3NDZiNTYxOWYyODIyMThiOWI5ODhiMyIsIm93bmVySUQiOjMwNTQ5OTM5LCJjcmVhdG9ySUQiOiIiLCJzZWdtZW50RHVyYXRpb25TZWNzIjo0LCJzdG9yYWdlUHJvdmlkZXIiOjQsInRyYWNrIjoiYjg4NWRiYTJhOWI1ZDQzNTczMWJmY2ZmYWY1M2NiNTEiLCJyZW5kaXRpb24iOiI5NDc5NDAwOTciLCJtdXhpbmciOiIxMDAzNDM3MjE3In0&s=w7Zkw6gxSizDi8ObZsOEcFFUwq7DtcKHwobDtAYwUcO1w7dXZEk_w7JewpLDoMKG": {
+  "archivo": "c5364279385e.mp4",
+  "tipo": "video/mp4",
+  "bytes": 1843896
+ },
+ "https://cloudflarestream.com/152686af0746b5619f282218b9b988b3/audio/131/seg_6.mp4?p=eyJ0eXBlIjoic2VnbWVudCIsInZpZGVvSUQiOiIxNTI2ODZhZjA3NDZiNTYxOWYyODIyMThiOWI5ODhiMyIsIm93bmVySUQiOjMwNTQ5OTM5LCJjcmVhdG9ySUQiOiIiLCJzZWdtZW50RHVyYXRpb25TZWNzIjo0LjAwMzU1NTU1NTU1NTU1Niwic3RvcmFnZVByb3ZpZGVyIjo0LCJ0cmFjayI6IjVlNTkwNTc3N2VjYTcwZGNlYWZmMTgwNzJiNjZjNjRlIiwicmVuZGl0aW9uIjoiOTQ3OTQwMDYyIiwibXV4aW5nIjoiMTAwMzQzNzE4MiJ9&s=w4nCiGhnA8Ksw6fDjsOjwp7Dh8Ohw6DCkMKJwqbClMKIC3oSG8KKV8KHw6jDusKAwpfDgwB2": {
+  "archivo": "aed5638d979d.mp4",
+  "tipo": "video/mp4",
+  "bytes": 1235
+ },
+ "https://cloudflarestream.com/152686af0746b5619f282218b9b988b3/video/1080/seg_5.mp4?p=eyJ0eXBlIjoic2VnbWVudCIsInZpZGVvSUQiOiIxNTI2ODZhZjA3NDZiNTYxOWYyODIyMThiOWI5ODhiMyIsIm93bmVySUQiOjMwNTQ5OTM5LCJjcmVhdG9ySUQiOiIiLCJzZWdtZW50RHVyYXRpb25TZWNzIjo0LCJzdG9yYWdlUHJvdmlkZXIiOjQsInRyYWNrIjoiYjg4NWRiYTJhOWI1ZDQzNTczMWJmY2ZmYWY1M2NiNTEiLCJyZW5kaXRpb24iOiI5NDc5NDAwOTciLCJtdXhpbmciOiIxMDAzNDM3MjE3In0&s=w7Zkw6gxSizDi8ObZsOEcFFUwq7DtcKHwobDtAYwUcO1w7dXZEk_w7JewpLDoMKG": {
+  "archivo": "4547a7fe7a01.mp4",
+  "tipo": "video/mp4",
+  "bytes": 1617165
+ },
+ "https://cloudflarestream.com/152686af0746b5619f282218b9b988b3/video/1080/seg_6.mp4?p=eyJ0eXBlIjoic2VnbWVudCIsInZpZGVvSUQiOiIxNTI2ODZhZjA3NDZiNTYxOWYyODIyMThiOWI5ODhiMyIsIm93bmVySUQiOjMwNTQ5OTM5LCJjcmVhdG9ySUQiOiIiLCJzZWdtZW50RHVyYXRpb25TZWNzIjo0LCJzdG9yYWdlUHJvdmlkZXIiOjQsInRyYWNrIjoiYjg4NWRiYTJhOWI1ZDQzNTczMWJmY2ZmYWY1M2NiNTEiLCJyZW5kaXRpb24iOiI5NDc5NDAwOTciLCJtdXhpbmciOiIxMDAzNDM3MjE3In0&s=w7Zkw6gxSizDi8ObZsOEcFFUwq7DtcKHwobDtAYwUcO1w7dXZEk_w7JewpLDoMKG": {
+  "archivo": "c6fc8cd3f7db.mp4",
+  "tipo": "video/mp4",
+  "bytes": 274277
+ },
+ "https://www.google.com/pagead/1p-user-list/16813218544/?random=1794681989095&cv=11&fst=1794679200000&bg=ffffff&guid=ON&async=1&en=gtag.config&gtm=45be6bb1h1v9212825474za208zb9201720628zd9201720628xecxf1&gcd=13l3l3l3l1l1&dma=0&tag_exp=115616985~115938466~115938468~118897920~118897930~120213116~120385422~120412526~120420416~120469145~120469153~121191155~121246026~121246034&u_w=1440&u_h=900&url=https%3A%2F%2Fwww.elnido.uy%2Fexperiencia-360%2Fnuestra-playa&rcb=16&frm=0&tiba=Experiencia%20360%20-%20Nuestra%20playa&did=dZGVlNj%2CdYWYxNW%2CdZTQ1Zm&gdid=dZGVlNj.dYWYxNW.dZTQ1Zm&hn=www.googleadservices.com&npa=0&pscdl=noapi&auid=122199793.1794681784&uaa=x86&uab=64&uafvl=HeadlessChrome%3B159.0.8154.6%7CNot%252FA)Brand%3B8.0.0.0%7CChromium%3B159.0.8154.6&uamb=0&uam=&uap=Linux&uapv=&uaw=0&data=event%3Dgtag.config&ept=9&rfmt=3&fmt=3&is_vtc=1&cid=CAQS4QEAogo4demdGb4m5zR6rah7r4VYtF0332cAikP725GU4qZU46muSy36xf__3YjAl49c82vxj09BdKq11j0-GdjAdNvW55YHHAlYSLEUZNEPp9XI4ZQdElBPbjE0n4aLog_Rc-_h1IFgenNkrKfuQ_HVgvf4LUN5xPfE-GmQCp3ngxJODts90hq7EODJSAxdwaFOxjjHnpTwAaHuH8kqoiPNzzTV0xyLE8T0VBNFORtMff5fYnNyF5MYEuKa2xdR-S6BS22M4XiDN-XLaqB5r4m6Uh5CuFDE45RN3Cihs8hAtyg&random=18973024&rmt_tld=0&ipr=y": {
+  "archivo": "4a214a766e42.gif",
+  "tipo": "image/gif",
+  "bytes": 42
+ },
+ "https://track.hubspot.com/__ptq.gif?k=1&sd=1440x900&cd=24-bit&cs=UTF-8&ln=es-uy&bfp=eb8eabd8d764f8c80e838e15c069dd09&v=1.1&a=48441824&pu=https%3A%2F%2Fwww.elnido.uy%2Fexperiencia-360%2Fnuestra-playa&t=Experiencia+360+-+Nuestra+playa&cts=1794681989572&vi=75a779d6d1789d1fe112b72222c3c5b1&nc=false&u=248689368.75a779d6d1789d1fe112b72222c3c5b1.1794681784908.1794681784908.1794681784908.1&b=248689368.10.1794681784908&cc=15": {
+  "archivo": "e4b12937b46e.gif",
+  "tipo": "image/gif",
+  "bytes": 45
+ },
+ "https://cloudflarestream.com/abd4afe646d8a9801a36d21c2f8318fa/audio/130/init.mp4?p=eyJ0eXBlIjoiaW5pdCIsInZpZGVvSUQiOiJhYmQ0YWZlNjQ2ZDhhOTgwMWEzNmQyMWMyZjgzMThmYSIsIm93bmVySUQiOjMwNTQ5OTM5LCJjcmVhdG9ySUQiOiIiLCJzdG9yYWdlUHJvdmlkZXIiOjQsInRyYWNrIjoiNzFiNDJkOWRiMTYyNDAxYjlmZWE1NmNkNDQ4NzA2NGIiLCJyZW5kaXRpb24iOiI5NDc4OTUyMDYiLCJtdXhpbmciOiIxMDAzMzkxNzg3In0&s=WMORwoZrw5TDv8OLwqrCncOKYsO-PsOzURjCmkbCm8O-IMONwonDgcOZO8ORbsKiw7zCnsKI": {
+  "archivo": "8d018778176c.mp4",
+  "tipo": "video/mp4",
+  "bytes": 761
+ },
+ "https://cloudflarestream.com/abd4afe646d8a9801a36d21c2f8318fa/video/1080/init.mp4?p=eyJ0eXBlIjoiaW5pdCIsInZpZGVvSUQiOiJhYmQ0YWZlNjQ2ZDhhOTgwMWEzNmQyMWMyZjgzMThmYSIsIm93bmVySUQiOjMwNTQ5OTM5LCJjcmVhdG9ySUQiOiIiLCJzdG9yYWdlUHJvdmlkZXIiOjQsInRyYWNrIjoiMjE1MzNhMTFjMzdmNjJjZmVlY2UyMzIzZjg5NjUzNDgiLCJyZW5kaXRpb24iOiI5NDc4OTUyMjYiLCJtdXhpbmciOiIxMDAzMzkxODA3In0&s=DitGRMO6DcKow5RFHsKSNUbDrWZDw7PDv0F9wotIYMKcwp3CjwBbfMOiwpop": {
+  "archivo": "a9f3fc508c75.mp4",
+  "tipo": "video/mp4",
+  "bytes": 828
+ },
+ "https://cloudflarestream.com/abd4afe646d8a9801a36d21c2f8318fa/audio/130/seg_1.mp4?p=eyJ0eXBlIjoic2VnbWVudCIsInZpZGVvSUQiOiJhYmQ0YWZlNjQ2ZDhhOTgwMWEzNmQyMWMyZjgzMThmYSIsIm93bmVySUQiOjMwNTQ5OTM5LCJjcmVhdG9ySUQiOiIiLCJzZWdtZW50RHVyYXRpb25TZWNzIjo0LjAwMzU1NTU1NTU1NTU1Niwic3RvcmFnZVByb3ZpZGVyIjo0LCJ0cmFjayI6IjcxYjQyZDlkYjE2MjQwMWI5ZmVhNTZjZDQ0ODcwNjRiIiwicmVuZGl0aW9uIjoiOTQ3ODk1MjA2IiwibXV4aW5nIjoiMTAwMzM5MTc4NyJ9&s=wq1Dwo8ZwrPCoi1dw6HCicKpfllFXjLDkhF1wrwsWF_DtcOMaMK7w7I7wqcpw6c": {
+  "archivo": "75610828ac5b.mp4",
+  "tipo": "video/mp4",
+  "bytes": 65496
+ },
+ "https://cloudflarestream.com/abd4afe646d8a9801a36d21c2f8318fa/video/1080/seg_1.mp4?p=eyJ0eXBlIjoic2VnbWVudCIsInZpZGVvSUQiOiJhYmQ0YWZlNjQ2ZDhhOTgwMWEzNmQyMWMyZjgzMThmYSIsIm93bmVySUQiOjMwNTQ5OTM5LCJjcmVhdG9ySUQiOiIiLCJzZWdtZW50RHVyYXRpb25TZWNzIjo0LCJzdG9yYWdlUHJvdmlkZXIiOjQsInRyYWNrIjoiMjE1MzNhMTFjMzdmNjJjZmVlY2UyMzIzZjg5NjUzNDgiLCJyZW5kaXRpb24iOiI5NDc4OTUyMjYiLCJtdXhpbmciOiIxMDAzMzkxODA3In0&s=woTCgcO7CcOswp0kLcO6YClxNT7CvsK5w7zCh8K8w7rChsOiY1RaYsKvwqjCklfDqcOe": {
+  "archivo": "1c927aa91088.mp4",
+  "tipo": "video/mp4",
+  "bytes": 1174592
+ },
+ "https://cloudflarestream.com/abd4afe646d8a9801a36d21c2f8318fa/video/1080/seg_2.mp4?p=eyJ0eXBlIjoic2VnbWVudCIsInZpZGVvSUQiOiJhYmQ0YWZlNjQ2ZDhhOTgwMWEzNmQyMWMyZjgzMThmYSIsIm93bmVySUQiOjMwNTQ5OTM5LCJjcmVhdG9ySUQiOiIiLCJzZWdtZW50RHVyYXRpb25TZWNzIjo0LCJzdG9yYWdlUHJvdmlkZXIiOjQsInRyYWNrIjoiMjE1MzNhMTFjMzdmNjJjZmVlY2UyMzIzZjg5NjUzNDgiLCJyZW5kaXRpb24iOiI5NDc4OTUyMjYiLCJtdXhpbmciOiIxMDAzMzkxODA3In0&s=woTCgcO7CcOswp0kLcO6YClxNT7CvsK5w7zCh8K8w7rChsOiY1RaYsKvwqjCklfDqcOe": {
+  "archivo": "4acfa1fea3bf.mp4",
+  "tipo": "video/mp4",
+  "bytes": 1154062
+ },
+ "https://cloudflarestream.com/abd4afe646d8a9801a36d21c2f8318fa/audio/130/seg_2.mp4?p=eyJ0eXBlIjoic2VnbWVudCIsInZpZGVvSUQiOiJhYmQ0YWZlNjQ2ZDhhOTgwMWEzNmQyMWMyZjgzMThmYSIsIm93bmVySUQiOjMwNTQ5OTM5LCJjcmVhdG9ySUQiOiIiLCJzZWdtZW50RHVyYXRpb25TZWNzIjo0LjAwMzU1NTU1NTU1NTU1Niwic3RvcmFnZVByb3ZpZGVyIjo0LCJ0cmFjayI6IjcxYjQyZDlkYjE2MjQwMWI5ZmVhNTZjZDQ0ODcwNjRiIiwicmVuZGl0aW9uIjoiOTQ3ODk1MjA2IiwibXV4aW5nIjoiMTAwMzM5MTc4NyJ9&s=wq1Dwo8ZwrPCoi1dw6HCicKpfllFXjLDkhF1wrwsWF_DtcOMaMK7w7I7wqcpw6c": {
+  "archivo": "0cdaebad03cf.mp4",
+  "tipo": "video/mp4",
+  "bytes": 65121
+ },
+ "https://cloudflarestream.com/abd4afe646d8a9801a36d21c2f8318fa/audio/130/seg_3.mp4?p=eyJ0eXBlIjoic2VnbWVudCIsInZpZGVvSUQiOiJhYmQ0YWZlNjQ2ZDhhOTgwMWEzNmQyMWMyZjgzMThmYSIsIm93bmVySUQiOjMwNTQ5OTM5LCJjcmVhdG9ySUQiOiIiLCJzZWdtZW50RHVyYXRpb25TZWNzIjo0LjAwMzU1NTU1NTU1NTU1Niwic3RvcmFnZVByb3ZpZGVyIjo0LCJ0cmFjayI6IjcxYjQyZDlkYjE2MjQwMWI5ZmVhNTZjZDQ0ODcwNjRiIiwicmVuZGl0aW9uIjoiOTQ3ODk1MjA2IiwibXV4aW5nIjoiMTAwMzM5MTc4NyJ9&s=wq1Dwo8ZwrPCoi1dw6HCicKpfllFXjLDkhF1wrwsWF_DtcOMaMK7w7I7wqcpw6c": {
+  "archivo": "7f6ff3c0d477.mp4",
+  "tipo": "video/mp4",
+  "bytes": 65122
+ },
+ "https://cloudflarestream.com/abd4afe646d8a9801a36d21c2f8318fa/video/1080/seg_3.mp4?p=eyJ0eXBlIjoic2VnbWVudCIsInZpZGVvSUQiOiJhYmQ0YWZlNjQ2ZDhhOTgwMWEzNmQyMWMyZjgzMThmYSIsIm93bmVySUQiOjMwNTQ5OTM5LCJjcmVhdG9ySUQiOiIiLCJzZWdtZW50RHVyYXRpb25TZWNzIjo0LCJzdG9yYWdlUHJvdmlkZXIiOjQsInRyYWNrIjoiMjE1MzNhMTFjMzdmNjJjZmVlY2UyMzIzZjg5NjUzNDgiLCJyZW5kaXRpb24iOiI5NDc4OTUyMjYiLCJtdXhpbmciOiIxMDAzMzkxODA3In0&s=woTCgcO7CcOswp0kLcO6YClxNT7CvsK5w7zCh8K8w7rChsOiY1RaYsKvwqjCklfDqcOe": {
+  "archivo": "563c29d4b444.mp4",
+  "tipo": "video/mp4",
+  "bytes": 1104570
+ },
+ "https://cloudflarestream.com/abd4afe646d8a9801a36d21c2f8318fa/audio/130/seg_4.mp4?p=eyJ0eXBlIjoic2VnbWVudCIsInZpZGVvSUQiOiJhYmQ0YWZlNjQ2ZDhhOTgwMWEzNmQyMWMyZjgzMThmYSIsIm93bmVySUQiOjMwNTQ5OTM5LCJjcmVhdG9ySUQiOiIiLCJzZWdtZW50RHVyYXRpb25TZWNzIjo0LjAwMzU1NTU1NTU1NTU1Niwic3RvcmFnZVByb3ZpZGVyIjo0LCJ0cmFjayI6IjcxYjQyZDlkYjE2MjQwMWI5ZmVhNTZjZDQ0ODcwNjRiIiwicmVuZGl0aW9uIjoiOTQ3ODk1MjA2IiwibXV4aW5nIjoiMTAwMzM5MTc4NyJ9&s=wq1Dwo8ZwrPCoi1dw6HCicKpfllFXjLDkhF1wrwsWF_DtcOMaMK7w7I7wqcpw6c": {
+  "archivo": "392feb41524b.mp4",
+  "tipo": "video/mp4",
+  "bytes": 65111
+ },
+ "https://cloudflarestream.com/abd4afe646d8a9801a36d21c2f8318fa/video/1080/seg_4.mp4?p=eyJ0eXBlIjoic2VnbWVudCIsInZpZGVvSUQiOiJhYmQ0YWZlNjQ2ZDhhOTgwMWEzNmQyMWMyZjgzMThmYSIsIm93bmVySUQiOjMwNTQ5OTM5LCJjcmVhdG9ySUQiOiIiLCJzZWdtZW50RHVyYXRpb25TZWNzIjo0LCJzdG9yYWdlUHJvdmlkZXIiOjQsInRyYWNrIjoiMjE1MzNhMTFjMzdmNjJjZmVlY2UyMzIzZjg5NjUzNDgiLCJyZW5kaXRpb24iOiI5NDc4OTUyMjYiLCJtdXhpbmciOiIxMDAzMzkxODA3In0&s=woTCgcO7CcOswp0kLcO6YClxNT7CvsK5w7zCh8K8w7rChsOiY1RaYsKvwqjCklfDqcOe": {
+  "archivo": "c260b00d4b59.mp4",
+  "tipo": "video/mp4",
+  "bytes": 1030448
+ },
+ "https://cloudflarestream.com/abd4afe646d8a9801a36d21c2f8318fa/audio/130/seg_5.mp4?p=eyJ0eXBlIjoic2VnbWVudCIsInZpZGVvSUQiOiJhYmQ0YWZlNjQ2ZDhhOTgwMWEzNmQyMWMyZjgzMThmYSIsIm93bmVySUQiOjMwNTQ5OTM5LCJjcmVhdG9ySUQiOiIiLCJzZWdtZW50RHVyYXRpb25TZWNzIjo0LjAwMzU1NTU1NTU1NTU1Niwic3RvcmFnZVByb3ZpZGVyIjo0LCJ0cmFjayI6IjcxYjQyZDlkYjE2MjQwMWI5ZmVhNTZjZDQ0ODcwNjRiIiwicmVuZGl0aW9uIjoiOTQ3ODk1MjA2IiwibXV4aW5nIjoiMTAwMzM5MTc4NyJ9&s=wq1Dwo8ZwrPCoi1dw6HCicKpfllFXjLDkhF1wrwsWF_DtcOMaMK7w7I7wqcpw6c": {
+  "archivo": "b435051f132b.mp4",
+  "tipo": "video/mp4",
+  "bytes": 65109
+ },
+ "https://cloudflarestream.com/abd4afe646d8a9801a36d21c2f8318fa/video/1080/seg_5.mp4?p=eyJ0eXBlIjoic2VnbWVudCIsInZpZGVvSUQiOiJhYmQ0YWZlNjQ2ZDhhOTgwMWEzNmQyMWMyZjgzMThmYSIsIm93bmVySUQiOjMwNTQ5OTM5LCJjcmVhdG9ySUQiOiIiLCJzZWdtZW50RHVyYXRpb25TZWNzIjo0LCJzdG9yYWdlUHJvdmlkZXIiOjQsInRyYWNrIjoiMjE1MzNhMTFjMzdmNjJjZmVlY2UyMzIzZjg5NjUzNDgiLCJyZW5kaXRpb24iOiI5NDc4OTUyMjYiLCJtdXhpbmciOiIxMDAzMzkxODA3In0&s=woTCgcO7CcOswp0kLcO6YClxNT7CvsK5w7zCh8K8w7rChsOiY1RaYsKvwqjCklfDqcOe": {
+  "archivo": "77f62e7bcd2d.mp4",
+  "tipo": "video/mp4",
+  "bytes": 1018366
+ },
+ "https://cloudflarestream.com/abd4afe646d8a9801a36d21c2f8318fa/audio/130/seg_6.mp4?p=eyJ0eXBlIjoic2VnbWVudCIsInZpZGVvSUQiOiJhYmQ0YWZlNjQ2ZDhhOTgwMWEzNmQyMWMyZjgzMThmYSIsIm93bmVySUQiOjMwNTQ5OTM5LCJjcmVhdG9ySUQiOiIiLCJzZWdtZW50RHVyYXRpb25TZWNzIjo0LjAwMzU1NTU1NTU1NTU1Niwic3RvcmFnZVByb3ZpZGVyIjo0LCJ0cmFjayI6IjcxYjQyZDlkYjE2MjQwMWI5ZmVhNTZjZDQ0ODcwNjRiIiwicmVuZGl0aW9uIjoiOTQ3ODk1MjA2IiwibXV4aW5nIjoiMTAwMzM5MTc4NyJ9&s=wq1Dwo8ZwrPCoi1dw6HCicKpfllFXjLDkhF1wrwsWF_DtcOMaMK7w7I7wqcpw6c": {
+  "archivo": "295a604df2d6.mp4",
+  "tipo": "video/mp4",
+  "bytes": 1541
+ },
+ "https://cloudflarestream.com/abd4afe646d8a9801a36d21c2f8318fa/video/1080/seg_6.mp4?p=eyJ0eXBlIjoic2VnbWVudCIsInZpZGVvSUQiOiJhYmQ0YWZlNjQ2ZDhhOTgwMWEzNmQyMWMyZjgzMThmYSIsIm93bmVySUQiOjMwNTQ5OTM5LCJjcmVhdG9ySUQiOiIiLCJzZWdtZW50RHVyYXRpb25TZWNzIjo0LCJzdG9yYWdlUHJvdmlkZXIiOjQsInRyYWNrIjoiMjE1MzNhMTFjMzdmNjJjZmVlY2UyMzIzZjg5NjUzNDgiLCJyZW5kaXRpb24iOiI5NDc4OTUyMjYiLCJtdXhpbmciOiIxMDAzMzkxODA3In0&s=woTCgcO7CcOswp0kLcO6YClxNT7CvsK5w7zCh8K8w7rChsOiY1RaYsKvwqjCklfDqcOe": {
+  "archivo": "91a4cabd61ab.mp4",
+  "tipo": "video/mp4",
+  "bytes": 166499
+ },
+ "https://track.hubspot.com/__ptq.gif?k=1&sd=1440x900&cd=24-bit&cs=UTF-8&ln=es-uy&v=1.1&a=48441824&pu=https%3A%2F%2Fwww.elnido.uy%2Fexperiencia-360%2Fnuestro-parador&t=Experiencia+360+-+Nuestro+parador&cts=1794682008061&vi=75a779d6d1789d1fe112b72222c3c5b1&nc=false&u=248689368.75a779d6d1789d1fe112b72222c3c5b1.1794681784908.1794681784908.1794681784908.1&b=248689368.11.1794681784908&cc=15": {
+  "archivo": "16742eae4415.gif",
+  "tipo": "image/gif",
+  "bytes": 45
+ },
+ "https://www.google.com/pagead/1p-user-list/16813218544/?random=1794682008172&cv=11&fst=1794679200000&bg=ffffff&guid=ON&async=1&en=gtag.config&gtm=45892e6bc0h2v9212825474za20czb9201720628zd9201720628xecxf4&gcd=13l3l3l3l1l1&dma=0&tag_exp=115616985~115938465~115938469~118897920~118897930~120213116~120385423~120412528~120420416~120469145~120469153~121191155~121246026~121246034&u_w=1440&u_h=900&url=https%3A%2F%2Fwww.elnido.uy%2Fexperiencia-360%2Fnuestro-parador&rcb=1&frm=0&tiba=Experiencia%20360%20-%20Nuestro%20parador&did=dZGVlNj%2CdYWYxNW%2CdZTQ1Zm&gdid=dZGVlNj.dYWYxNW.dZTQ1Zm.dNzQzZD&hn=www.googleadservices.com&npa=0&pscdl=noapi&auid=122199793.1794681784&uaa=x86&uab=64&uafvl=HeadlessChrome%3B159.0.8154.6%7CNot%252FA)Brand%3B8.0.0.0%7CChromium%3B159.0.8154.6&uamb=0&uam=&uap=Linux&uapv=&uaw=0&gtb=2&data=event%3Dgtag.config&gap.gtb=2&ept=9&rfmt=3&fmt=3&is_vtc=1&cid=CAQS4QEAogo4dQ84qwLuZ2w13GljnVCF_coKGx-S0sQ9F8aSgGlBTrvH3_1ylYYUC3C49xWETQ0JXek_hbhU2yW85QYKK3ACjBYZj9dtXVSI4jDGu8_FIpJdepWdu1rm-kKztH29oQGAriP_GoFAt290rHrIPSkZHsTBehGwjo7Rc6fm13x8Gs0tm5plF3jZjmSXxwOE7qiygbaPkgs6RYOeLOwU2N2mJkSSnOUH3fsPhXLBAIzdipwIiEmuRNllYQM_fKNFWsJF_9pqFU-nk6yIeemksOzsF9R4TI6yZqqu_omXyI8&random=850753935&rmt_tld=0&ipr=y": {
+  "archivo": "7f860fee8241.gif",
+  "tipo": "image/gif",
+  "bytes": 42
+ },
+ "https://gc.360-data.com/tours/DdE5ibeBz/DdE5ibeBz-I7MY-3Ji1-thumb.jpeg": {
+  "archivo": "9850e30179a3.jpg",
+  "tipo": "image/jpeg",
+  "bytes": 25475
+ },
+ "https://cloudflarestream.com/c056902441f286115880088ec8a669db/video/1080/init.mp4?p=eyJ0eXBlIjoiaW5pdCIsInZpZGVvSUQiOiJjMDU2OTAyNDQxZjI4NjExNTg4MDA4OGVjOGE2NjlkYiIsIm93bmVySUQiOjMwNTQ5OTM5LCJjcmVhdG9ySUQiOiIiLCJzdG9yYWdlUHJvdmlkZXIiOjQsInRyYWNrIjoiZTBjMmMwZWQ2ZTZiZDYwNzFmMjA3Njc0NGQxYjkwY2YiLCJyZW5kaXRpb24iOiI5NDc5MTE4MTEiLCJtdXhpbmciOiIxMDAzNDA4MzkyIn0&s=XRnDpMODKsKpXFlWBlTCkcK2w5_Cs8Oiw53DmyrDmGzDmsK4w4xrPHXCgMKQP8Ogw7s": {
+  "archivo": "382f9b6f7824.mp4",
+  "tipo": "video/mp4",
+  "bytes": 828
+ },
+ "https://cloudflarestream.com/c056902441f286115880088ec8a669db/audio/131/init.mp4?p=eyJ0eXBlIjoiaW5pdCIsInZpZGVvSUQiOiJjMDU2OTAyNDQxZjI4NjExNTg4MDA4OGVjOGE2NjlkYiIsIm93bmVySUQiOjMwNTQ5OTM5LCJjcmVhdG9ySUQiOiIiLCJzdG9yYWdlUHJvdmlkZXIiOjQsInRyYWNrIjoiYTk1M2EzZjBkNjExYTRiNzMzYjVhZTIxNmUzNjZjY2IiLCJyZW5kaXRpb24iOiI5NDc5MTE4MDIiLCJtdXhpbmciOiIxMDAzNDA4MzgzIn0&s=Q8Ogwo9lC0HDkwLCsRwcIMKrS24YwoEOLcK7FMOqWRw-w7DDi8OawrfCkMKwVg": {
+  "archivo": "c2e57ba58220.mp4",
+  "tipo": "video/mp4",
+  "bytes": 761
+ },
+ "https://cloudflarestream.com/c056902441f286115880088ec8a669db/audio/131/seg_1.mp4?p=eyJ0eXBlIjoic2VnbWVudCIsInZpZGVvSUQiOiJjMDU2OTAyNDQxZjI4NjExNTg4MDA4OGVjOGE2NjlkYiIsIm93bmVySUQiOjMwNTQ5OTM5LCJjcmVhdG9ySUQiOiIiLCJzZWdtZW50RHVyYXRpb25TZWNzIjo0LjAwMjEzMzMzMzMzMzMzMywic3RvcmFnZVByb3ZpZGVyIjo0LCJ0cmFjayI6ImE5NTNhM2YwZDYxMWE0YjczM2I1YWUyMTZlMzY2Y2NiIiwicmVuZGl0aW9uIjoiOTQ3OTExODAyIiwibXV4aW5nIjoiMTAwMzQwODM4MyJ9&s=wqLCvsO2wo3CscKnFMOgfQcww707wqgwR13DmS5fw7QNw7_DisOHBsOWwonDmcKawqnCog": {
+  "archivo": "98adf342ffa4.mp4",
+  "tipo": "video/mp4",
+  "bytes": 65719
+ },
+ "https://cloudflarestream.com/c056902441f286115880088ec8a669db/video/1080/seg_1.mp4?p=eyJ0eXBlIjoic2VnbWVudCIsInZpZGVvSUQiOiJjMDU2OTAyNDQxZjI4NjExNTg4MDA4OGVjOGE2NjlkYiIsIm93bmVySUQiOjMwNTQ5OTM5LCJjcmVhdG9ySUQiOiIiLCJzZWdtZW50RHVyYXRpb25TZWNzIjo0LCJzdG9yYWdlUHJvdmlkZXIiOjQsInRyYWNrIjoiZTBjMmMwZWQ2ZTZiZDYwNzFmMjA3Njc0NGQxYjkwY2YiLCJyZW5kaXRpb24iOiI5NDc5MTE4MTEiLCJtdXhpbmciOiIxMDAzNDA4MzkyIn0&s=w753wpUfKz7CsTTCgsKlwpHCl8OIJ2tSYMKSwpMmIcKFw4bCi8Otwr9lejfCsmvDuA": {
+  "archivo": "a0b3a445a838.mp4",
+  "tipo": "video/mp4",
+  "bytes": 1779651
+ },
+ "https://cloudflarestream.com/c056902441f286115880088ec8a669db/video/1080/seg_2.mp4?p=eyJ0eXBlIjoic2VnbWVudCIsInZpZGVvSUQiOiJjMDU2OTAyNDQxZjI4NjExNTg4MDA4OGVjOGE2NjlkYiIsIm93bmVySUQiOjMwNTQ5OTM5LCJjcmVhdG9ySUQiOiIiLCJzZWdtZW50RHVyYXRpb25TZWNzIjo0LCJzdG9yYWdlUHJvdmlkZXIiOjQsInRyYWNrIjoiZTBjMmMwZWQ2ZTZiZDYwNzFmMjA3Njc0NGQxYjkwY2YiLCJyZW5kaXRpb24iOiI5NDc5MTE4MTEiLCJtdXhpbmciOiIxMDAzNDA4MzkyIn0&s=w753wpUfKz7CsTTCgsKlwpHCl8OIJ2tSYMKSwpMmIcKFw4bCi8Otwr9lejfCsmvDuA": {
+  "archivo": "fdd82c162fce.mp4",
+  "tipo": "video/mp4",
+  "bytes": 1665630
+ },
+ "https://cloudflarestream.com/c056902441f286115880088ec8a669db/audio/131/seg_2.mp4?p=eyJ0eXBlIjoic2VnbWVudCIsInZpZGVvSUQiOiJjMDU2OTAyNDQxZjI4NjExNTg4MDA4OGVjOGE2NjlkYiIsIm93bmVySUQiOjMwNTQ5OTM5LCJjcmVhdG9ySUQiOiIiLCJzZWdtZW50RHVyYXRpb25TZWNzIjo0LjAwMjEzMzMzMzMzMzMzMywic3RvcmFnZVByb3ZpZGVyIjo0LCJ0cmFjayI6ImE5NTNhM2YwZDYxMWE0YjczM2I1YWUyMTZlMzY2Y2NiIiwicmVuZGl0aW9uIjoiOTQ3OTExODAyIiwibXV4aW5nIjoiMTAwMzQwODM4MyJ9&s=wqLCvsO2wo3CscKnFMOgfQcww707wqgwR13DmS5fw7QNw7_DisOHBsOWwonDmcKawqnCog": {
+  "archivo": "28484546e73e.mp4",
+  "tipo": "video/mp4",
+  "bytes": 64989
+ },
+ "https://cloudflarestream.com/c056902441f286115880088ec8a669db/video/1080/seg_3.mp4?p=eyJ0eXBlIjoic2VnbWVudCIsInZpZGVvSUQiOiJjMDU2OTAyNDQxZjI4NjExNTg4MDA4OGVjOGE2NjlkYiIsIm93bmVySUQiOjMwNTQ5OTM5LCJjcmVhdG9ySUQiOiIiLCJzZWdtZW50RHVyYXRpb25TZWNzIjo0LCJzdG9yYWdlUHJvdmlkZXIiOjQsInRyYWNrIjoiZTBjMmMwZWQ2ZTZiZDYwNzFmMjA3Njc0NGQxYjkwY2YiLCJyZW5kaXRpb24iOiI5NDc5MTE4MTEiLCJtdXhpbmciOiIxMDAzNDA4MzkyIn0&s=w753wpUfKz7CsTTCgsKlwpHCl8OIJ2tSYMKSwpMmIcKFw4bCi8Otwr9lejfCsmvDuA": {
+  "archivo": "ebd2f6771e46.mp4",
+  "tipo": "video/mp4",
+  "bytes": 1621567
+ },
+ "https://cloudflarestream.com/c056902441f286115880088ec8a669db/audio/131/seg_3.mp4?p=eyJ0eXBlIjoic2VnbWVudCIsInZpZGVvSUQiOiJjMDU2OTAyNDQxZjI4NjExNTg4MDA4OGVjOGE2NjlkYiIsIm93bmVySUQiOjMwNTQ5OTM5LCJjcmVhdG9ySUQiOiIiLCJzZWdtZW50RHVyYXRpb25TZWNzIjo0LjAwMjEzMzMzMzMzMzMzMywic3RvcmFnZVByb3ZpZGVyIjo0LCJ0cmFjayI6ImE5NTNhM2YwZDYxMWE0YjczM2I1YWUyMTZlMzY2Y2NiIiwicmVuZGl0aW9uIjoiOTQ3OTExODAyIiwibXV4aW5nIjoiMTAwMzQwODM4MyJ9&s=wqLCvsO2wo3CscKnFMOgfQcww707wqgwR13DmS5fw7QNw7_DisOHBsOWwonDmcKawqnCog": {
+  "archivo": "8670b07e77f2.mp4",
+  "tipo": "video/mp4",
+  "bytes": 65155
+ },
+ "https://cloudflarestream.com/c056902441f286115880088ec8a669db/video/1080/seg_4.mp4?p=eyJ0eXBlIjoic2VnbWVudCIsInZpZGVvSUQiOiJjMDU2OTAyNDQxZjI4NjExNTg4MDA4OGVjOGE2NjlkYiIsIm93bmVySUQiOjMwNTQ5OTM5LCJjcmVhdG9ySUQiOiIiLCJzZWdtZW50RHVyYXRpb25TZWNzIjo0LCJzdG9yYWdlUHJvdmlkZXIiOjQsInRyYWNrIjoiZTBjMmMwZWQ2ZTZiZDYwNzFmMjA3Njc0NGQxYjkwY2YiLCJyZW5kaXRpb24iOiI5NDc5MTE4MTEiLCJtdXhpbmciOiIxMDAzNDA4MzkyIn0&s=w753wpUfKz7CsTTCgsKlwpHCl8OIJ2tSYMKSwpMmIcKFw4bCi8Otwr9lejfCsmvDuA": {
+  "archivo": "8279876c001f.mp4",
+  "tipo": "video/mp4",
+  "bytes": 1581069
+ },
+ "https://cloudflarestream.com/c056902441f286115880088ec8a669db/audio/131/seg_4.mp4?p=eyJ0eXBlIjoic2VnbWVudCIsInZpZGVvSUQiOiJjMDU2OTAyNDQxZjI4NjExNTg4MDA4OGVjOGE2NjlkYiIsIm93bmVySUQiOjMwNTQ5OTM5LCJjcmVhdG9ySUQiOiIiLCJzZWdtZW50RHVyYXRpb25TZWNzIjo0LjAwMjEzMzMzMzMzMzMzMywic3RvcmFnZVByb3ZpZGVyIjo0LCJ0cmFjayI6ImE5NTNhM2YwZDYxMWE0YjczM2I1YWUyMTZlMzY2Y2NiIiwicmVuZGl0aW9uIjoiOTQ3OTExODAyIiwibXV4aW5nIjoiMTAwMzQwODM4MyJ9&s=wqLCvsO2wo3CscKnFMOgfQcww707wqgwR13DmS5fw7QNw7_DisOHBsOWwonDmcKawqnCog": {
+  "archivo": "f5034e263f39.mp4",
+  "tipo": "video/mp4",
+  "bytes": 65125
+ },
+ "https://cloudflarestream.com/c056902441f286115880088ec8a669db/audio/131/seg_5.mp4?p=eyJ0eXBlIjoic2VnbWVudCIsInZpZGVvSUQiOiJjMDU2OTAyNDQxZjI4NjExNTg4MDA4OGVjOGE2NjlkYiIsIm93bmVySUQiOjMwNTQ5OTM5LCJjcmVhdG9ySUQiOiIiLCJzZWdtZW50RHVyYXRpb25TZWNzIjo0LjAwMjEzMzMzMzMzMzMzMywic3RvcmFnZVByb3ZpZGVyIjo0LCJ0cmFjayI6ImE5NTNhM2YwZDYxMWE0YjczM2I1YWUyMTZlMzY2Y2NiIiwicmVuZGl0aW9uIjoiOTQ3OTExODAyIiwibXV4aW5nIjoiMTAwMzQwODM4MyJ9&s=wqLCvsO2wo3CscKnFMOgfQcww707wqgwR13DmS5fw7QNw7_DisOHBsOWwonDmcKawqnCog": {
+  "archivo": "5b0981cb711e.mp4",
+  "tipo": "video/mp4",
+  "bytes": 63165
+ },
+ "https://cloudflarestream.com/c056902441f286115880088ec8a669db/video/1080/seg_5.mp4?p=eyJ0eXBlIjoic2VnbWVudCIsInZpZGVvSUQiOiJjMDU2OTAyNDQxZjI4NjExNTg4MDA4OGVjOGE2NjlkYiIsIm93bmVySUQiOjMwNTQ5OTM5LCJjcmVhdG9ySUQiOiIiLCJzZWdtZW50RHVyYXRpb25TZWNzIjo0LCJzdG9yYWdlUHJvdmlkZXIiOjQsInRyYWNrIjoiZTBjMmMwZWQ2ZTZiZDYwNzFmMjA3Njc0NGQxYjkwY2YiLCJyZW5kaXRpb24iOiI5NDc5MTE4MTEiLCJtdXhpbmciOiIxMDAzNDA4MzkyIn0&s=w753wpUfKz7CsTTCgsKlwpHCl8OIJ2tSYMKSwpMmIcKFw4bCi8Otwr9lejfCsmvDuA": {
+  "archivo": "f6cea679d8b1.mp4",
+  "tipo": "video/mp4",
+  "bytes": 1414523
+ }
+}
