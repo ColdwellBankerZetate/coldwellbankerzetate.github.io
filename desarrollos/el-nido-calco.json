@@ -1,5 +1,5 @@
 {
- "_nota": "El Nido Beach & Surf Homes (Balneario Buenos Aires, Ruta 10). Recorte del satélite sobre la obra de la piscina de olas para calzar el plano de fraccionamiento.",
+ "_nota": "El Nido: lotes sacados del plano vectorial de fraccionamiento (PDF 'Lotes tomados SEPTIEMBRE', Agrim. Sergio Bonilla, dic-2023): polígonos, números (OCR) y m² del cuadro de áreas. Calzado sobre el satélite (afín, 9 puntos: manzana O, piscina de olas, acceso por Ruta 10, extremos de las alas) ±25 m: el plano no calza rígido con las calles abiertas en la obra. Estados = puntos de color del plano (azul vendido; verde/rojo/violeta reservado). El KML se arma fuera de calcar.py (desarrollos/el-nido.kml); si llega el KMZ del desarrollador, lo reemplaza.",
  "centro": [
   -34.88,
   -54.78
