@@ -118,6 +118,9 @@ i.venta{background:var(--venta)}i.temporada{background:var(--temporada)}i.alquil
 .bm.dev.on .c{animation:latido 1.8s ease-out infinite}
 @keyframes latido{0%{box-shadow:0 0 0 2px rgba(255,255,255,.9),0 0 0 4px rgba(200,178,138,.55),0 4px 12px rgba(0,0,0,.55)}100%{box-shadow:0 0 0 2px rgba(255,255,255,.9),0 0 0 16px rgba(200,178,138,0),0 4px 12px rgba(0,0,0,.55)}}
 .top,.tira{display:none}
+/* sección Desarrollos (compu): sin logo ni bajada y panel más ancho para que las tarjetas se vean grandes */
+body.seccion-dev .logo-wrap,body.seccion-dev .bajada{display:none}
+body.seccion-dev .app{grid-template-columns:minmax(440px,600px) 1fr}
 @media (max-width:899px){
   .app{display:block;height:100%}
   .panel{display:none}
@@ -247,7 +250,10 @@ function pintarChips() {
 }
 function pintar() {
   pintarSecciones(); pintarChips();
-  document.body.classList.toggle("seccion-dev", !!SECCION);
+  if (document.body.classList.contains("seccion-dev") !== !!SECCION) {
+    document.body.classList.toggle("seccion-dev", !!SECCION);
+    setTimeout(() => mapa.invalidateSize(), 0);
+  }
   $("bajada").textContent = SECCION ? t("desarrollos_b") : t("portada_b");
   const L0 = lista();
   if (SECCION) {
