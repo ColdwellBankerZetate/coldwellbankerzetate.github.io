@@ -87,8 +87,6 @@ i.venta{background:var(--venta)}i.temporada{background:var(--temporada)}i.alquil
 .pestanas button.dev[aria-selected="true"]::after{background:var(--champ)}
 .pestanas .n{color:var(--champ);margin-left:6px}
 .chips{display:flex;flex-wrap:wrap;gap:6px}
-.comparar{align-self:center;margin-left:auto;display:inline-flex;align-items:center;gap:7px;background:none;border:1px solid rgba(200,178,138,.55);color:var(--champ,#c8b28a);border-radius:999px;padding:7px 13px;font:700 10.5px var(--f-body,sans-serif);letter-spacing:.14em;text-transform:uppercase;cursor:pointer}
-.comparar:hover{border-color:#c8b28a;background:rgba(200,178,138,.08)}
 .chip{display:inline-flex;align-items:center;gap:7px;border:1px solid var(--line-2);background:transparent;border-radius:999px;padding:6px 13px;font-size:12.5px;font-weight:600;color:var(--muted);cursor:pointer}
 .chip:hover{color:var(--fg);border-color:var(--fg)}
 .chip[aria-pressed="true"]{background:var(--fg);border-color:var(--fg);color:var(--ink)}
@@ -209,7 +207,7 @@ const mapa = mapaBase("mapa");
 const capa = L.layerGroup().addTo(mapa);
 let items = [], activa = 0, ultimoVuelo = 0;
 /* Dos secciones: 0 = propiedades por barrio, 1 = desarrollos (edificios y barrios que se venden por lotes) */
-let SECCION = /^#(desarrollos|comparar)$/.test(location.hash) ? 1 : 0;
+let SECCION = location.hash === "#desarrollos" ? 1 : 0;
 let FCLASE = null; /* filtro de desarrollos: null | "edificio" | "barrio" */
 const lista = () => SECCION ? D.filter(d => !FCLASE || d.clase === FCLASE) : B;
 
@@ -255,9 +253,7 @@ function pintar() {
   if (SECCION) {
     const ed = D.filter(d => d.clase === "edificio").length, ba = D.length - ed;
     $("stats").innerHTML = D.length ? `<div class="stat"><b>${D.length}</b><span>${t("desarrollos")}</span></div>` +
-      (ed ? `<div class="stat"><b>${ed}</b><span>${t("edificios")}</span></div>` : "") + (ba ? `<div class="stat"><b>${ba}</b><span>${t("barrios_dev")}</span></div>` : "") +
-      (INTERNO.activo() ? `<button type="button" class="comparar" data-comparar title="Solo equipo">${ICONO_INFO}Comparar</button>` : "") : "";
-    const bc = $("stats").querySelector("[data-comparar]"); if (bc) bc.onclick = abrirComparar;
+      (ed ? `<div class="stat"><b>${ed}</b><span>${t("edificios")}</span></div>` : "") + (ba ? `<div class="stat"><b>${ba}</b><span>${t("barrios_dev")}</span></div>` : "") : "";
     $("lista").innerHTML = L0.length ? L0.map(d => `<li>${cardDev(d)}</li>`).join("") : `<li>${htmlPron()}</li>`;
     $("tira").innerHTML = L0.length ? L0.map(d => `<li>${cardDev(d)}</li>`).join("") : `<li class="ancho">${htmlPron()}</li>`;
   } else {
@@ -358,45 +354,8 @@ document.querySelectorAll(".pista-t").forEach(pt => {
   });
 });
 
-/* ---------- comparativa de desarrollos (modo interno): disponibilidad y precios de todos, lado a lado ---------- */
-let CMP_O = ["desde", 1];
-function htmlComparar() {
-  const filas = D.map(d => ({ d, a: INTERNO.dev(d.slug).analisis })).filter(x => x.a);
-  const val = (x, k) => k === "nombre" ? x.d.nombre : k === "vend" ? (x.a.resumen.total ? x.a.resumen.vend / x.a.resumen.total : null) : x.a.resumen[k];
-  const [k, dir] = CMP_O;
-  filas.sort((x, y) => { const a1 = val(x, k), b1 = val(y, k); if (a1 == null) return 1; if (b1 == null) return -1; return (typeof a1 === "string" ? a1.localeCompare(b1) : a1 - b1) * dir; });
-  const th = (c, x, r) => `<th data-o="${c}" class="${r ? "r " : ""}${k === c ? "on" : ""}">${x}${k === c ? (dir > 0 ? " ↑" : " ↓") : ""}</th>`;
-  const lotes = filas.flatMap(x => x.a.lotes.filter(l => l.precio && l.estado === "disponible").map(l => ({ ...l, d: x.d })));
-  const m2 = l => l.m2 ? l.precio / l.m2 : null;
-  const baratos = [...lotes].sort((a, b) => a.precio - b.precio).slice(0, 8), porM2 = lotes.filter(m2).sort((a, b) => m2(a) - m2(b)).slice(0, 8);
-  const it = (l, der) => `<button type="button" data-ir="${l.d.slug}"><b>${esc(l.d.nombre)} · ${esc(l.n)}</b><span>${der}</span></button>`;
-  const f = n => n == null ? "—" : Math.round(n).toLocaleString("es-UY");
-  return `<div class="cab"><div><span class="k">${ICONO_INFO} Info interna · solo equipo</span><h3>Comparar desarrollos</h3><p class="f">Disponibilidad y precios de las listas cargadas. Tocá un desarrollo para ver su Info completa.</p></div><button type="button" class="x" data-cerrar aria-label="Cerrar">×</button></div>
-  <div class="cu">
-    ${filas.length ? `<section><div class="tabla"><table><thead><tr>${th("nombre", "Desarrollo")}${th("disp", "Disponibles", true)}${th("vend", "Vendido", true)}${th("desde", "Desde", true)}${th("prom", "Promedio", true)}${th("prom_m2", "USD/m²", true)}<th class="ocm">Lista</th></tr></thead><tbody>
-      ${filas.map(({ d, a }) => { const r = a.resumen; return `<tr data-ir="${d.slug}" data-n="1"><td><b>${esc(d.nombre)}</b><div style="color:#6d6a64;font-size:11.5px">${esc(d.zona)}</div></td><td class="r">${r.disp} <span style="color:#6d6a64">/ ${r.total}</span></td><td class="r">${r.total ? Math.round(100 * r.vend / r.total) + " %" : "—"}</td>
-        <td class="r">${r.desde ? fmtUSDc(r.desde) : "—"}</td><td class="r">${r.prom ? fmtUSDc(r.prom) : "—"}</td><td class="r">${r.prom_m2 ? f(r.prom_m2) : "—"}${r.min_m2 && r.max_m2 !== r.min_m2 ? `<div style="color:#6d6a64;font-size:11.5px">${f(r.min_m2)}–${f(r.max_m2)}</div>` : ""}</td><td class="ocm" style="color:#9b978f">${a.con_lista ? esc(a.fecha || "sí") : "sin lista"}</td></tr>`; }).join("")}
-      </tbody></table></div></section>
-    <div class="dos"><section><h4>Lotes más baratos</h4><div class="op">${baratos.map(l => it(l, `${fmtUSD(l.precio)} · ${f(l.m2)} m²`)).join("")}</div></section>
-      <section><h4>Mejor precio por m²</h4><div class="op">${porM2.map(l => it(l, `${f(m2(l))} USD/m² · ${fmtUSDc(l.precio)}`)).join("")}</div></section></div>`
-    : `<div class="vacio">No hay datos internos de desarrollos en tu sesión. Salí del modo interno y volvé a entrar para cargarlos.</div>`}
-  </div>`;
-}
-function abrirComparar() {
-  const m = INTERNO.panel(htmlComparar());
-  track("comparar");
-  m.addEventListener("click", e => {
-    const o = e.target.closest("th[data-o]"), ir = e.target.closest("[data-ir]");
-    if (o) { CMP_O = [o.dataset.o, CMP_O[0] === o.dataset.o ? -CMP_O[1] : (o.dataset.o === "disp" ? -1 : 1)]; m.querySelector(".v").innerHTML = htmlComparar(); }
-    else if (ir) location.href = `desarrollos/${ir.dataset.ir}/#info`;
-  });
-}
 document.addEventListener("interno", () => pintar());
-if (location.hash === "#comparar" && INTERNO.activo()) abrirComparar();
-window.addEventListener("hashchange", () => {
-  if (location.hash === "#comparar") { const g = document.getElementById("cbz-int-m"); if (g) g.remove(); irA(1, true); if (INTERNO.activo()) abrirComparar(); return; }
-  irA(location.hash === "#desarrollos" ? 1 : 0, true);
-});
+window.addEventListener("hashchange", () => irA(location.hash === "#desarrollos" ? 1 : 0, true));
 for (const id of ["idiomas-p", "idiomas-m"]) armarIdiomas($(id), pintar);
 pintar();
 encuadrar(false);
