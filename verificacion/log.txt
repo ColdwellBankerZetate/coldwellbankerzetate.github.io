@@ -1,0 +1,51 @@
+escala 0.268 m/px · error en los puntos de control: 0.0 m, 0.0 m, 0.0 m
+  … 200 regiones
+  … 400 regiones
+  … 600 regiones
+  … 800 regiones
+listo: desarrollos/dunas.kml · 48 lotes, 0 áreas · revisar verificacion/dunas-lotes.jpg
+listo: /home/runner/work/coldwellbankerzetate.github.io/coldwellbankerzetate.github.io/verificacion/dunas-calco.jpg
+escala 0.526 m/px · error en los puntos de control: 16.9 m, 7.5 m, 13.5 m, 15.9 m, 24.8 m
+  ¡ojo! algún punto de control queda a más de 8 m: revisarlo
+  … 200 regiones
+  … 400 regiones
+  … 600 regiones
+  … 800 regiones
+  … 1000 regiones
+  … 1200 regiones
+  … 1400 regiones
+  … 1600 regiones
+  … 1800 regiones
+  … 2000 regiones
+  … 2200 regiones
+  … 2400 regiones
+  … 2600 regiones
+  … 2800 regiones
+  … 3000 regiones
+  … 3200 regiones
+  … 3400 regiones
+  … 3600 regiones
+  … 3800 regiones
+  … 4000 regiones
+  … 4200 regiones
+  … 4400 regiones
+  … 4600 regiones
+  … 4800 regiones
+listo: desarrollos/playa-brava.kml · 93 lotes, 0 áreas · revisar verificacion/playa-brava-lotes.jpg
+listo: /home/runner/work/coldwellbankerzetate.github.io/coldwellbankerzetate.github.io/verificacion/playa-brava-calco.jpg
+escala 0.258 m/px · error en los puntos de control: 7.5 m, 16.5 m, 17.6 m, 8.6 m
+  ¡ojo! algún punto de control queda a más de 8 m: revisarlo
+  … 200 regiones
+  … 400 regiones
+  … 600 regiones
+listo: desarrollos/pueblo-colibri.kml · 36 lotes, 0 áreas · revisar verificacion/pueblo-colibri-lotes.jpg
+listo: /home/runner/work/coldwellbankerzetate.github.io/coldwellbankerzetate.github.io/verificacion/pueblo-colibri-calco.jpg
+escala 0.691 m/px · error en los puntos de control: 0.0 m, 0.0 m, 0.0 m, 0.0 m, 0.0 m, 0.0 m
+listo: desarrollos/punta-polo.kml · 248 lotes, 0 áreas · revisar verificacion/punta-polo-lotes.jpg
+listo: /home/runner/work/coldwellbankerzetate.github.io/coldwellbankerzetate.github.io/verificacion/punta-polo-calco.jpg
+amalfi: recorte alrededor de -34.7528414,-54.6346758 (2000 m) -> verificacion/amalfi-sat.jpg
+dunas: recorte alrededor de -34.8238,-54.6395 (1300 m) -> verificacion/dunas-sat.jpg
+el-nido: recorte alrededor de -34.88,-54.78 (2200 m) -> verificacion/el-nido-sat.jpg
+pueblo-colibri: 5 tramos 'Hidalgo', 1 tramos 'Flamencos'
+  cruce: {'lat': -34.9092316, 'lng': -54.8618584, 'separacion_m': 0.0, 'calles': ['Bartolomé Hidalgo', 'Camino de los Flamencos']}
+  recorte: verificacion/pueblo-colibri-sat.jpg (817x817, 800 m de lado)
