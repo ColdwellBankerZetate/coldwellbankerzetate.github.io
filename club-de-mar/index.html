@@ -800,16 +800,20 @@ const INTERNO = {
   const guardar = (d, recordar) => { const s = JSON.stringify(d); sesion.set(s); if (recordar) guardarLS(K, s); };
   async function refrescar() {
     const d = INTERNO.datos;
-    if (!d || !d._k || !(window.crypto && crypto.subtle)) return;
+    if (!d || !(window.crypto && crypto.subtle)) return;
     try {
       const j = await bajar();
-      if (j.n === d._n || j.s !== d._s) return; /* sin cambios, o cambió la contraseña (hay que volver a entrar) */
+      /* sesión guardada con el formato viejo (sin llave) o cambió la contraseña: no se puede actualizar sola, así que se
+         sale del modo interno para que vuelva a pedir la contraseña (si no, quedaba "activo" con datos viejos y sin botones) */
+      if (!d._k || j.s !== d._s) { salir(); return; }
+      if (j.n === d._n) return; /* sin cambios */
       const llave = await crypto.subtle.importKey("raw", b64(d._k), "AES-GCM", false, ["decrypt"]);
       const nuevo = Object.assign(await abrir(j, llave), { _k: d._k, _s: d._s, _n: j.n, _tk: d._tk });
       INTERNO.datos = nuevo; guardar(nuevo, !!leer(K)); avisar();
     } catch (_) {}
   }
   const avisar = () => document.dispatchEvent(new CustomEvent("interno"));
+  const salir = () => { INTERNO.datos = null; sesion.del(); try { localStorage.removeItem(K); } catch (_) {} estado(); avisar(); };
   setTimeout(refrescar, 400);
   const css = document.createElement("style");
   css.textContent = `
@@ -849,7 +853,7 @@ const INTERNO = {
     if (INTERNO.activo()) {
       const m = modal('<div class="c" role="dialog" aria-modal="true"><h3>Modo interno</h3><p>Activo: ves las funciones solo para el equipo.</p><a class="ag" href="' + raiz() + 'agenda/">Agenda de temporada →</a><a class="ag" href="' + raiz() + 'comparativo/">Comparativo de desarrollos →</a><div class="fila"><button type="button" data-x>Cerrar</button><button type="button" class="pri" data-salir>Salir del modo interno</button></div></div>');
       m.querySelector("[data-x]").onclick = cerrar;
-      m.querySelector("[data-salir]").onclick = () => { INTERNO.datos = null; sesion.del(); try { localStorage.removeItem(K); } catch (_) {} estado(); cerrar(); avisar(); };
+      m.querySelector("[data-salir]").onclick = () => { salir(); cerrar(); };
       return;
     }
     const m = modal('<form role="dialog" aria-modal="true" autocomplete="off"><h3>Acceso interno</h3><p>Solo para el equipo de Coldwell Banker Zetaté.</p><input type="password" name="clave" placeholder="Contraseña" autocomplete="current-password" required><label><input type="checkbox" name="recordar"> Recordar en este equipo</label><div class="err" role="alert"></div><div class="fila"><button type="button" data-x>Cancelar</button><button type="submit" class="pri">Entrar</button></div></form>');
